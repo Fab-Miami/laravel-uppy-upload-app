@@ -9,9 +9,7 @@
             inputElementUrlUploadFile.dispatchEvent(new Event('input'));
             {{ $extraJSForOnUploadSuccess }}
           };
-
         uppyUpload = new Uppy({{ $options }});
-
         uppyUpload
           .use(Dashboard, {
               inline: true,
