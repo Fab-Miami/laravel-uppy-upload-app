@@ -4098,6 +4098,3728 @@ module.exports = function supportsUploadProgress(userAgent) {
 
 /***/ }),
 
+/***/ "./node_modules/@uppy/dashboard/lib/components/AddFiles.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/AddFiles.js ***!
+  \*****************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h,
+    Component = _require.Component;
+
+var AddFiles = /*#__PURE__*/function (_Component) {
+  _inheritsLoose(AddFiles, _Component);
+
+  function AddFiles() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+    _this.triggerFileInputClick = function () {
+      _this.fileInput.click();
+    };
+
+    _this.triggerFolderInputClick = function () {
+      _this.folderInput.click();
+    };
+
+    _this.onFileInputChange = function (event) {
+      _this.props.handleInputChange(event); // We clear the input after a file is selected, because otherwise
+      // change event is not fired in Chrome and Safari when a file
+      // with the same name is selected.
+      // ___Why not use value="" on <input/> instead?
+      //    Because if we use that method of clearing the input,
+      //    Chrome will not trigger change if we drop the same file twice (Issue #768).
+
+
+      event.target.value = null;
+    };
+
+    _this.renderHiddenInput = function (isFolder, refCallback) {
+      return h("input", {
+        className: "uppy-Dashboard-input",
+        hidden: true,
+        "aria-hidden": "true",
+        tabIndex: -1,
+        webkitdirectory: isFolder,
+        type: "file",
+        name: "files[]",
+        multiple: _this.props.maxNumberOfFiles !== 1,
+        onChange: _this.onFileInputChange,
+        accept: _this.props.allowedFileTypes,
+        ref: refCallback
+      });
+    };
+
+    _this.renderMyDeviceAcquirer = function () {
+      return h("div", {
+        className: "uppy-DashboardTab",
+        role: "presentation",
+        "data-uppy-acquirer-id": "MyDevice"
+      }, h("button", {
+        type: "button",
+        className: "uppy-u-reset uppy-c-btn uppy-DashboardTab-btn",
+        role: "tab",
+        tabIndex: 0,
+        "data-uppy-super-focusable": true,
+        onClick: _this.triggerFileInputClick
+      }, h("svg", {
+        "aria-hidden": "true",
+        focusable: "false",
+        width: "32",
+        height: "32",
+        viewBox: "0 0 32 32"
+      }, h("g", {
+        fill: "none",
+        fillRule: "evenodd"
+      }, h("rect", {
+        className: "uppy-ProviderIconBg",
+        width: "32",
+        height: "32",
+        rx: "16",
+        fill: "#2275D7"
+      }), h("path", {
+        d: "M21.973 21.152H9.863l-1.108-5.087h14.464l-1.246 5.087zM9.935 11.37h3.958l.886 1.444a.673.673 0 0 0 .585.316h6.506v1.37H9.935v-3.13zm14.898 3.44a.793.793 0 0 0-.616-.31h-.978v-2.126c0-.379-.275-.613-.653-.613H15.75l-.886-1.445a.673.673 0 0 0-.585-.316H9.232c-.378 0-.667.209-.667.587V14.5h-.782a.793.793 0 0 0-.61.303.795.795 0 0 0-.155.663l1.45 6.633c.078.36.396.618.764.618h13.354c.36 0 .674-.246.76-.595l1.631-6.636a.795.795 0 0 0-.144-.675z",
+        fill: "#FFF"
+      }))), h("div", {
+        className: "uppy-DashboardTab-name"
+      }, _this.props.i18n('myDevice'))));
+    };
+
+    _this.renderBrowseButton = function (text, onClickFn) {
+      var numberOfAcquirers = _this.props.acquirers.length;
+      return h("button", {
+        type: "button",
+        className: "uppy-u-reset uppy-Dashboard-browse",
+        onClick: onClickFn,
+        "data-uppy-super-focusable": numberOfAcquirers === 0
+      }, text);
+    };
+
+    _this.renderDropPasteBrowseTagline = function () {
+      var numberOfAcquirers = _this.props.acquirers.length; // in order to keep the i18n CamelCase and options lower (as are defaults) we will want to transform a lower
+      // to Camel
+
+      var lowerFMSelectionType = _this.props.fileManagerSelectionType;
+      var camelFMSelectionType = lowerFMSelectionType.charAt(0).toUpperCase() + lowerFMSelectionType.slice(1); // For backwards compatibility, we need to support both 'browse' and 'browseFiles'/'browseFolders' as strings here.
+
+      var browseText = 'browse';
+      var browseFilesText = 'browse';
+      var browseFoldersText = 'browse';
+
+      if (lowerFMSelectionType === 'files') {
+        try {
+          browseText = _this.props.i18n('browse');
+          browseFilesText = _this.props.i18n('browse');
+          browseFoldersText = _this.props.i18n('browse');
+        } catch (_unused) {// Ignore, hopefully we can use the 'browseFiles' / 'browseFolders' strings
+        }
+      }
+
+      try {
+        browseFilesText = _this.props.i18n('browseFiles');
+        browseFoldersText = _this.props.i18n('browseFolders');
+      } catch (_unused2) {// Ignore, use the 'browse' string
+      }
+
+      var browse = _this.renderBrowseButton(browseText, _this.triggerFileInputClick);
+
+      var browseFiles = _this.renderBrowseButton(browseFilesText, _this.triggerFileInputClick);
+
+      var browseFolders = _this.renderBrowseButton(browseFoldersText, _this.triggerFolderInputClick); // Before the `fileManagerSelectionType` feature existed, we had two possible
+      // strings here, but now we have six. We use the new-style strings by default:
+
+
+      var titleText;
+
+      if (numberOfAcquirers > 0) {
+        titleText = _this.props.i18nArray("dropPasteImport" + camelFMSelectionType, {
+          browseFiles: browseFiles,
+          browseFolders: browseFolders,
+          browse: browse
+        });
+      } else {
+        titleText = _this.props.i18nArray("dropPaste" + camelFMSelectionType, {
+          browseFiles: browseFiles,
+          browseFolders: browseFolders,
+          browse: browse
+        });
+      } // We use the old-style strings if available: this implies that the user has
+      // manually specified them, so they should take precedence over the new-style
+      // defaults.
+
+
+      if (lowerFMSelectionType === 'files') {
+        try {
+          if (numberOfAcquirers > 0) {
+            titleText = _this.props.i18nArray('dropPasteImport', {
+              browse: browse
+            });
+          } else {
+            titleText = _this.props.i18nArray('dropPaste', {
+              browse: browse
+            });
+          }
+        } catch (_unused3) {// Ignore, the new-style strings will be used.
+        }
+      }
+
+      if (_this.props.disableLocalFiles) {
+        titleText = _this.props.i18n('importFiles');
+      }
+
+      return h("div", {
+        className: "uppy-Dashboard-AddFiles-title"
+      }, titleText);
+    };
+
+    _this.renderAcquirer = function (acquirer) {
+      return h("div", {
+        className: "uppy-DashboardTab",
+        role: "presentation",
+        "data-uppy-acquirer-id": acquirer.id
+      }, h("button", {
+        type: "button",
+        className: "uppy-u-reset uppy-c-btn uppy-DashboardTab-btn",
+        role: "tab",
+        tabIndex: 0,
+        "aria-controls": "uppy-DashboardContent-panel--" + acquirer.id,
+        "aria-selected": _this.props.activePickerPanel.id === acquirer.id,
+        "data-uppy-super-focusable": true,
+        onClick: function onClick() {
+          return _this.props.showPanel(acquirer.id);
+        }
+      }, acquirer.icon(), h("div", {
+        className: "uppy-DashboardTab-name"
+      }, acquirer.name)));
+    };
+
+    _this.renderAcquirers = function (acquirers, disableLocalFiles) {
+      // Group last two buttons, so we don’t end up with
+      // just one button on a new line
+      var acquirersWithoutLastTwo = [].concat(acquirers);
+      var lastTwoAcquirers = acquirersWithoutLastTwo.splice(acquirers.length - 2, acquirers.length);
+      return h("div", {
+        className: "uppy-Dashboard-AddFiles-list",
+        role: "tablist"
+      }, !disableLocalFiles && _this.renderMyDeviceAcquirer(), acquirersWithoutLastTwo.map(function (acquirer) {
+        return _this.renderAcquirer(acquirer);
+      }), h("span", {
+        role: "presentation",
+        style: "white-space: nowrap;"
+      }, lastTwoAcquirers.map(function (acquirer) {
+        return _this.renderAcquirer(acquirer);
+      })));
+    };
+
+    return _this;
+  }
+
+  var _proto = AddFiles.prototype;
+
+  _proto.renderPoweredByUppy = function renderPoweredByUppy() {
+    var uppyBranding = h("span", null, h("svg", {
+      "aria-hidden": "true",
+      focusable: "false",
+      className: "uppy-c-icon uppy-Dashboard-poweredByIcon",
+      width: "11",
+      height: "11",
+      viewBox: "0 0 11 11"
+    }, h("path", {
+      d: "M7.365 10.5l-.01-4.045h2.612L5.5.806l-4.467 5.65h2.604l.01 4.044h3.718z",
+      fillRule: "evenodd"
+    })), h("span", {
+      className: "uppy-Dashboard-poweredByUppy"
+    }, "Uppy")); // Support both the old word-order-insensitive string `poweredBy` and the new word-order-sensitive string `poweredBy2`
+
+    var linkText = this.props.i18nArray('poweredBy2', {
+      backwardsCompat: this.props.i18n('poweredBy'),
+      uppy: uppyBranding
+    });
+    return h("a", {
+      tabIndex: "-1",
+      href: "https://uppy.io",
+      rel: "noreferrer noopener",
+      target: "_blank",
+      className: "uppy-Dashboard-poweredBy"
+    }, linkText);
+  };
+
+  _proto.render = function render() {
+    var _this2 = this;
+
+    return h("div", {
+      className: "uppy-Dashboard-AddFiles"
+    }, this.renderHiddenInput(false, function (ref) {
+      _this2.fileInput = ref;
+    }), this.renderHiddenInput(true, function (ref) {
+      _this2.folderInput = ref;
+    }), this.renderDropPasteBrowseTagline(), this.props.acquirers.length > 0 && this.renderAcquirers(this.props.acquirers, this.props.disableLocalFiles), h("div", {
+      className: "uppy-Dashboard-AddFiles-info"
+    }, this.props.note && h("div", {
+      className: "uppy-Dashboard-note"
+    }, this.props.note), this.props.proudlyDisplayPoweredByUppy && this.renderPoweredByUppy(this.props)));
+  };
+
+  return AddFiles;
+}(Component);
+
+module.exports = AddFiles;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/AddFilesPanel.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/AddFilesPanel.js ***!
+  \**********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var AddFiles = __webpack_require__(/*! ./AddFiles */ "./node_modules/@uppy/dashboard/lib/components/AddFiles.js");
+
+var AddFilesPanel = function AddFilesPanel(props) {
+  return h("div", {
+    className: classNames('uppy-Dashboard-AddFilesPanel', props.className),
+    "data-uppy-panelType": "AddFiles",
+    "aria-hidden": props.showAddFilesPanel
+  }, h("div", {
+    className: "uppy-DashboardContent-bar"
+  }, h("div", {
+    className: "uppy-DashboardContent-title",
+    role: "heading",
+    "aria-level": "1"
+  }, props.i18n('addingMoreFiles')), h("button", {
+    className: "uppy-DashboardContent-back",
+    type: "button",
+    onClick: function onClick(ev) {
+      return props.toggleAddFilesPanel(false);
+    }
+  }, props.i18n('back'))), h(AddFiles, props));
+};
+
+module.exports = AddFilesPanel;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/Dashboard.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/Dashboard.js ***!
+  \******************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var FileList = __webpack_require__(/*! ./FileList */ "./node_modules/@uppy/dashboard/lib/components/FileList.js");
+
+var AddFiles = __webpack_require__(/*! ./AddFiles */ "./node_modules/@uppy/dashboard/lib/components/AddFiles.js");
+
+var AddFilesPanel = __webpack_require__(/*! ./AddFilesPanel */ "./node_modules/@uppy/dashboard/lib/components/AddFilesPanel.js");
+
+var PickerPanelContent = __webpack_require__(/*! ./PickerPanelContent */ "./node_modules/@uppy/dashboard/lib/components/PickerPanelContent.js");
+
+var EditorPanel = __webpack_require__(/*! ./EditorPanel */ "./node_modules/@uppy/dashboard/lib/components/EditorPanel.js");
+
+var PanelTopBar = __webpack_require__(/*! ./PickerPanelTopBar */ "./node_modules/@uppy/dashboard/lib/components/PickerPanelTopBar.js");
+
+var FileCard = __webpack_require__(/*! ./FileCard */ "./node_modules/@uppy/dashboard/lib/components/FileCard/index.js");
+
+var Slide = __webpack_require__(/*! ./Slide */ "./node_modules/@uppy/dashboard/lib/components/Slide.js");
+
+var isDragDropSupported = __webpack_require__(/*! @uppy/utils/lib/isDragDropSupported */ "./node_modules/@uppy/utils/lib/isDragDropSupported.js"); // http://dev.edenspiekermann.com/2016/02/11/introducing-accessible-modal-dialog
+// https://github.com/ghosh/micromodal
+
+
+var WIDTH_XL = 900;
+var WIDTH_LG = 700;
+var WIDTH_MD = 576;
+var HEIGHT_MD = 400;
+
+module.exports = function Dashboard(props) {
+  var noFiles = props.totalFileCount === 0;
+  var isSizeMD = props.containerWidth > WIDTH_MD;
+  var wrapperClassName = classNames({
+    'uppy-Root': props.isTargetDOMEl
+  });
+  var dashboardClassName = classNames({
+    'uppy-Dashboard': true,
+    'uppy-Dashboard--isDisabled': props.disabled,
+    'uppy-Dashboard--animateOpenClose': props.animateOpenClose,
+    'uppy-Dashboard--isClosing': props.isClosing,
+    'uppy-Dashboard--isDraggingOver': props.isDraggingOver,
+    'uppy-Dashboard--modal': !props.inline,
+    'uppy-size--md': props.containerWidth > WIDTH_MD,
+    'uppy-size--lg': props.containerWidth > WIDTH_LG,
+    'uppy-size--xl': props.containerWidth > WIDTH_XL,
+    'uppy-size--height-md': props.containerHeight > HEIGHT_MD,
+    'uppy-Dashboard--isAddFilesPanelVisible': props.showAddFilesPanel,
+    'uppy-Dashboard--isInnerWrapVisible': props.areInsidesReadyToBeVisible
+  }); // Important: keep these in sync with the percent width values in `src/components/FileItem/index.scss`.
+
+  var itemsPerRow = 1; // mobile
+
+  if (props.containerWidth > WIDTH_XL) {
+    itemsPerRow = 5;
+  } else if (props.containerWidth > WIDTH_LG) {
+    itemsPerRow = 4;
+  } else if (props.containerWidth > WIDTH_MD) {
+    itemsPerRow = 3;
+  }
+
+  var showFileList = props.showSelectedFiles && !noFiles;
+  var numberOfFilesForRecovery = props.recoveredState ? Object.keys(props.recoveredState.files).length : null;
+  var numberOfGhosts = props.files ? Object.keys(props.files).filter(function (fileID) {
+    return props.files[fileID].isGhost;
+  }).length : null;
+
+  var renderRestoredText = function renderRestoredText() {
+    if (numberOfGhosts > 0) {
+      return props.i18n('recoveredXFiles', {
+        smart_count: numberOfGhosts
+      });
+    }
+
+    return props.i18n('recoveredAllFiles');
+  };
+
+  var dashboard = h("div", {
+    className: dashboardClassName,
+    "data-uppy-theme": props.theme,
+    "data-uppy-num-acquirers": props.acquirers.length,
+    "data-uppy-drag-drop-supported": !props.disableLocalFiles && isDragDropSupported(),
+    "aria-hidden": props.inline ? 'false' : props.isHidden,
+    "aria-disabled": props.disabled,
+    "aria-label": !props.inline ? props.i18n('dashboardWindowTitle') : props.i18n('dashboardTitle'),
+    onPaste: props.handlePaste,
+    onDragOver: props.handleDragOver,
+    onDragLeave: props.handleDragLeave,
+    onDrop: props.handleDrop
+  }, h("div", {
+    className: "uppy-Dashboard-overlay",
+    tabIndex: -1,
+    onClick: props.handleClickOutside
+  }), h("div", {
+    className: "uppy-Dashboard-inner",
+    "aria-modal": !props.inline && 'true',
+    role: !props.inline && 'dialog',
+    style: {
+      width: props.inline && props.width ? props.width : '',
+      height: props.inline && props.height ? props.height : ''
+    }
+  }, !props.inline ? h("button", {
+    className: "uppy-u-reset uppy-Dashboard-close",
+    type: "button",
+    "aria-label": props.i18n('closeModal'),
+    title: props.i18n('closeModal'),
+    onClick: props.closeModal
+  }, h("span", {
+    "aria-hidden": "true"
+  }, "\xD7")) : null, h("div", {
+    className: "uppy-Dashboard-innerWrap"
+  }, h("div", {
+    className: "uppy-Dashboard-dropFilesHereHint"
+  }, props.i18n('dropHint')), showFileList && h(PanelTopBar, props), numberOfFilesForRecovery && h("div", {
+    className: "uppy-Dashboard-serviceMsg"
+  }, h("svg", {
+    className: "uppy-Dashboard-serviceMsg-icon",
+    "aria-hidden": "true",
+    focusable: "false",
+    width: "21",
+    height: "16",
+    viewBox: "0 0 24 19"
+  }, h("g", {
+    transform: "translate(0 -1)",
+    fill: "none",
+    fillRule: "evenodd"
+  }, h("path", {
+    d: "M12.857 1.43l10.234 17.056A1 1 0 0122.234 20H1.766a1 1 0 01-.857-1.514L11.143 1.429a1 1 0 011.714 0z",
+    fill: "#FFD300"
+  }), h("path", {
+    fill: "#000",
+    d: "M11 6h2l-.3 8h-1.4z"
+  }), h("circle", {
+    fill: "#000",
+    cx: "12",
+    cy: "17",
+    r: "1"
+  }))), h("strong", {
+    className: "uppy-Dashboard-serviceMsg-title"
+  }, props.i18n('sessionRestored')), h("div", {
+    class: "uppy-Dashboard-serviceMsg-text"
+  }, renderRestoredText())), showFileList ? h(FileList, _extends({}, props, {
+    itemsPerRow: itemsPerRow
+  })) : h(AddFiles, _extends({}, props, {
+    isSizeMD: isSizeMD
+  })), h(Slide, null, props.showAddFilesPanel ? h(AddFilesPanel, _extends({
+    key: "AddFiles"
+  }, props, {
+    isSizeMD: isSizeMD
+  })) : null), h(Slide, null, props.fileCardFor ? h(FileCard, _extends({
+    key: "FileCard"
+  }, props)) : null), h(Slide, null, props.activePickerPanel ? h(PickerPanelContent, _extends({
+    key: "Picker"
+  }, props)) : null), h(Slide, null, props.showFileEditor ? h(EditorPanel, _extends({
+    key: "Editor"
+  }, props)) : null), h("div", {
+    className: "uppy-Dashboard-progressindicators"
+  }, props.progressindicators.map(function (target) {
+    return props.getPlugin(target.id).render(props.state);
+  })))));
+  return (// Wrap it for RTL language support
+    h("div", {
+      className: wrapperClassName,
+      dir: props.direction
+    }, dashboard)
+  );
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/EditorPanel.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/EditorPanel.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+function EditorPanel(props) {
+  var file = this.props.files[this.props.fileCardFor];
+  return h("div", {
+    className: classNames('uppy-DashboardContent-panel', props.className),
+    role: "tabpanel",
+    "data-uppy-panelType": "FileEditor",
+    id: "uppy-DashboardContent-panel--editor"
+  }, h("div", {
+    className: "uppy-DashboardContent-bar"
+  }, h("div", {
+    className: "uppy-DashboardContent-title",
+    role: "heading",
+    "aria-level": "1"
+  }, props.i18nArray('editing', {
+    file: h("span", {
+      className: "uppy-DashboardContent-titleFile"
+    }, file.meta ? file.meta.name : file.name)
+  })), h("button", {
+    className: "uppy-DashboardContent-back",
+    type: "button",
+    onClick: props.hideAllPanels
+  }, props.i18n('cancel')), h("button", {
+    className: "uppy-DashboardContent-save",
+    type: "button",
+    onClick: props.saveFileEditor
+  }, props.i18n('save'))), h("div", {
+    className: "uppy-DashboardContent-panelBody"
+  }, props.editors.map(function (target) {
+    return props.getPlugin(target.id).render(props.state);
+  })));
+}
+
+module.exports = EditorPanel;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FileCard/index.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FileCard/index.js ***!
+  \***********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h,
+    Component = _require.Component;
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var cuid = __webpack_require__(/*! cuid */ "./node_modules/cuid/index.js");
+
+var getFileTypeIcon = __webpack_require__(/*! ../../utils/getFileTypeIcon */ "./node_modules/@uppy/dashboard/lib/utils/getFileTypeIcon.js");
+
+var ignoreEvent = __webpack_require__(/*! ../../utils/ignoreEvent.js */ "./node_modules/@uppy/dashboard/lib/utils/ignoreEvent.js");
+
+var FilePreview = __webpack_require__(/*! ../FilePreview */ "./node_modules/@uppy/dashboard/lib/components/FilePreview.js");
+
+var FileCard = /*#__PURE__*/function (_Component) {
+  _inheritsLoose(FileCard, _Component);
+
+  function FileCard(props) {
+    var _this;
+
+    _this = _Component.call(this, props) || this;
+
+    _this.updateMeta = function (newVal, name) {
+      var _extends2;
+
+      _this.setState({
+        formState: _extends({}, _this.state.formState, (_extends2 = {}, _extends2[name] = newVal, _extends2))
+      });
+    };
+
+    _this.form = document.createElement('form');
+
+    _this.handleSave = function (e) {
+      e.preventDefault();
+      var fileID = _this.props.fileCardFor;
+
+      _this.props.saveFileCard(_this.state.formState, fileID);
+    };
+
+    _this.handleCancel = function () {
+      _this.props.toggleFileCard(false);
+    };
+
+    _this.renderMetaFields = function () {
+      var metaFields = _this.getMetaFields() || [];
+      var fieldCSSClasses = {
+        text: 'uppy-u-reset uppy-c-textInput uppy-Dashboard-FileCard-input'
+      };
+      return metaFields.map(function (field) {
+        var id = "uppy-Dashboard-FileCard-input-" + field.id;
+
+        var required = _this.props.requiredMetaFields.includes(field.id);
+
+        return h("fieldset", {
+          key: field.id,
+          className: "uppy-Dashboard-FileCard-fieldset"
+        }, h("label", {
+          className: "uppy-Dashboard-FileCard-label",
+          htmlFor: id
+        }, field.name), field.render !== undefined ? field.render({
+          value: _this.state.formState[field.id],
+          onChange: function onChange(newVal) {
+            return _this.updateMeta(newVal, field.id);
+          },
+          fieldCSSClasses: fieldCSSClasses,
+          required: required,
+          form: _this.form.id
+        }, h) : h("input", {
+          className: fieldCSSClasses.text,
+          id: id,
+          form: _this.form.id,
+          type: field.type || 'text',
+          required: required,
+          value: _this.state.formState[field.id],
+          placeholder: field.placeholder,
+          onInput: function onInput(ev) {
+            return _this.updateMeta(ev.target.value, field.id);
+          },
+          "data-uppy-super-focusable": true
+        }));
+      });
+    };
+
+    var file = _this.props.files[_this.props.fileCardFor];
+
+    var _metaFields = _this.getMetaFields() || [];
+
+    var storedMetaData = {};
+
+    _metaFields.forEach(function (field) {
+      storedMetaData[field.id] = file.meta[field.id] || '';
+    });
+
+    _this.state = {
+      formState: storedMetaData
+    };
+    _this.form.id = cuid();
+    return _this;
+  }
+
+  var _proto = FileCard.prototype;
+
+  // TODO(aduh95): move this to `UNSAFE_componentWillMount` when updating to Preact X+.
+  _proto.componentWillMount = function componentWillMount() {
+    this.form.addEventListener('submit', this.handleSave);
+    document.body.appendChild(this.form);
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    this.form.removeEventListener('submit', this.handleSave);
+    document.body.removeChild(this.form);
+  };
+
+  _proto.getMetaFields = function getMetaFields() {
+    return typeof this.props.metaFields === 'function' ? this.props.metaFields(this.props.files[this.props.fileCardFor]) : this.props.metaFields;
+  };
+
+  _proto.render = function render() {
+    var _this2 = this;
+
+    var file = this.props.files[this.props.fileCardFor];
+    var showEditButton = this.props.canEditFile(file);
+    return h("div", {
+      className: classNames('uppy-Dashboard-FileCard', this.props.className),
+      "data-uppy-panelType": "FileCard",
+      onDragOver: ignoreEvent,
+      onDragLeave: ignoreEvent,
+      onDrop: ignoreEvent,
+      onPaste: ignoreEvent
+    }, h("div", {
+      className: "uppy-DashboardContent-bar"
+    }, h("div", {
+      className: "uppy-DashboardContent-title",
+      role: "heading",
+      "aria-level": "1"
+    }, this.props.i18nArray('editing', {
+      file: h("span", {
+        className: "uppy-DashboardContent-titleFile"
+      }, file.meta ? file.meta.name : file.name)
+    })), h("button", {
+      className: "uppy-DashboardContent-back",
+      type: "button",
+      form: this.form.id,
+      title: this.props.i18n('finishEditingFile'),
+      onClick: this.handleCancel
+    }, this.props.i18n('cancel'))), h("div", {
+      className: "uppy-Dashboard-FileCard-inner"
+    }, h("div", {
+      className: "uppy-Dashboard-FileCard-preview",
+      style: {
+        backgroundColor: getFileTypeIcon(file.type).color
+      }
+    }, h(FilePreview, {
+      file: file
+    }), showEditButton && h("button", {
+      type: "button",
+      className: "uppy-u-reset uppy-c-btn uppy-Dashboard-FileCard-edit",
+      onClick: function onClick() {
+        return _this2.props.openFileEditor(file);
+      },
+      form: this.form.id
+    }, this.props.i18n('editFile'))), h("div", {
+      className: "uppy-Dashboard-FileCard-info"
+    }, this.renderMetaFields()), h("div", {
+      className: "uppy-Dashboard-FileCard-actions"
+    }, h("button", {
+      className: "uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Dashboard-FileCard-actionsBtn",
+      type: "submit",
+      form: this.form.id
+    }, this.props.i18n('saveChanges')), h("button", {
+      className: "uppy-u-reset uppy-c-btn uppy-c-btn-link uppy-Dashboard-FileCard-actionsBtn",
+      type: "button",
+      onClick: this.handleCancel,
+      form: this.form.id
+    }, this.props.i18n('cancel')))));
+  };
+
+  return FileCard;
+}(Component);
+
+module.exports = FileCard;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FileItem/Buttons/index.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FileItem/Buttons/index.js ***!
+  \*******************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var copyToClipboard = __webpack_require__(/*! ../../../utils/copyToClipboard */ "./node_modules/@uppy/dashboard/lib/utils/copyToClipboard.js");
+
+function EditButton(_ref) {
+  var file = _ref.file,
+      uploadInProgressOrComplete = _ref.uploadInProgressOrComplete,
+      metaFields = _ref.metaFields,
+      canEditFile = _ref.canEditFile,
+      i18n = _ref.i18n,
+      _onClick = _ref.onClick;
+
+  if (!uploadInProgressOrComplete && metaFields && metaFields.length > 0 || !uploadInProgressOrComplete && canEditFile(file)) {
+    return h("button", {
+      className: "uppy-u-reset uppy-Dashboard-Item-action uppy-Dashboard-Item-action--edit",
+      type: "button",
+      "aria-label": i18n('editFile') + " " + file.meta.name,
+      title: i18n('editFile'),
+      onClick: function onClick() {
+        return _onClick();
+      }
+    }, h("svg", {
+      "aria-hidden": "true",
+      focusable: "false",
+      className: "uppy-c-icon",
+      width: "14",
+      height: "14",
+      viewBox: "0 0 14 14"
+    }, h("g", {
+      fillRule: "evenodd"
+    }, h("path", {
+      d: "M1.5 10.793h2.793A1 1 0 0 0 5 10.5L11.5 4a1 1 0 0 0 0-1.414L9.707.793a1 1 0 0 0-1.414 0l-6.5 6.5A1 1 0 0 0 1.5 8v2.793zm1-1V8L9 1.5l1.793 1.793-6.5 6.5H2.5z",
+      fillRule: "nonzero"
+    }), h("rect", {
+      x: "1",
+      y: "12.293",
+      width: "11",
+      height: "1",
+      rx: ".5"
+    }), h("path", {
+      fillRule: "nonzero",
+      d: "M6.793 2.5L9.5 5.207l.707-.707L7.5 1.793z"
+    }))));
+  }
+
+  return null;
+}
+
+function RemoveButton(_ref2) {
+  var i18n = _ref2.i18n,
+      _onClick2 = _ref2.onClick;
+  return h("button", {
+    className: "uppy-u-reset uppy-Dashboard-Item-action uppy-Dashboard-Item-action--remove",
+    type: "button",
+    "aria-label": i18n('removeFile'),
+    title: i18n('removeFile'),
+    onClick: function onClick() {
+      return _onClick2();
+    }
+  }, h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "18",
+    height: "18",
+    viewBox: "0 0 18 18"
+  }, h("path", {
+    d: "M9 0C4.034 0 0 4.034 0 9s4.034 9 9 9 9-4.034 9-9-4.034-9-9-9z"
+  }), h("path", {
+    fill: "#FFF",
+    d: "M13 12.222l-.778.778L9 9.778 5.778 13 5 12.222 8.222 9 5 5.778 5.778 5 9 8.222 12.222 5l.778.778L9.778 9z"
+  })));
+}
+
+var copyLinkToClipboard = function copyLinkToClipboard(event, props) {
+  copyToClipboard(props.file.uploadURL, props.i18n('copyLinkToClipboardFallback')).then(function () {
+    props.log('Link copied to clipboard.');
+    props.info(props.i18n('copyLinkToClipboardSuccess'), 'info', 3000);
+  }).catch(props.log) // avoid losing focus
+  .then(function () {
+    return event.target.focus({
+      preventScroll: true
+    });
+  });
+};
+
+function CopyLinkButton(props) {
+  return h("button", {
+    className: "uppy-u-reset uppy-Dashboard-Item-action uppy-Dashboard-Item-action--copyLink",
+    type: "button",
+    "aria-label": props.i18n('copyLink'),
+    title: props.i18n('copyLink'),
+    onClick: function onClick(event) {
+      return copyLinkToClipboard(event, props);
+    }
+  }, h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "14",
+    height: "14",
+    viewBox: "0 0 14 12"
+  }, h("path", {
+    d: "M7.94 7.703a2.613 2.613 0 0 1-.626 2.681l-.852.851a2.597 2.597 0 0 1-1.849.766A2.616 2.616 0 0 1 2.764 7.54l.852-.852a2.596 2.596 0 0 1 2.69-.625L5.267 7.099a1.44 1.44 0 0 0-.833.407l-.852.851a1.458 1.458 0 0 0 1.03 2.486c.39 0 .755-.152 1.03-.426l.852-.852c.231-.231.363-.522.406-.824l1.04-1.038zm4.295-5.937A2.596 2.596 0 0 0 10.387 1c-.698 0-1.355.272-1.849.766l-.852.851a2.614 2.614 0 0 0-.624 2.688l1.036-1.036c.041-.304.173-.6.407-.833l.852-.852c.275-.275.64-.426 1.03-.426a1.458 1.458 0 0 1 1.03 2.486l-.852.851a1.442 1.442 0 0 1-.824.406l-1.04 1.04a2.596 2.596 0 0 0 2.683-.628l.851-.85a2.616 2.616 0 0 0 0-3.697zm-6.88 6.883a.577.577 0 0 0 .82 0l3.474-3.474a.579.579 0 1 0-.819-.82L5.355 7.83a.579.579 0 0 0 0 .819z"
+  })));
+}
+
+module.exports = function Buttons(props) {
+  var file = props.file,
+      uploadInProgressOrComplete = props.uploadInProgressOrComplete,
+      canEditFile = props.canEditFile,
+      metaFields = props.metaFields,
+      showLinkToFileUploadResult = props.showLinkToFileUploadResult,
+      showRemoveButton = props.showRemoveButton,
+      i18n = props.i18n,
+      removeFile = props.removeFile,
+      toggleFileCard = props.toggleFileCard,
+      openFileEditor = props.openFileEditor,
+      log = props.log,
+      info = props.info;
+
+  var editAction = function editAction() {
+    if (metaFields && metaFields.length > 0) {
+      toggleFileCard(true, file.id);
+    } else {
+      openFileEditor(file);
+    }
+  };
+
+  return h("div", {
+    className: "uppy-Dashboard-Item-actionWrapper"
+  }, h(EditButton, {
+    i18n: i18n,
+    file: file,
+    uploadInProgressOrComplete: uploadInProgressOrComplete,
+    canEditFile: canEditFile,
+    metaFields: metaFields,
+    onClick: editAction
+  }), showLinkToFileUploadResult && file.uploadURL ? h(CopyLinkButton, {
+    file: file,
+    i18n: i18n,
+    info: info,
+    log: log
+  }) : null, showRemoveButton ? h(RemoveButton, {
+    i18n: i18n,
+    info: props.info,
+    log: props.log,
+    onClick: function onClick() {
+      return removeFile(file.id, 'removed-by-user');
+    }
+  }) : null);
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FileItem/FileInfo/index.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FileItem/FileInfo/index.js ***!
+  \********************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var prettierBytes = __webpack_require__(/*! @transloadit/prettier-bytes */ "./node_modules/@transloadit/prettier-bytes/prettierBytes.js");
+
+var truncateString = __webpack_require__(/*! @uppy/utils/lib/truncateString */ "./node_modules/@uppy/utils/lib/truncateString.js");
+
+var renderAcquirerIcon = function renderAcquirerIcon(acquirer, props) {
+  return h("span", {
+    title: props.i18n('fileSource', {
+      name: acquirer.name
+    })
+  }, acquirer.icon());
+};
+
+var renderFileName = function renderFileName(props) {
+  // Take up at most 2 lines on any screen
+  var maxNameLength; // For very small mobile screens
+
+  if (props.containerWidth <= 352) {
+    maxNameLength = 35; // For regular mobile screens
+  } else if (props.containerWidth <= 576) {
+    maxNameLength = 60; // For desktops
+  } else {
+    maxNameLength = 30;
+  }
+
+  return h("div", {
+    className: "uppy-Dashboard-Item-name",
+    title: props.file.meta.name
+  }, truncateString(props.file.meta.name, maxNameLength));
+};
+
+var renderFileSize = function renderFileSize(props) {
+  return props.file.size && h("div", {
+    className: "uppy-Dashboard-Item-statusSize"
+  }, prettierBytes(props.file.size));
+};
+
+var ReSelectButton = function ReSelectButton(props) {
+  return props.file.isGhost && h("span", null, " \u2022 ", h("button", {
+    className: "uppy-u-reset uppy-c-btn uppy-Dashboard-Item-reSelect",
+    type: "button",
+    onClick: props.toggleAddFilesPanel
+  }, props.i18n('reSelect')));
+};
+
+var ErrorButton = function ErrorButton(_ref) {
+  var file = _ref.file,
+      onClick = _ref.onClick;
+
+  if (file.error) {
+    return h("span", {
+      className: "uppy-Dashboard-Item-errorDetails",
+      "aria-label": file.error,
+      "data-microtip-position": "bottom",
+      "data-microtip-size": "medium",
+      role: "tooltip",
+      onClick: onClick
+    }, "?");
+  }
+
+  return null;
+};
+
+module.exports = function FileInfo(props) {
+  return h("div", {
+    className: "uppy-Dashboard-Item-fileInfo",
+    "data-uppy-file-source": props.file.source
+  }, renderFileName(props), h("div", {
+    className: "uppy-Dashboard-Item-status"
+  }, renderFileSize(props), ReSelectButton(props), h(ErrorButton, {
+    file: props.file,
+    onClick: function onClick() {
+      alert(props.file.error);
+    }
+  })));
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FileItem/FilePreviewAndLink/index.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FileItem/FilePreviewAndLink/index.js ***!
+  \******************************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var FilePreview = __webpack_require__(/*! ../../FilePreview */ "./node_modules/@uppy/dashboard/lib/components/FilePreview.js");
+
+var getFileTypeIcon = __webpack_require__(/*! ../../../utils/getFileTypeIcon */ "./node_modules/@uppy/dashboard/lib/utils/getFileTypeIcon.js");
+
+module.exports = function FilePreviewAndLink(props) {
+  return h("div", {
+    className: "uppy-Dashboard-Item-previewInnerWrap",
+    style: {
+      backgroundColor: getFileTypeIcon(props.file.type).color
+    }
+  }, props.showLinkToFileUploadResult && props.file.uploadURL && h("a", {
+    className: "uppy-Dashboard-Item-previewLink",
+    href: props.file.uploadURL,
+    rel: "noreferrer noopener",
+    target: "_blank",
+    "aria-label": props.file.meta.name
+  }), h(FilePreview, {
+    file: props.file
+  }));
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FileItem/FileProgress/index.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FileItem/FileProgress/index.js ***!
+  \************************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+function onPauseResumeCancelRetry(props) {
+  if (props.isUploaded) return;
+
+  if (props.error && !props.hideRetryButton) {
+    props.retryUpload(props.file.id);
+    return;
+  }
+
+  if (props.resumableUploads && !props.hidePauseResumeButton) {
+    props.pauseUpload(props.file.id);
+  } else if (props.individualCancellation && !props.hideCancelButton) {
+    props.cancelUpload(props.file.id);
+  }
+}
+
+function progressIndicatorTitle(props) {
+  if (props.isUploaded) {
+    return props.i18n('uploadComplete');
+  }
+
+  if (props.error) {
+    return props.i18n('retryUpload');
+  }
+
+  if (props.resumableUploads) {
+    if (props.file.isPaused) {
+      return props.i18n('resumeUpload');
+    }
+
+    return props.i18n('pauseUpload');
+  }
+
+  if (props.individualCancellation) {
+    return props.i18n('cancelUpload');
+  }
+
+  return '';
+}
+
+function ProgressIndicatorButton(props) {
+  return h("div", {
+    className: "uppy-Dashboard-Item-progress"
+  }, h("button", {
+    className: "uppy-u-reset uppy-Dashboard-Item-progressIndicator",
+    type: "button",
+    "aria-label": progressIndicatorTitle(props),
+    title: progressIndicatorTitle(props),
+    onClick: function onClick() {
+      return onPauseResumeCancelRetry(props);
+    }
+  }, props.children));
+}
+
+function ProgressCircleContainer(_ref) {
+  var children = _ref.children;
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    width: "70",
+    height: "70",
+    viewBox: "0 0 36 36",
+    className: "uppy-c-icon uppy-Dashboard-Item-progressIcon--circle"
+  }, children);
+}
+
+function ProgressCircle(_ref2) {
+  var progress = _ref2.progress;
+  // circle length equals 2 * PI * R
+  var circleLength = 2 * Math.PI * 15;
+  return h("g", null, h("circle", {
+    className: "uppy-Dashboard-Item-progressIcon--bg",
+    r: "15",
+    cx: "18",
+    cy: "18",
+    "stroke-width": "2",
+    fill: "none"
+  }), h("circle", {
+    className: "uppy-Dashboard-Item-progressIcon--progress",
+    r: "15",
+    cx: "18",
+    cy: "18",
+    transform: "rotate(-90, 18, 18)",
+    fill: "none",
+    "stroke-width": "2",
+    "stroke-dasharray": circleLength,
+    "stroke-dashoffset": circleLength - circleLength / 100 * progress
+  }));
+}
+
+module.exports = function FileProgress(props) {
+  // Nothing if upload has not started
+  if (!props.file.progress.uploadStarted) {
+    return null;
+  } // Green checkmark when complete
+
+
+  if (props.isUploaded) {
+    return h("div", {
+      className: "uppy-Dashboard-Item-progress"
+    }, h("div", {
+      className: "uppy-Dashboard-Item-progressIndicator"
+    }, h(ProgressCircleContainer, null, h("circle", {
+      r: "15",
+      cx: "18",
+      cy: "18",
+      fill: "#1bb240"
+    }), h("polygon", {
+      className: "uppy-Dashboard-Item-progressIcon--check",
+      transform: "translate(2, 3)",
+      points: "14 22.5 7 15.2457065 8.99985857 13.1732815 14 18.3547104 22.9729883 9 25 11.1005634"
+    }))));
+  }
+
+  if (props.recoveredState) {
+    return;
+  } // Retry button for error
+
+
+  if (props.error && !props.hideRetryButton) {
+    return h(ProgressIndicatorButton, props, h("svg", {
+      "aria-hidden": "true",
+      focusable: "false",
+      className: "uppy-c-icon uppy-Dashboard-Item-progressIcon--retry",
+      width: "28",
+      height: "31",
+      viewBox: "0 0 16 19"
+    }, h("path", {
+      d: "M16 11a8 8 0 1 1-8-8v2a6 6 0 1 0 6 6h2z"
+    }), h("path", {
+      d: "M7.9 3H10v2H7.9z"
+    }), h("path", {
+      d: "M8.536.5l3.535 3.536-1.414 1.414L7.12 1.914z"
+    }), h("path", {
+      d: "M10.657 2.621l1.414 1.415L8.536 7.57 7.12 6.157z"
+    })));
+  } // Pause/resume button for resumable uploads
+
+
+  if (props.resumableUploads && !props.hidePauseResumeButton) {
+    return h(ProgressIndicatorButton, props, h(ProgressCircleContainer, null, h(ProgressCircle, {
+      progress: props.file.progress.percentage
+    }), props.file.isPaused ? h("polygon", {
+      className: "uppy-Dashboard-Item-progressIcon--play",
+      transform: "translate(3, 3)",
+      points: "12 20 12 10 20 15"
+    }) : h("g", {
+      className: "uppy-Dashboard-Item-progressIcon--pause",
+      transform: "translate(14.5, 13)"
+    }, h("rect", {
+      x: "0",
+      y: "0",
+      width: "2",
+      height: "10",
+      rx: "0"
+    }), h("rect", {
+      x: "5",
+      y: "0",
+      width: "2",
+      height: "10",
+      rx: "0"
+    }))));
+  } // Cancel button for non-resumable uploads if individualCancellation is supported (not bundled)
+
+
+  if (!props.resumableUploads && props.individualCancellation && !props.hideCancelButton) {
+    return h(ProgressIndicatorButton, props, h(ProgressCircleContainer, null, h(ProgressCircle, {
+      progress: props.file.progress.percentage
+    }), h("polygon", {
+      className: "cancel",
+      transform: "translate(2, 2)",
+      points: "19.8856516 11.0625 16 14.9481516 12.1019737 11.0625 11.0625 12.1143484 14.9481516 16 11.0625 19.8980263 12.1019737 20.9375 16 17.0518484 19.8856516 20.9375 20.9375 19.8980263 17.0518484 16 20.9375 12"
+    })));
+  } // Just progress when buttons are disabled
+
+
+  return h("div", {
+    className: "uppy-Dashboard-Item-progress"
+  }, h("div", {
+    className: "uppy-Dashboard-Item-progressIndicator"
+  }, h(ProgressCircleContainer, null, h(ProgressCircle, {
+    progress: props.file.progress.percentage
+  }))));
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FileItem/index.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FileItem/index.js ***!
+  \***********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h,
+    Component = _require.Component;
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var shallowEqual = __webpack_require__(/*! is-shallow-equal */ "./node_modules/is-shallow-equal/index.js");
+
+var FilePreviewAndLink = __webpack_require__(/*! ./FilePreviewAndLink */ "./node_modules/@uppy/dashboard/lib/components/FileItem/FilePreviewAndLink/index.js");
+
+var FileProgress = __webpack_require__(/*! ./FileProgress */ "./node_modules/@uppy/dashboard/lib/components/FileItem/FileProgress/index.js");
+
+var FileInfo = __webpack_require__(/*! ./FileInfo */ "./node_modules/@uppy/dashboard/lib/components/FileItem/FileInfo/index.js");
+
+var Buttons = __webpack_require__(/*! ./Buttons */ "./node_modules/@uppy/dashboard/lib/components/FileItem/Buttons/index.js");
+
+module.exports = /*#__PURE__*/function (_Component) {
+  _inheritsLoose(FileItem, _Component);
+
+  function FileItem() {
+    return _Component.apply(this, arguments) || this;
+  }
+
+  var _proto = FileItem.prototype;
+
+  _proto.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+    return !shallowEqual(this.props, nextProps);
+  };
+
+  _proto.componentDidMount = function componentDidMount() {
+    var file = this.props.file;
+
+    if (!file.preview) {
+      this.props.handleRequestThumbnail(file);
+    }
+  } // VirtualList mounts FileItems again and they emit `thumbnail:request`
+  // Otherwise thumbnails are broken or missing after Golden Retriever restores files
+  ;
+
+  _proto.componentDidUpdate = function componentDidUpdate() {
+    var file = this.props.file;
+
+    if (!file.preview) {
+      this.props.handleRequestThumbnail(file);
+    }
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    var file = this.props.file;
+
+    if (!file.preview) {
+      this.props.handleCancelThumbnail(file);
+    }
+  };
+
+  _proto.render = function render() {
+    var file = this.props.file;
+    var isProcessing = file.progress.preprocess || file.progress.postprocess;
+    var isUploaded = file.progress.uploadComplete && !isProcessing && !file.error;
+    var uploadInProgressOrComplete = file.progress.uploadStarted || isProcessing;
+    var uploadInProgress = file.progress.uploadStarted && !file.progress.uploadComplete || isProcessing;
+    var error = file.error || false; // File that Golden Retriever was able to partly restore (only meta, not blob),
+    // users still need to re-add it, so it’s a ghost
+
+    var isGhost = file.isGhost;
+    var showRemoveButton = this.props.individualCancellation ? !isUploaded : !uploadInProgress && !isUploaded;
+
+    if (isUploaded && this.props.showRemoveButtonAfterComplete) {
+      showRemoveButton = true;
+    }
+
+    var dashboardItemClass = classNames({
+      'uppy-Dashboard-Item': true,
+      'is-inprogress': uploadInProgress && !this.props.recoveredState,
+      'is-processing': isProcessing,
+      'is-complete': isUploaded,
+      'is-error': !!error,
+      'is-resumable': this.props.resumableUploads,
+      'is-noIndividualCancellation': !this.props.individualCancellation,
+      'is-ghost': isGhost
+    });
+    return h("div", {
+      className: dashboardItemClass,
+      id: "uppy_" + file.id,
+      role: this.props.role
+    }, h("div", {
+      className: "uppy-Dashboard-Item-preview"
+    }, h(FilePreviewAndLink, {
+      file: file,
+      showLinkToFileUploadResult: this.props.showLinkToFileUploadResult
+    }), h(FileProgress, {
+      file: file,
+      error: error,
+      isUploaded: isUploaded,
+      hideRetryButton: this.props.hideRetryButton,
+      hideCancelButton: this.props.hideCancelButton,
+      hidePauseResumeButton: this.props.hidePauseResumeButton,
+      recoveredState: this.props.recoveredState,
+      showRemoveButtonAfterComplete: this.props.showRemoveButtonAfterComplete,
+      resumableUploads: this.props.resumableUploads,
+      individualCancellation: this.props.individualCancellation,
+      pauseUpload: this.props.pauseUpload,
+      cancelUpload: this.props.cancelUpload,
+      retryUpload: this.props.retryUpload,
+      i18n: this.props.i18n
+    })), h("div", {
+      className: "uppy-Dashboard-Item-fileInfoAndButtons"
+    }, h(FileInfo, {
+      file: file,
+      id: this.props.id,
+      acquirers: this.props.acquirers,
+      containerWidth: this.props.containerWidth,
+      i18n: this.props.i18n,
+      toggleAddFilesPanel: this.props.toggleAddFilesPanel
+    }), h(Buttons, {
+      file: file,
+      metaFields: this.props.metaFields,
+      showLinkToFileUploadResult: this.props.showLinkToFileUploadResult,
+      showRemoveButton: showRemoveButton,
+      canEditFile: this.props.canEditFile,
+      uploadInProgressOrComplete: uploadInProgressOrComplete,
+      removeFile: this.props.removeFile,
+      toggleFileCard: this.props.toggleFileCard,
+      openFileEditor: this.props.openFileEditor,
+      i18n: this.props.i18n,
+      log: this.props.log,
+      info: this.props.info
+    })));
+  };
+
+  return FileItem;
+}(Component);
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FileList.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FileList.js ***!
+  \*****************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+var FileItem = __webpack_require__(/*! ./FileItem/index.js */ "./node_modules/@uppy/dashboard/lib/components/FileItem/index.js");
+
+var VirtualList = __webpack_require__(/*! ./VirtualList */ "./node_modules/@uppy/dashboard/lib/components/VirtualList.js");
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+function chunks(list, size) {
+  var chunked = [];
+  var currentChunk = [];
+  list.forEach(function (item, i) {
+    if (currentChunk.length < size) {
+      currentChunk.push(item);
+    } else {
+      chunked.push(currentChunk);
+      currentChunk = [item];
+    }
+  });
+  if (currentChunk.length) chunked.push(currentChunk);
+  return chunked;
+}
+
+module.exports = function (props) {
+  var noFiles = props.totalFileCount === 0;
+  var dashboardFilesClass = classNames('uppy-Dashboard-files', {
+    'uppy-Dashboard-files--noFiles': noFiles
+  }); // It's not great that this is hardcoded!
+  // It's ESPECIALLY not great that this is checking against `itemsPerRow`!
+
+  var rowHeight = props.itemsPerRow === 1 // Mobile
+  ? 71 // 190px height + 2 * 5px margin
+  : 200;
+  var fileProps = {
+    // FIXME This is confusing, it's actually the Dashboard's plugin ID
+    id: props.id,
+    error: props.error,
+    // TODO move this to context
+    i18n: props.i18n,
+    log: props.log,
+    info: props.info,
+    // features
+    acquirers: props.acquirers,
+    resumableUploads: props.resumableUploads,
+    individualCancellation: props.individualCancellation,
+    // visual options
+    hideRetryButton: props.hideRetryButton,
+    hidePauseResumeButton: props.hidePauseResumeButton,
+    hideCancelButton: props.hideCancelButton,
+    showLinkToFileUploadResult: props.showLinkToFileUploadResult,
+    showRemoveButtonAfterComplete: props.showRemoveButtonAfterComplete,
+    isWide: props.isWide,
+    metaFields: props.metaFields,
+    recoveredState: props.recoveredState,
+    // callbacks
+    retryUpload: props.retryUpload,
+    pauseUpload: props.pauseUpload,
+    cancelUpload: props.cancelUpload,
+    toggleFileCard: props.toggleFileCard,
+    removeFile: props.removeFile,
+    handleRequestThumbnail: props.handleRequestThumbnail,
+    handleCancelThumbnail: props.handleCancelThumbnail
+  };
+
+  var sortByGhostComesFirst = function sortByGhostComesFirst(file1, file2) {
+    return props.files[file2].isGhost - props.files[file1].isGhost;
+  }; // Sort files by file.isGhost, ghost files first, only if recoveredState is present
+
+
+  var files = Object.keys(props.files);
+  if (props.recoveredState) files.sort(sortByGhostComesFirst);
+  var rows = chunks(files, props.itemsPerRow);
+
+  function renderRow(row) {
+    return (// The `role="presentation` attribute ensures that the list items are properly associated with the `VirtualList` element
+      // We use the first file ID as the key—this should not change across scroll rerenders
+      h("div", {
+        role: "presentation",
+        key: row[0]
+      }, row.map(function (fileID) {
+        return h(FileItem, _extends({
+          key: fileID
+        }, fileProps, {
+          role: "listitem",
+          openFileEditor: props.openFileEditor,
+          canEditFile: props.canEditFile,
+          toggleAddFilesPanel: props.toggleAddFilesPanel,
+          file: props.files[fileID]
+        }));
+      }))
+    );
+  }
+
+  return h(VirtualList, {
+    class: dashboardFilesClass,
+    role: "list",
+    data: rows,
+    renderRow: renderRow,
+    rowHeight: rowHeight
+  });
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/FilePreview.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/FilePreview.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var getFileTypeIcon = __webpack_require__(/*! ../utils/getFileTypeIcon */ "./node_modules/@uppy/dashboard/lib/utils/getFileTypeIcon.js");
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+module.exports = function FilePreview(props) {
+  var file = props.file;
+
+  if (file.preview) {
+    return h("img", {
+      className: "uppy-Dashboard-Item-previewImg",
+      alt: file.name,
+      src: file.preview
+    });
+  }
+
+  var _getFileTypeIcon = getFileTypeIcon(file.type),
+      color = _getFileTypeIcon.color,
+      icon = _getFileTypeIcon.icon;
+
+  return h("div", {
+    className: "uppy-Dashboard-Item-previewIconWrap"
+  }, h("span", {
+    className: "uppy-Dashboard-Item-previewIcon",
+    style: {
+      color: color
+    }
+  }, icon), h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-Dashboard-Item-previewIconBg",
+    width: "58",
+    height: "76",
+    viewBox: "0 0 58 76"
+  }, h("rect", {
+    fill: "#FFF",
+    width: "58",
+    height: "76",
+    rx: "3",
+    fillRule: "evenodd"
+  })));
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/PickerPanelContent.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/PickerPanelContent.js ***!
+  \***************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var ignoreEvent = __webpack_require__(/*! ../utils/ignoreEvent.js */ "./node_modules/@uppy/dashboard/lib/utils/ignoreEvent.js");
+
+function PickerPanelContent(props) {
+  return h("div", {
+    className: classNames('uppy-DashboardContent-panel', props.className),
+    role: "tabpanel",
+    "data-uppy-panelType": "PickerPanel",
+    id: "uppy-DashboardContent-panel--" + props.activePickerPanel.id,
+    onDragOver: ignoreEvent,
+    onDragLeave: ignoreEvent,
+    onDrop: ignoreEvent,
+    onPaste: ignoreEvent
+  }, h("div", {
+    className: "uppy-DashboardContent-bar"
+  }, h("div", {
+    className: "uppy-DashboardContent-title",
+    role: "heading",
+    "aria-level": "1"
+  }, props.i18n('importFrom', {
+    name: props.activePickerPanel.name
+  })), h("button", {
+    className: "uppy-DashboardContent-back",
+    type: "button",
+    onClick: props.hideAllPanels
+  }, props.i18n('cancel'))), h("div", {
+    className: "uppy-DashboardContent-panelBody"
+  }, props.getPlugin(props.activePickerPanel.id).render(props.state)));
+}
+
+module.exports = PickerPanelContent;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/PickerPanelTopBar.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/PickerPanelTopBar.js ***!
+  \**************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var uploadStates = {
+  STATE_ERROR: 'error',
+  STATE_WAITING: 'waiting',
+  STATE_PREPROCESSING: 'preprocessing',
+  STATE_UPLOADING: 'uploading',
+  STATE_POSTPROCESSING: 'postprocessing',
+  STATE_COMPLETE: 'complete',
+  STATE_PAUSED: 'paused'
+};
+
+function getUploadingState(isAllErrored, isAllComplete, isAllPaused, files) {
+  if (files === void 0) {
+    files = {};
+  }
+
+  if (isAllErrored) {
+    return uploadStates.STATE_ERROR;
+  }
+
+  if (isAllComplete) {
+    return uploadStates.STATE_COMPLETE;
+  }
+
+  if (isAllPaused) {
+    return uploadStates.STATE_PAUSED;
+  }
+
+  var state = uploadStates.STATE_WAITING;
+  var fileIDs = Object.keys(files);
+
+  for (var i = 0; i < fileIDs.length; i++) {
+    var progress = files[fileIDs[i]].progress; // If ANY files are being uploaded right now, show the uploading state.
+
+    if (progress.uploadStarted && !progress.uploadComplete) {
+      return uploadStates.STATE_UPLOADING;
+    } // If files are being preprocessed AND postprocessed at this time, we show the
+    // preprocess state. If any files are being uploaded we show uploading.
+
+
+    if (progress.preprocess && state !== uploadStates.STATE_UPLOADING) {
+      state = uploadStates.STATE_PREPROCESSING;
+    } // If NO files are being preprocessed or uploaded right now, but some files are
+    // being postprocessed, show the postprocess state.
+
+
+    if (progress.postprocess && state !== uploadStates.STATE_UPLOADING && state !== uploadStates.STATE_PREPROCESSING) {
+      state = uploadStates.STATE_POSTPROCESSING;
+    }
+  }
+
+  return state;
+}
+
+function UploadStatus(props) {
+  var uploadingState = getUploadingState(props.isAllErrored, props.isAllComplete, props.isAllPaused, props.files);
+
+  switch (uploadingState) {
+    case 'uploading':
+      return props.i18n('uploadingXFiles', {
+        smart_count: props.inProgressNotPausedFiles.length
+      });
+
+    case 'preprocessing':
+    case 'postprocessing':
+      return props.i18n('processingXFiles', {
+        smart_count: props.processingFiles.length
+      });
+
+    case 'paused':
+      return props.i18n('uploadPaused');
+
+    case 'waiting':
+      return props.i18n('xFilesSelected', {
+        smart_count: props.newFiles.length
+      });
+
+    case 'complete':
+      return props.i18n('uploadComplete');
+  }
+}
+
+function PanelTopBar(props) {
+  var allowNewUpload = props.allowNewUpload; // TODO maybe this should be done in ../index.js, then just pass that down as `allowNewUpload`
+
+  if (allowNewUpload && props.maxNumberOfFiles) {
+    allowNewUpload = props.totalFileCount < props.maxNumberOfFiles;
+  }
+
+  return h("div", {
+    className: "uppy-DashboardContent-bar"
+  }, !props.isAllComplete && !props.hideCancelButton ? h("button", {
+    className: "uppy-DashboardContent-back",
+    type: "button",
+    onClick: props.cancelAll
+  }, props.i18n('cancel')) : h("div", null), h("div", {
+    className: "uppy-DashboardContent-title",
+    role: "heading",
+    "aria-level": "1"
+  }, h(UploadStatus, props)), allowNewUpload ? h("button", {
+    className: "uppy-DashboardContent-addMore",
+    type: "button",
+    "aria-label": props.i18n('addMoreFiles'),
+    title: props.i18n('addMoreFiles'),
+    onClick: function onClick() {
+      return props.toggleAddFilesPanel(true);
+    }
+  }, h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "15",
+    height: "15",
+    viewBox: "0 0 15 15"
+  }, h("path", {
+    d: "M8 6.5h6a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H8v6a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V8h-6a.5.5 0 0 1-.5-.5V7a.5.5 0 0 1 .5-.5h6v-6A.5.5 0 0 1 7 0h.5a.5.5 0 0 1 .5.5v6z"
+  })), h("span", {
+    className: "uppy-DashboardContent-addMoreCaption"
+  }, props.i18n('addMore'))) : h("div", null));
+}
+
+module.exports = PanelTopBar;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/Slide.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/Slide.js ***!
+  \**************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    cloneElement = _require.cloneElement,
+    Component = _require.Component;
+
+var classNames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var transitionName = 'uppy-transition-slideDownUp';
+var duration = 250;
+/**
+ * Vertical slide transition.
+ *
+ * This can take a _single_ child component, which _must_ accept a `className` prop.
+ *
+ * Currently this is specific to the `uppy-transition-slideDownUp` transition,
+ * but it should be simple to extend this for any type of single-element
+ * transition by setting the CSS name and duration as props.
+ */
+
+var Slide = /*#__PURE__*/function (_Component) {
+  _inheritsLoose(Slide, _Component);
+
+  function Slide(props) {
+    var _this;
+
+    _this = _Component.call(this, props) || this;
+    _this.state = {
+      cachedChildren: null,
+      className: ''
+    };
+    return _this;
+  }
+
+  var _proto = Slide.prototype;
+
+  _proto.componentWillUpdate = function componentWillUpdate(nextProps) {
+    var _this2 = this;
+
+    var cachedChildren = this.state.cachedChildren;
+    var child = nextProps.children[0];
+    if (cachedChildren === child) return;
+    var patch = {
+      cachedChildren: child
+    }; // Enter transition
+
+    if (child && !cachedChildren) {
+      patch.className = transitionName + "-enter";
+      cancelAnimationFrame(this.animationFrame);
+      clearTimeout(this.leaveTimeout);
+      this.leaveTimeout = undefined;
+      this.animationFrame = requestAnimationFrame(function () {
+        // Force it to render before we add the active class
+        _this2.base.getBoundingClientRect();
+
+        _this2.setState({
+          className: transitionName + "-enter " + transitionName + "-enter-active"
+        });
+
+        _this2.enterTimeout = setTimeout(function () {
+          _this2.setState({
+            className: ''
+          });
+        }, duration);
+      });
+    } // Leave transition
+
+
+    if (cachedChildren && !child && this.leaveTimeout === undefined) {
+      patch.cachedChildren = cachedChildren;
+      patch.className = transitionName + "-leave";
+      cancelAnimationFrame(this.animationFrame);
+      clearTimeout(this.enterTimeout);
+      this.enterTimeout = undefined;
+      this.animationFrame = requestAnimationFrame(function () {
+        _this2.setState({
+          className: transitionName + "-leave " + transitionName + "-leave-active"
+        });
+
+        _this2.leaveTimeout = setTimeout(function () {
+          _this2.setState({
+            cachedChildren: null,
+            className: ''
+          });
+        }, duration);
+      });
+    }
+
+    this.setState(patch);
+  };
+
+  _proto.render = function render() {
+    var _this$state = this.state,
+        cachedChildren = _this$state.cachedChildren,
+        className = _this$state.className;
+
+    if (!cachedChildren) {
+      return null;
+    }
+
+    return cloneElement(cachedChildren, {
+      className: classNames(className, cachedChildren.attributes.className)
+    });
+  };
+
+  return Slide;
+}(Component);
+
+module.exports = Slide;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/components/VirtualList.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/components/VirtualList.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _excluded = ["data", "rowHeight", "renderRow", "overscanCount", "sync"];
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+/**
+ * Adapted from preact-virtual-list: https://github.com/developit/preact-virtual-list
+ *
+ * © 2016 Jason Miller
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * Adaptations:
+ * - Added role=presentation to helper elements
+ * - Tweaked styles for Uppy's Dashboard use case
+ */
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h,
+    Component = _require.Component;
+
+var STYLE_INNER = {
+  position: 'relative',
+  // Disabled for our use case: the wrapper elements around FileList already deal with overflow,
+  // and this additional property would hide things that we want to show.
+  //
+  // overflow: 'hidden',
+  width: '100%',
+  minHeight: '100%'
+};
+var STYLE_CONTENT = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  // Because the `top` value gets set to some offset, this `height` being 100% would make the scrollbar
+  // stretch far beyond the content. For our use case, the content div actually can get its height from
+  // the elements inside it, so we don't need to specify a `height` property at all.
+  //
+  // height: '100%',
+  width: '100%',
+  overflow: 'visible'
+};
+
+var VirtualList = /*#__PURE__*/function (_Component) {
+  _inheritsLoose(VirtualList, _Component);
+
+  function VirtualList(props) {
+    var _this;
+
+    _this = _Component.call(this, props) || this; // The currently focused node, used to retain focus when the visible rows change.
+    // To avoid update loops, this should not cause state updates, so it's kept as a plain property.
+
+    _this.handleResize = function () {
+      _this.resize();
+    };
+
+    _this.handleScroll = function () {
+      _this.setState({
+        offset: _this.base.scrollTop
+      });
+
+      if (_this.props.sync) {
+        _this.forceUpdate();
+      }
+    };
+
+    _this.focusElement = null;
+    _this.state = {
+      offset: 0,
+      height: 0
+    };
+    return _this;
+  }
+
+  var _proto = VirtualList.prototype;
+
+  _proto.resize = function resize() {
+    if (this.state.height !== this.base.offsetHeight) {
+      this.setState({
+        height: this.base.offsetHeight
+      });
+    }
+  };
+
+  _proto.componentWillUpdate = function componentWillUpdate() {
+    if (this.base.contains(document.activeElement)) {
+      this.focusElement = document.activeElement;
+    }
+  };
+
+  _proto.componentDidUpdate = function componentDidUpdate() {
+    // Maintain focus when rows are added and removed.
+    if (this.focusElement && this.focusElement.parentNode && document.activeElement !== this.focusElement) {
+      this.focusElement.focus();
+    }
+
+    this.focusElement = null;
+    this.resize();
+  };
+
+  _proto.componentDidMount = function componentDidMount() {
+    this.resize();
+    window.addEventListener('resize', this.handleResize);
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  };
+
+  _proto.render = function render(_ref) {
+    var data = _ref.data,
+        rowHeight = _ref.rowHeight,
+        renderRow = _ref.renderRow,
+        _ref$overscanCount = _ref.overscanCount,
+        overscanCount = _ref$overscanCount === void 0 ? 10 : _ref$overscanCount,
+        sync = _ref.sync,
+        props = _objectWithoutPropertiesLoose(_ref, _excluded);
+
+    var _this$state = this.state,
+        offset = _this$state.offset,
+        height = _this$state.height; // first visible row index
+
+    var start = Math.floor(offset / rowHeight); // actual number of visible rows (without overscan)
+
+    var visibleRowCount = Math.floor(height / rowHeight); // Overscan: render blocks of rows modulo an overscan row count
+    // This dramatically reduces DOM writes during scrolling
+
+    if (overscanCount) {
+      start = Math.max(0, start - start % overscanCount);
+      visibleRowCount += overscanCount;
+    } // last visible + overscan row index + padding to allow keyboard focus to travel past the visible area
+
+
+    var end = start + visibleRowCount + 4; // data slice currently in viewport plus overscan items
+
+    var selection = data.slice(start, end);
+
+    var styleInner = _extends({}, STYLE_INNER, {
+      height: data.length * rowHeight
+    });
+
+    var styleContent = _extends({}, STYLE_CONTENT, {
+      top: start * rowHeight
+    }); // The `role="presentation"` attributes ensure that these wrapper elements are not treated as list
+    // items by accessibility and outline tools.
+
+
+    return h("div", _extends({
+      onScroll: this.handleScroll
+    }, props), h("div", {
+      role: "presentation",
+      style: styleInner
+    }, h("div", {
+      role: "presentation",
+      style: styleContent
+    }, selection.map(renderRow))));
+  };
+
+  return VirtualList;
+}(Component);
+
+module.exports = VirtualList;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/index.js":
+/*!***************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/index.js ***!
+  \***************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _class, _temp;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+var _require2 = __webpack_require__(/*! @uppy/core */ "./node_modules/@uppy/core/lib/index.js"),
+    Plugin = _require2.Plugin;
+
+var Translator = __webpack_require__(/*! @uppy/utils/lib/Translator */ "./node_modules/@uppy/utils/lib/Translator.js");
+
+var DashboardUI = __webpack_require__(/*! ./components/Dashboard */ "./node_modules/@uppy/dashboard/lib/components/Dashboard.js");
+
+var StatusBar = __webpack_require__(/*! @uppy/status-bar */ "./node_modules/@uppy/status-bar/lib/index.js");
+
+var Informer = __webpack_require__(/*! @uppy/informer */ "./node_modules/@uppy/informer/lib/index.js");
+
+var ThumbnailGenerator = __webpack_require__(/*! @uppy/thumbnail-generator */ "./node_modules/@uppy/thumbnail-generator/lib/index.js");
+
+var findAllDOMElements = __webpack_require__(/*! @uppy/utils/lib/findAllDOMElements */ "./node_modules/@uppy/utils/lib/findAllDOMElements.js");
+
+var toArray = __webpack_require__(/*! @uppy/utils/lib/toArray */ "./node_modules/@uppy/utils/lib/toArray.js");
+
+var getDroppedFiles = __webpack_require__(/*! @uppy/utils/lib/getDroppedFiles */ "./node_modules/@uppy/utils/lib/getDroppedFiles/index.js");
+
+var getTextDirection = __webpack_require__(/*! @uppy/utils/lib/getTextDirection */ "./node_modules/@uppy/utils/lib/getTextDirection.js");
+
+var trapFocus = __webpack_require__(/*! ./utils/trapFocus */ "./node_modules/@uppy/dashboard/lib/utils/trapFocus.js");
+
+var cuid = __webpack_require__(/*! cuid */ "./node_modules/cuid/index.js");
+
+var ResizeObserver = __webpack_require__(/*! resize-observer-polyfill */ "./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js").default || __webpack_require__(/*! resize-observer-polyfill */ "./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js");
+
+var createSuperFocus = __webpack_require__(/*! ./utils/createSuperFocus */ "./node_modules/@uppy/dashboard/lib/utils/createSuperFocus.js");
+
+var memoize = __webpack_require__(/*! memoize-one */ "./node_modules/memoize-one/dist/memoize-one.esm.js").default || __webpack_require__(/*! memoize-one */ "./node_modules/memoize-one/dist/memoize-one.esm.js");
+
+var FOCUSABLE_ELEMENTS = __webpack_require__(/*! @uppy/utils/lib/FOCUSABLE_ELEMENTS */ "./node_modules/@uppy/utils/lib/FOCUSABLE_ELEMENTS.js");
+
+var TAB_KEY = 9;
+var ESC_KEY = 27;
+
+function createPromise() {
+  var o = {};
+  o.promise = new Promise(function (resolve, reject) {
+    o.resolve = resolve;
+    o.reject = reject;
+  });
+  return o;
+}
+
+function defaultPickerIcon() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    width: "30",
+    height: "30",
+    viewBox: "0 0 30 30"
+  }, h("path", {
+    d: "M15 30c8.284 0 15-6.716 15-15 0-8.284-6.716-15-15-15C6.716 0 0 6.716 0 15c0 8.284 6.716 15 15 15zm4.258-12.676v6.846h-8.426v-6.846H5.204l9.82-12.364 9.82 12.364H19.26z"
+  }));
+}
+/**
+ * Dashboard UI with previews, metadata editing, tabs for various services and more
+ */
+
+
+module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
+  _inheritsLoose(Dashboard, _Plugin);
+
+  function Dashboard(uppy, _opts) {
+    var _this;
+
+    _this = _Plugin.call(this, uppy, _opts) || this;
+
+    _this.setOptions = function (newOpts) {
+      _Plugin.prototype.setOptions.call(_assertThisInitialized(_this), newOpts);
+
+      _this.i18nInit();
+    };
+
+    _this.i18nInit = function () {
+      _this.translator = new Translator([_this.defaultLocale, _this.uppy.locale, _this.opts.locale]);
+      _this.i18n = _this.translator.translate.bind(_this.translator);
+      _this.i18nArray = _this.translator.translateArray.bind(_this.translator);
+
+      _this.setPluginState(); // so that UI re-renders and we see the updated locale
+
+    };
+
+    _this.removeTarget = function (plugin) {
+      var pluginState = _this.getPluginState(); // filter out the one we want to remove
+
+
+      var newTargets = pluginState.targets.filter(function (target) {
+        return target.id !== plugin.id;
+      });
+
+      _this.setPluginState({
+        targets: newTargets
+      });
+    };
+
+    _this.addTarget = function (plugin) {
+      var callerPluginId = plugin.id || plugin.constructor.name;
+      var callerPluginName = plugin.title || callerPluginId;
+      var callerPluginType = plugin.type;
+
+      if (callerPluginType !== 'acquirer' && callerPluginType !== 'progressindicator' && callerPluginType !== 'editor') {
+        var msg = 'Dashboard: can only be targeted by plugins of types: acquirer, progressindicator, editor';
+
+        _this.uppy.log(msg, 'error');
+
+        return;
+      }
+
+      var target = {
+        id: callerPluginId,
+        name: callerPluginName,
+        type: callerPluginType
+      };
+
+      var state = _this.getPluginState();
+
+      var newTargets = state.targets.slice();
+      newTargets.push(target);
+
+      _this.setPluginState({
+        targets: newTargets
+      });
+
+      return _this.el;
+    };
+
+    _this.hideAllPanels = function () {
+      var update = {
+        activePickerPanel: false,
+        showAddFilesPanel: false,
+        activeOverlayType: null,
+        fileCardFor: null,
+        showFileEditor: false
+      };
+
+      var current = _this.getPluginState();
+
+      if (current.activePickerPanel === update.activePickerPanel && current.showAddFilesPanel === update.showAddFilesPanel && current.showFileEditor === update.showFileEditor && current.activeOverlayType === update.activeOverlayType) {
+        // avoid doing a state update if nothing changed
+        return;
+      }
+
+      _this.setPluginState(update);
+    };
+
+    _this.showPanel = function (id) {
+      var _this$getPluginState = _this.getPluginState(),
+          targets = _this$getPluginState.targets;
+
+      var activePickerPanel = targets.filter(function (target) {
+        return target.type === 'acquirer' && target.id === id;
+      })[0];
+
+      _this.setPluginState({
+        activePickerPanel: activePickerPanel,
+        activeOverlayType: 'PickerPanel'
+      });
+    };
+
+    _this.canEditFile = function (file) {
+      var _this$getPluginState2 = _this.getPluginState(),
+          targets = _this$getPluginState2.targets;
+
+      var editors = _this._getEditors(targets);
+
+      return editors.some(function (target) {
+        return _this.uppy.getPlugin(target.id).canEditFile(file);
+      });
+    };
+
+    _this.openFileEditor = function (file) {
+      var _this$getPluginState3 = _this.getPluginState(),
+          targets = _this$getPluginState3.targets;
+
+      var editors = _this._getEditors(targets);
+
+      _this.setPluginState({
+        showFileEditor: true,
+        fileCardFor: file.id || null,
+        activeOverlayType: 'FileEditor'
+      });
+
+      editors.forEach(function (editor) {
+        _this.uppy.getPlugin(editor.id).selectFile(file);
+      });
+    };
+
+    _this.saveFileEditor = function () {
+      var _this$getPluginState4 = _this.getPluginState(),
+          targets = _this$getPluginState4.targets;
+
+      var editors = _this._getEditors(targets);
+
+      editors.forEach(function (editor) {
+        _this.uppy.getPlugin(editor.id).save();
+      });
+
+      _this.hideAllPanels();
+    };
+
+    _this.openModal = function () {
+      var _createPromise = createPromise(),
+          promise = _createPromise.promise,
+          resolve = _createPromise.resolve; // save scroll position
+
+
+      _this.savedScrollPosition = window.pageYOffset; // save active element, so we can restore focus when modal is closed
+
+      _this.savedActiveElement = document.activeElement;
+
+      if (_this.opts.disablePageScrollWhenModalOpen) {
+        document.body.classList.add('uppy-Dashboard-isFixed');
+      }
+
+      if (_this.opts.animateOpenClose && _this.getPluginState().isClosing) {
+        var handler = function handler() {
+          _this.setPluginState({
+            isHidden: false
+          });
+
+          _this.el.removeEventListener('animationend', handler, false);
+
+          resolve();
+        };
+
+        _this.el.addEventListener('animationend', handler, false);
+      } else {
+        _this.setPluginState({
+          isHidden: false
+        });
+
+        resolve();
+      }
+
+      if (_this.opts.browserBackButtonClose) {
+        _this.updateBrowserHistory();
+      } // handle ESC and TAB keys in modal dialog
+
+
+      document.addEventListener('keydown', _this.handleKeyDownInModal);
+
+      _this.uppy.emit('dashboard:modal-open');
+
+      return promise;
+    };
+
+    _this.closeModal = function (opts) {
+      if (opts === void 0) {
+        opts = {};
+      }
+
+      var _opts2 = opts,
+          _opts2$manualClose = _opts2.manualClose,
+          manualClose = _opts2$manualClose === void 0 ? true : _opts2$manualClose;
+
+      var _this$getPluginState5 = _this.getPluginState(),
+          isHidden = _this$getPluginState5.isHidden,
+          isClosing = _this$getPluginState5.isClosing;
+
+      if (isHidden || isClosing) {
+        // short-circuit if animation is ongoing
+        return;
+      }
+
+      var _createPromise2 = createPromise(),
+          promise = _createPromise2.promise,
+          resolve = _createPromise2.resolve;
+
+      if (_this.opts.disablePageScrollWhenModalOpen) {
+        document.body.classList.remove('uppy-Dashboard-isFixed');
+      }
+
+      if (_this.opts.animateOpenClose) {
+        _this.setPluginState({
+          isClosing: true
+        });
+
+        var handler = function handler() {
+          _this.setPluginState({
+            isHidden: true,
+            isClosing: false
+          });
+
+          _this.superFocus.cancel();
+
+          _this.savedActiveElement.focus();
+
+          _this.el.removeEventListener('animationend', handler, false);
+
+          resolve();
+        };
+
+        _this.el.addEventListener('animationend', handler, false);
+      } else {
+        _this.setPluginState({
+          isHidden: true
+        });
+
+        _this.superFocus.cancel();
+
+        _this.savedActiveElement.focus();
+
+        resolve();
+      } // handle ESC and TAB keys in modal dialog
+
+
+      document.removeEventListener('keydown', _this.handleKeyDownInModal);
+
+      if (manualClose) {
+        if (_this.opts.browserBackButtonClose) {
+          // Make sure that the latest entry in the history state is our modal name
+          if (history.state && history.state[_this.modalName]) {
+            // Go back in history to clear out the entry we created (ultimately closing the modal)
+            history.go(-1);
+          }
+        }
+      }
+
+      _this.uppy.emit('dashboard:modal-closed');
+
+      return promise;
+    };
+
+    _this.isModalOpen = function () {
+      return !_this.getPluginState().isHidden || false;
+    };
+
+    _this.requestCloseModal = function () {
+      if (_this.opts.onRequestCloseModal) {
+        return _this.opts.onRequestCloseModal();
+      }
+
+      return _this.closeModal();
+    };
+
+    _this.setDarkModeCapability = function (isDarkModeOn) {
+      var _this$uppy$getState = _this.uppy.getState(),
+          capabilities = _this$uppy$getState.capabilities;
+
+      _this.uppy.setState({
+        capabilities: _extends({}, capabilities, {
+          darkMode: isDarkModeOn
+        })
+      });
+    };
+
+    _this.handleSystemDarkModeChange = function (event) {
+      var isDarkModeOnNow = event.matches;
+
+      _this.uppy.log("[Dashboard] Dark mode is " + (isDarkModeOnNow ? 'on' : 'off'));
+
+      _this.setDarkModeCapability(isDarkModeOnNow);
+    };
+
+    _this.toggleFileCard = function (show, fileID) {
+      var file = _this.uppy.getFile(fileID);
+
+      if (show) {
+        _this.uppy.emit('dashboard:file-edit-start', file);
+      } else {
+        _this.uppy.emit('dashboard:file-edit-complete', file);
+      }
+
+      _this.setPluginState({
+        fileCardFor: show ? fileID : null,
+        activeOverlayType: show ? 'FileCard' : null
+      });
+    };
+
+    _this.toggleAddFilesPanel = function (show) {
+      _this.setPluginState({
+        showAddFilesPanel: show,
+        activeOverlayType: show ? 'AddFiles' : null
+      });
+    };
+
+    _this.addFiles = function (files) {
+      var descriptors = files.map(function (file) {
+        return {
+          source: _this.id,
+          name: file.name,
+          type: file.type,
+          data: file,
+          meta: {
+            // path of the file relative to the ancestor directory the user selected.
+            // e.g. 'docs/Old Prague/airbnb.pdf'
+            relativePath: file.relativePath || null
+          }
+        };
+      });
+
+      try {
+        _this.uppy.addFiles(descriptors);
+      } catch (err) {
+        _this.uppy.log(err);
+      }
+    };
+
+    _this.startListeningToResize = function () {
+      // Watch for Dashboard container (`.uppy-Dashboard-inner`) resize
+      // and update containerWidth/containerHeight in plugin state accordingly.
+      // Emits first event on initialization.
+      _this.resizeObserver = new ResizeObserver(function (entries, observer) {
+        var uppyDashboardInnerEl = entries[0];
+        var _uppyDashboardInnerEl = uppyDashboardInnerEl.contentRect,
+            width = _uppyDashboardInnerEl.width,
+            height = _uppyDashboardInnerEl.height;
+
+        _this.uppy.log("[Dashboard] resized: " + width + " / " + height, 'debug');
+
+        _this.setPluginState({
+          containerWidth: width,
+          containerHeight: height,
+          areInsidesReadyToBeVisible: true
+        });
+      });
+
+      _this.resizeObserver.observe(_this.el.querySelector('.uppy-Dashboard-inner')); // If ResizeObserver fails to emit an event telling us what size to use - default to the mobile view
+
+
+      _this.makeDashboardInsidesVisibleAnywayTimeout = setTimeout(function () {
+        var pluginState = _this.getPluginState();
+
+        var isModalAndClosed = !_this.opts.inline && pluginState.isHidden;
+
+        if ( // if ResizeObserver hasn't yet fired,
+        !pluginState.areInsidesReadyToBeVisible // and it's not due to the modal being closed
+        && !isModalAndClosed) {
+          _this.uppy.log("[Dashboard] resize event didn't fire on time: defaulted to mobile layout", 'debug');
+
+          _this.setPluginState({
+            areInsidesReadyToBeVisible: true
+          });
+        }
+      }, 1000);
+    };
+
+    _this.stopListeningToResize = function () {
+      _this.resizeObserver.disconnect();
+
+      clearTimeout(_this.makeDashboardInsidesVisibleAnywayTimeout);
+    };
+
+    _this.recordIfFocusedOnUppyRecently = function (event) {
+      if (_this.el.contains(event.target)) {
+        _this.ifFocusedOnUppyRecently = true;
+      } else {
+        _this.ifFocusedOnUppyRecently = false; // ___Why run this.superFocus.cancel here when it already runs in superFocusOnEachUpdate?
+        //    Because superFocus is debounced, when we move from Uppy to some other element on the page,
+        //    previously run superFocus sometimes hits and moves focus back to Uppy.
+
+        _this.superFocus.cancel();
+      }
+    };
+
+    _this.disableAllFocusableElements = function (disable) {
+      var focusableNodes = toArray(_this.el.querySelectorAll(FOCUSABLE_ELEMENTS));
+
+      if (disable) {
+        focusableNodes.forEach(function (node) {
+          // save previous tabindex in a data-attribute, to restore when enabling
+          var currentTabIndex = node.getAttribute('tabindex');
+
+          if (currentTabIndex) {
+            node.dataset.inertTabindex = currentTabIndex;
+          }
+
+          node.setAttribute('tabindex', '-1');
+        });
+      } else {
+        focusableNodes.forEach(function (node) {
+          if ('inertTabindex' in node.dataset) {
+            node.setAttribute('tabindex', node.dataset.inertTabindex);
+          } else {
+            node.removeAttribute('tabindex');
+          }
+        });
+      }
+
+      _this.dashboardIsDisabled = disable;
+    };
+
+    _this.updateBrowserHistory = function () {
+      // Ensure history state does not already contain our modal name to avoid double-pushing
+      if (!history.state || !history.state[_this.modalName]) {
+        var _extends2;
+
+        // Push to history so that the page is not lost on browser back button press
+        history.pushState(_extends({}, history.state, (_extends2 = {}, _extends2[_this.modalName] = true, _extends2)), '');
+      } // Listen for back button presses
+
+
+      window.addEventListener('popstate', _this.handlePopState, false);
+    };
+
+    _this.handlePopState = function (event) {
+      // Close the modal if the history state no longer contains our modal name
+      if (_this.isModalOpen() && (!event.state || !event.state[_this.modalName])) {
+        _this.closeModal({
+          manualClose: false
+        });
+      } // When the browser back button is pressed and uppy is now the latest entry in the history but the modal is closed, fix the history by removing the uppy history entry
+      // This occurs when another entry is added into the history state while the modal is open, and then the modal gets manually closed
+      // Solves PR #575 (https://github.com/transloadit/uppy/pull/575)
+
+
+      if (!_this.isModalOpen() && event.state && event.state[_this.modalName]) {
+        history.go(-1);
+      }
+    };
+
+    _this.handleKeyDownInModal = function (event) {
+      // close modal on esc key press
+      if (event.keyCode === ESC_KEY) _this.requestCloseModal(event); // trap focus on tab key press
+
+      if (event.keyCode === TAB_KEY) trapFocus.forModal(event, _this.getPluginState().activeOverlayType, _this.el);
+    };
+
+    _this.handleClickOutside = function () {
+      if (_this.opts.closeModalOnClickOutside) _this.requestCloseModal();
+    };
+
+    _this.handlePaste = function (event) {
+      // 1. Let any acquirer plugin (Url/Webcam/etc.) handle pastes to the root
+      _this.uppy.iteratePlugins(function (plugin) {
+        if (plugin.type === 'acquirer') {
+          // Every Plugin with .type acquirer can define handleRootPaste(event)
+          plugin.handleRootPaste && plugin.handleRootPaste(event);
+        }
+      }); // 2. Add all dropped files
+
+
+      var files = toArray(event.clipboardData.files);
+
+      _this.addFiles(files);
+    };
+
+    _this.handleInputChange = function (event) {
+      event.preventDefault();
+      var files = toArray(event.target.files);
+
+      _this.addFiles(files);
+    };
+
+    _this.handleDragOver = function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (_this.opts.disabled || _this.opts.disableLocalFiles) {
+        return;
+      } // 1. Add a small (+) icon on drop
+      // (and prevent browsers from interpreting this as files being _moved_ into the browser, https://github.com/transloadit/uppy/issues/1978)
+
+
+      event.dataTransfer.dropEffect = 'copy';
+      clearTimeout(_this.removeDragOverClassTimeout);
+
+      _this.setPluginState({
+        isDraggingOver: true
+      });
+    };
+
+    _this.handleDragLeave = function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (_this.opts.disabled || _this.opts.disableLocalFiles) {
+        return;
+      }
+
+      clearTimeout(_this.removeDragOverClassTimeout); // Timeout against flickering, this solution is taken from drag-drop library. Solution with 'pointer-events: none' didn't work across browsers.
+
+      _this.removeDragOverClassTimeout = setTimeout(function () {
+        _this.setPluginState({
+          isDraggingOver: false
+        });
+      }, 50);
+    };
+
+    _this.handleDrop = function (event, dropCategory) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (_this.opts.disabled || _this.opts.disableLocalFiles) {
+        return;
+      }
+
+      clearTimeout(_this.removeDragOverClassTimeout); // 2. Remove dragover class
+
+      _this.setPluginState({
+        isDraggingOver: false
+      }); // 3. Let any acquirer plugin (Url/Webcam/etc.) handle drops to the root
+
+
+      _this.uppy.iteratePlugins(function (plugin) {
+        if (plugin.type === 'acquirer') {
+          // Every Plugin with .type acquirer can define handleRootDrop(event)
+          plugin.handleRootDrop && plugin.handleRootDrop(event);
+        }
+      }); // 4. Add all dropped files
+
+
+      var executedDropErrorOnce = false;
+
+      var logDropError = function logDropError(error) {
+        _this.uppy.log(error, 'error'); // In practice all drop errors are most likely the same, so let's just show one to avoid overwhelming the user
+
+
+        if (!executedDropErrorOnce) {
+          _this.uppy.info(error.message, 'error');
+
+          executedDropErrorOnce = true;
+        }
+      };
+
+      getDroppedFiles(event.dataTransfer, {
+        logDropError: logDropError
+      }).then(function (files) {
+        if (files.length > 0) {
+          _this.uppy.log('[Dashboard] Files were dropped');
+
+          _this.addFiles(files);
+        }
+      });
+    };
+
+    _this.handleRequestThumbnail = function (file) {
+      if (!_this.opts.waitForThumbnailsBeforeUpload) {
+        _this.uppy.emit('thumbnail:request', file);
+      }
+    };
+
+    _this.handleCancelThumbnail = function (file) {
+      if (!_this.opts.waitForThumbnailsBeforeUpload) {
+        _this.uppy.emit('thumbnail:cancel', file);
+      }
+    };
+
+    _this.handleKeyDownInInline = function (event) {
+      // Trap focus on tab key press.
+      if (event.keyCode === TAB_KEY) trapFocus.forInline(event, _this.getPluginState().activeOverlayType, _this.el);
+    };
+
+    _this.handlePasteOnBody = function (event) {
+      var isFocusInOverlay = _this.el.contains(document.activeElement);
+
+      if (isFocusInOverlay) {
+        _this.handlePaste(event);
+      }
+    };
+
+    _this.handleComplete = function (_ref) {
+      var failed = _ref.failed;
+
+      if (_this.opts.closeAfterFinish && failed.length === 0) {
+        // All uploads are done
+        _this.requestCloseModal();
+      }
+    };
+
+    _this.handleCancelRestore = function () {
+      _this.uppy.emit('restore-canceled');
+    };
+
+    _this._openFileEditorWhenFilesAdded = function (files) {
+      var firstFile = files[0];
+
+      if (_this.canEditFile(firstFile)) {
+        _this.openFileEditor(firstFile);
+      }
+    };
+
+    _this.initEvents = function () {
+      // Modal open button
+      if (_this.opts.trigger && !_this.opts.inline) {
+        var showModalTrigger = findAllDOMElements(_this.opts.trigger);
+
+        if (showModalTrigger) {
+          showModalTrigger.forEach(function (trigger) {
+            return trigger.addEventListener('click', _this.openModal);
+          });
+        } else {
+          _this.uppy.log('Dashboard modal trigger not found. Make sure `trigger` is set in Dashboard options, unless you are planning to call `dashboard.openModal()` method yourself', 'warning');
+        }
+      }
+
+      _this.startListeningToResize();
+
+      document.addEventListener('paste', _this.handlePasteOnBody);
+
+      _this.uppy.on('plugin-remove', _this.removeTarget);
+
+      _this.uppy.on('file-added', _this.hideAllPanels);
+
+      _this.uppy.on('dashboard:modal-closed', _this.hideAllPanels);
+
+      _this.uppy.on('file-editor:complete', _this.hideAllPanels);
+
+      _this.uppy.on('complete', _this.handleComplete); // ___Why fire on capture?
+      //    Because this.ifFocusedOnUppyRecently needs to change before onUpdate() fires.
+
+
+      document.addEventListener('focus', _this.recordIfFocusedOnUppyRecently, true);
+      document.addEventListener('click', _this.recordIfFocusedOnUppyRecently, true);
+
+      if (_this.opts.inline) {
+        _this.el.addEventListener('keydown', _this.handleKeyDownInInline);
+      }
+
+      if (_this.opts.autoOpenFileEditor) {
+        _this.uppy.on('files-added', _this._openFileEditorWhenFilesAdded);
+      }
+    };
+
+    _this.removeEvents = function () {
+      var showModalTrigger = findAllDOMElements(_this.opts.trigger);
+
+      if (!_this.opts.inline && showModalTrigger) {
+        showModalTrigger.forEach(function (trigger) {
+          return trigger.removeEventListener('click', _this.openModal);
+        });
+      }
+
+      _this.stopListeningToResize();
+
+      document.removeEventListener('paste', _this.handlePasteOnBody);
+      window.removeEventListener('popstate', _this.handlePopState, false);
+
+      _this.uppy.off('plugin-remove', _this.removeTarget);
+
+      _this.uppy.off('file-added', _this.hideAllPanels);
+
+      _this.uppy.off('dashboard:modal-closed', _this.hideAllPanels);
+
+      _this.uppy.off('file-editor:complete', _this.hideAllPanels);
+
+      _this.uppy.off('complete', _this.handleComplete);
+
+      document.removeEventListener('focus', _this.recordIfFocusedOnUppyRecently);
+      document.removeEventListener('click', _this.recordIfFocusedOnUppyRecently);
+
+      if (_this.opts.inline) {
+        _this.el.removeEventListener('keydown', _this.handleKeyDownInInline);
+      }
+
+      if (_this.opts.autoOpenFileEditor) {
+        _this.uppy.off('files-added', _this._openFileEditorWhenFilesAdded);
+      }
+    };
+
+    _this.superFocusOnEachUpdate = function () {
+      var isFocusInUppy = _this.el.contains(document.activeElement); // When focus is lost on the page (== focus is on body for most browsers, or focus is null for IE11)
+
+
+      var isFocusNowhere = document.activeElement === document.body || document.activeElement === null;
+
+      var isInformerHidden = _this.uppy.getState().info.isHidden;
+
+      var isModal = !_this.opts.inline;
+
+      if ( // If update is connected to showing the Informer - let the screen reader calmly read it.
+      isInformerHidden && ( // If we are in a modal - always superfocus without concern for other elements on the page (user is unlikely to want to interact with the rest of the page)
+      isModal // If we are already inside of Uppy, or
+      || isFocusInUppy // If we are not focused on anything BUT we have already, at least once, focused on uppy
+      //   1. We focus when isFocusNowhere, because when the element we were focused on disappears (e.g. an overlay), - focus gets lost. If user is typing something somewhere else on the page, - focus won't be 'nowhere'.
+      //   2. We only focus when focus is nowhere AND this.ifFocusedOnUppyRecently, to avoid focus jumps if we do something else on the page.
+      //   [Practical check] Without '&& this.ifFocusedOnUppyRecently', in Safari, in inline mode, when file is uploading, - navigate via tab to the checkbox, try to press space multiple times. Focus will jump to Uppy.
+      || isFocusNowhere && _this.ifFocusedOnUppyRecently)) {
+        _this.superFocus(_this.el, _this.getPluginState().activeOverlayType);
+      } else {
+        _this.superFocus.cancel();
+      }
+    };
+
+    _this.afterUpdate = function () {
+      if (_this.opts.disabled && !_this.dashboardIsDisabled) {
+        _this.disableAllFocusableElements(true);
+
+        return;
+      }
+
+      if (!_this.opts.disabled && _this.dashboardIsDisabled) {
+        _this.disableAllFocusableElements(false);
+      }
+
+      _this.superFocusOnEachUpdate();
+    };
+
+    _this.cancelUpload = function (fileID) {
+      _this.uppy.removeFile(fileID);
+    };
+
+    _this.saveFileCard = function (meta, fileID) {
+      _this.uppy.setFileMeta(fileID, meta);
+
+      _this.toggleFileCard(false, fileID);
+    };
+
+    _this._attachRenderFunctionToTarget = function (target) {
+      var plugin = _this.uppy.getPlugin(target.id);
+
+      return _extends({}, target, {
+        icon: plugin.icon || _this.opts.defaultPickerIcon,
+        render: plugin.render
+      });
+    };
+
+    _this._isTargetSupported = function (target) {
+      var plugin = _this.uppy.getPlugin(target.id); // If the plugin does not provide a `supported` check, assume the plugin works everywhere.
+
+
+      if (typeof plugin.isSupported !== 'function') {
+        return true;
+      }
+
+      return plugin.isSupported();
+    };
+
+    _this._getAcquirers = memoize(function (targets) {
+      return targets.filter(function (target) {
+        return target.type === 'acquirer' && _this._isTargetSupported(target);
+      }).map(_this._attachRenderFunctionToTarget);
+    });
+    _this._getProgressIndicators = memoize(function (targets) {
+      return targets.filter(function (target) {
+        return target.type === 'progressindicator';
+      }).map(_this._attachRenderFunctionToTarget);
+    });
+    _this._getEditors = memoize(function (targets) {
+      return targets.filter(function (target) {
+        return target.type === 'editor';
+      }).map(_this._attachRenderFunctionToTarget);
+    });
+
+    _this.render = function (state) {
+      var pluginState = _this.getPluginState();
+
+      var files = state.files,
+          capabilities = state.capabilities,
+          allowNewUpload = state.allowNewUpload; // TODO: move this to Core, to share between Status Bar and Dashboard
+      // (and any other plugin that might need it, too)
+
+      var newFiles = Object.keys(files).filter(function (file) {
+        return !files[file].progress.uploadStarted;
+      });
+      var uploadStartedFiles = Object.keys(files).filter(function (file) {
+        return files[file].progress.uploadStarted;
+      });
+      var pausedFiles = Object.keys(files).filter(function (file) {
+        return files[file].isPaused;
+      });
+      var completeFiles = Object.keys(files).filter(function (file) {
+        return files[file].progress.uploadComplete;
+      });
+      var erroredFiles = Object.keys(files).filter(function (file) {
+        return files[file].error;
+      });
+      var inProgressFiles = Object.keys(files).filter(function (file) {
+        return !files[file].progress.uploadComplete && files[file].progress.uploadStarted;
+      });
+      var inProgressNotPausedFiles = inProgressFiles.filter(function (file) {
+        return !files[file].isPaused;
+      });
+      var processingFiles = Object.keys(files).filter(function (file) {
+        return files[file].progress.preprocess || files[file].progress.postprocess;
+      });
+      var isUploadStarted = uploadStartedFiles.length > 0;
+      var isAllComplete = state.totalProgress === 100 && completeFiles.length === Object.keys(files).length && processingFiles.length === 0;
+      var isAllErrored = isUploadStarted && erroredFiles.length === uploadStartedFiles.length;
+      var isAllPaused = inProgressFiles.length !== 0 && pausedFiles.length === inProgressFiles.length;
+
+      var acquirers = _this._getAcquirers(pluginState.targets);
+
+      var progressindicators = _this._getProgressIndicators(pluginState.targets);
+
+      var editors = _this._getEditors(pluginState.targets);
+
+      var theme;
+
+      if (_this.opts.theme === 'auto') {
+        theme = capabilities.darkMode ? 'dark' : 'light';
+      } else {
+        theme = _this.opts.theme;
+      }
+
+      if (['files', 'folders', 'both'].indexOf(_this.opts.fileManagerSelectionType) < 0) {
+        _this.opts.fileManagerSelectionType = 'files';
+        console.error("Unsupported option for \"fileManagerSelectionType\". Using default of \"" + _this.opts.fileManagerSelectionType + "\".");
+      }
+
+      return DashboardUI({
+        state: state,
+        isHidden: pluginState.isHidden,
+        files: files,
+        newFiles: newFiles,
+        uploadStartedFiles: uploadStartedFiles,
+        completeFiles: completeFiles,
+        erroredFiles: erroredFiles,
+        inProgressFiles: inProgressFiles,
+        inProgressNotPausedFiles: inProgressNotPausedFiles,
+        processingFiles: processingFiles,
+        isUploadStarted: isUploadStarted,
+        isAllComplete: isAllComplete,
+        isAllErrored: isAllErrored,
+        isAllPaused: isAllPaused,
+        totalFileCount: Object.keys(files).length,
+        totalProgress: state.totalProgress,
+        allowNewUpload: allowNewUpload,
+        acquirers: acquirers,
+        theme: theme,
+        disabled: _this.opts.disabled,
+        disableLocalFiles: _this.opts.disableLocalFiles,
+        direction: _this.opts.direction,
+        activePickerPanel: pluginState.activePickerPanel,
+        showFileEditor: pluginState.showFileEditor,
+        saveFileEditor: _this.saveFileEditor,
+        disableAllFocusableElements: _this.disableAllFocusableElements,
+        animateOpenClose: _this.opts.animateOpenClose,
+        isClosing: pluginState.isClosing,
+        getPlugin: _this.uppy.getPlugin,
+        progressindicators: progressindicators,
+        editors: editors,
+        autoProceed: _this.uppy.opts.autoProceed,
+        id: _this.id,
+        closeModal: _this.requestCloseModal,
+        handleClickOutside: _this.handleClickOutside,
+        handleInputChange: _this.handleInputChange,
+        handlePaste: _this.handlePaste,
+        inline: _this.opts.inline,
+        showPanel: _this.showPanel,
+        hideAllPanels: _this.hideAllPanels,
+        log: _this.uppy.log,
+        i18n: _this.i18n,
+        i18nArray: _this.i18nArray,
+        removeFile: _this.uppy.removeFile,
+        uppy: _this.uppy,
+        info: _this.uppy.info,
+        note: _this.opts.note,
+        recoveredState: state.recoveredState,
+        metaFields: pluginState.metaFields,
+        resumableUploads: capabilities.resumableUploads || false,
+        individualCancellation: capabilities.individualCancellation,
+        isMobileDevice: capabilities.isMobileDevice,
+        pauseUpload: _this.uppy.pauseResume,
+        retryUpload: _this.uppy.retryUpload,
+        cancelUpload: _this.cancelUpload,
+        cancelAll: _this.uppy.cancelAll,
+        fileCardFor: pluginState.fileCardFor,
+        toggleFileCard: _this.toggleFileCard,
+        toggleAddFilesPanel: _this.toggleAddFilesPanel,
+        showAddFilesPanel: pluginState.showAddFilesPanel,
+        saveFileCard: _this.saveFileCard,
+        openFileEditor: _this.openFileEditor,
+        canEditFile: _this.canEditFile,
+        width: _this.opts.width,
+        height: _this.opts.height,
+        showLinkToFileUploadResult: _this.opts.showLinkToFileUploadResult,
+        fileManagerSelectionType: _this.opts.fileManagerSelectionType,
+        proudlyDisplayPoweredByUppy: _this.opts.proudlyDisplayPoweredByUppy,
+        hideCancelButton: _this.opts.hideCancelButton,
+        hideRetryButton: _this.opts.hideRetryButton,
+        hidePauseResumeButton: _this.opts.hidePauseResumeButton,
+        showRemoveButtonAfterComplete: _this.opts.showRemoveButtonAfterComplete,
+        containerWidth: pluginState.containerWidth,
+        containerHeight: pluginState.containerHeight,
+        areInsidesReadyToBeVisible: pluginState.areInsidesReadyToBeVisible,
+        isTargetDOMEl: _this.isTargetDOMEl,
+        parentElement: _this.el,
+        allowedFileTypes: _this.uppy.opts.restrictions.allowedFileTypes,
+        maxNumberOfFiles: _this.uppy.opts.restrictions.maxNumberOfFiles,
+        requiredMetaFields: _this.uppy.opts.restrictions.requiredMetaFields,
+        showSelectedFiles: _this.opts.showSelectedFiles,
+        handleCancelRestore: _this.handleCancelRestore,
+        handleRequestThumbnail: _this.handleRequestThumbnail,
+        handleCancelThumbnail: _this.handleCancelThumbnail,
+        // drag props
+        isDraggingOver: pluginState.isDraggingOver,
+        handleDragOver: _this.handleDragOver,
+        handleDragLeave: _this.handleDragLeave,
+        handleDrop: _this.handleDrop
+      });
+    };
+
+    _this.discoverProviderPlugins = function () {
+      _this.uppy.iteratePlugins(function (plugin) {
+        if (plugin && !plugin.target && plugin.opts && plugin.opts.target === _this.constructor) {
+          _this.addTarget(plugin);
+        }
+      });
+    };
+
+    _this.install = function () {
+      // Set default state for Dashboard
+      _this.setPluginState({
+        isHidden: true,
+        fileCardFor: null,
+        activeOverlayType: null,
+        showAddFilesPanel: false,
+        activePickerPanel: false,
+        showFileEditor: false,
+        metaFields: _this.opts.metaFields,
+        targets: [],
+        // We'll make them visible once .containerWidth is determined
+        areInsidesReadyToBeVisible: false,
+        isDraggingOver: false
+      });
+
+      var _this$opts = _this.opts,
+          inline = _this$opts.inline,
+          closeAfterFinish = _this$opts.closeAfterFinish;
+
+      if (inline && closeAfterFinish) {
+        throw new Error('[Dashboard] `closeAfterFinish: true` cannot be used on an inline Dashboard, because an inline Dashboard cannot be closed at all. Either set `inline: false`, or disable the `closeAfterFinish` option.');
+      }
+
+      var allowMultipleUploads = _this.uppy.opts.allowMultipleUploads;
+
+      if (allowMultipleUploads && closeAfterFinish) {
+        _this.uppy.log('[Dashboard] When using `closeAfterFinish`, we recommended setting the `allowMultipleUploads` option to `false` in the Uppy constructor. See https://uppy.io/docs/uppy/#allowMultipleUploads-true', 'warning');
+      }
+
+      var target = _this.opts.target;
+
+      if (target) {
+        _this.mount(target, _assertThisInitialized(_this));
+      }
+
+      var plugins = _this.opts.plugins || [];
+      plugins.forEach(function (pluginID) {
+        var plugin = _this.uppy.getPlugin(pluginID);
+
+        if (plugin) {
+          plugin.mount(_assertThisInitialized(_this), plugin);
+        }
+      });
+
+      if (!_this.opts.disableStatusBar) {
+        _this.uppy.use(StatusBar, {
+          id: _this.id + ":StatusBar",
+          target: _assertThisInitialized(_this),
+          hideUploadButton: _this.opts.hideUploadButton,
+          hideRetryButton: _this.opts.hideRetryButton,
+          hidePauseResumeButton: _this.opts.hidePauseResumeButton,
+          hideCancelButton: _this.opts.hideCancelButton,
+          showProgressDetails: _this.opts.showProgressDetails,
+          hideAfterFinish: _this.opts.hideProgressAfterFinish,
+          locale: _this.opts.locale,
+          doneButtonHandler: _this.opts.doneButtonHandler
+        });
+      }
+
+      if (!_this.opts.disableInformer) {
+        _this.uppy.use(Informer, {
+          id: _this.id + ":Informer",
+          target: _assertThisInitialized(_this)
+        });
+      }
+
+      if (!_this.opts.disableThumbnailGenerator) {
+        _this.uppy.use(ThumbnailGenerator, {
+          id: _this.id + ":ThumbnailGenerator",
+          thumbnailWidth: _this.opts.thumbnailWidth,
+          thumbnailType: _this.opts.thumbnailType,
+          waitForThumbnailsBeforeUpload: _this.opts.waitForThumbnailsBeforeUpload,
+          // If we don't block on thumbnails, we can lazily generate them
+          lazy: !_this.opts.waitForThumbnailsBeforeUpload
+        });
+      } // Dark Mode / theme
+
+
+      _this.darkModeMediaQuery = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+      var isDarkModeOnFromTheStart = _this.darkModeMediaQuery ? _this.darkModeMediaQuery.matches : false;
+
+      _this.uppy.log("[Dashboard] Dark mode is " + (isDarkModeOnFromTheStart ? 'on' : 'off'));
+
+      _this.setDarkModeCapability(isDarkModeOnFromTheStart);
+
+      if (_this.opts.theme === 'auto') {
+        _this.darkModeMediaQuery.addListener(_this.handleSystemDarkModeChange);
+      }
+
+      _this.discoverProviderPlugins();
+
+      _this.initEvents();
+    };
+
+    _this.uninstall = function () {
+      if (!_this.opts.disableInformer) {
+        var informer = _this.uppy.getPlugin(_this.id + ":Informer"); // Checking if this plugin exists, in case it was removed by uppy-core
+        // before the Dashboard was.
+
+
+        if (informer) _this.uppy.removePlugin(informer);
+      }
+
+      if (!_this.opts.disableStatusBar) {
+        var statusBar = _this.uppy.getPlugin(_this.id + ":StatusBar");
+
+        if (statusBar) _this.uppy.removePlugin(statusBar);
+      }
+
+      if (!_this.opts.disableThumbnailGenerator) {
+        var thumbnail = _this.uppy.getPlugin(_this.id + ":ThumbnailGenerator");
+
+        if (thumbnail) _this.uppy.removePlugin(thumbnail);
+      }
+
+      var plugins = _this.opts.plugins || [];
+      plugins.forEach(function (pluginID) {
+        var plugin = _this.uppy.getPlugin(pluginID);
+
+        if (plugin) plugin.unmount();
+      });
+
+      if (_this.opts.theme === 'auto') {
+        _this.darkModeMediaQuery.removeListener(_this.handleSystemDarkModeChange);
+      }
+
+      _this.unmount();
+
+      _this.removeEvents();
+    };
+
+    _this.id = _this.opts.id || 'Dashboard';
+    _this.title = 'Dashboard';
+    _this.type = 'orchestrator';
+    _this.modalName = "uppy-Dashboard-" + cuid();
+    _this.defaultLocale = {
+      strings: {
+        closeModal: 'Close Modal',
+        importFrom: 'Import from %{name}',
+        addingMoreFiles: 'Adding more files',
+        addMoreFiles: 'Add more files',
+        dashboardWindowTitle: 'File Uploader Window (Press escape to close)',
+        dashboardTitle: 'File Uploader',
+        copyLinkToClipboardSuccess: 'Link copied to clipboard',
+        copyLinkToClipboardFallback: 'Copy the URL below',
+        copyLink: 'Copy link',
+        fileSource: 'File source: %{name}',
+        back: 'Back',
+        addMore: 'Add more',
+        removeFile: 'Remove file',
+        editFile: 'Edit file',
+        editing: 'Editing %{file}',
+        finishEditingFile: 'Finish editing file',
+        save: 'Save',
+        saveChanges: 'Save changes',
+        cancel: 'Cancel',
+        myDevice: 'My Device',
+        dropPasteFiles: 'Drop files here or %{browseFiles}',
+        dropPasteFolders: 'Drop files here or %{browseFolders}',
+        dropPasteBoth: 'Drop files here, %{browseFiles} or %{browseFolders}',
+        dropPasteImportFiles: 'Drop files here, %{browseFiles} or import from:',
+        dropPasteImportFolders: 'Drop files here, %{browseFolders} or import from:',
+        dropPasteImportBoth: 'Drop files here, %{browseFiles}, %{browseFolders} or import from:',
+        importFiles: 'Import files from:',
+        dropHint: 'Drop your files here',
+        browseFiles: 'browse files',
+        browseFolders: 'browse folders',
+        uploadComplete: 'Upload complete',
+        uploadPaused: 'Upload paused',
+        resumeUpload: 'Resume upload',
+        pauseUpload: 'Pause upload',
+        retryUpload: 'Retry upload',
+        cancelUpload: 'Cancel upload',
+        xFilesSelected: {
+          0: '%{smart_count} file selected',
+          1: '%{smart_count} files selected'
+        },
+        uploadingXFiles: {
+          0: 'Uploading %{smart_count} file',
+          1: 'Uploading %{smart_count} files'
+        },
+        processingXFiles: {
+          0: 'Processing %{smart_count} file',
+          1: 'Processing %{smart_count} files'
+        },
+        recoveredXFiles: {
+          0: 'We could not fully recover 1 file. Please re-select it and resume the upload.',
+          1: 'We could not fully recover %{smart_count} files. Please re-select them and resume the upload.'
+        },
+        recoveredAllFiles: 'We restored all files. You can now resume the upload.',
+        sessionRestored: 'Session restored',
+        reSelect: 'Re-select',
+        // The default `poweredBy2` string only combines the `poweredBy` string (%{backwardsCompat}) with the size.
+        // Locales can override `poweredBy2` to specify a different word order. This is for backwards compat with
+        // Uppy 1.9.x and below which did a naive concatenation of `poweredBy2 + size` instead of using a locale-specific
+        // substitution.
+        // TODO: In 2.0 `poweredBy2` should be removed in and `poweredBy` updated to use substitution.
+        poweredBy2: '%{backwardsCompat} %{uppy}',
+        poweredBy: 'Powered by'
+      }
+    }; // set default options
+
+    var defaultOptions = {
+      target: 'body',
+      metaFields: [],
+      trigger: '#uppy-select-files',
+      inline: false,
+      width: 750,
+      height: 550,
+      thumbnailWidth: 280,
+      thumbnailType: 'image/jpeg',
+      waitForThumbnailsBeforeUpload: false,
+      defaultPickerIcon: defaultPickerIcon,
+      showLinkToFileUploadResult: true,
+      showProgressDetails: false,
+      hideUploadButton: false,
+      hideCancelButton: false,
+      hideRetryButton: false,
+      hidePauseResumeButton: false,
+      hideProgressAfterFinish: false,
+      doneButtonHandler: function doneButtonHandler() {
+        _this.uppy.reset();
+
+        _this.requestCloseModal();
+      },
+      note: null,
+      closeModalOnClickOutside: false,
+      closeAfterFinish: false,
+      disableStatusBar: false,
+      disableInformer: false,
+      disableThumbnailGenerator: false,
+      disablePageScrollWhenModalOpen: true,
+      animateOpenClose: true,
+      fileManagerSelectionType: 'files',
+      proudlyDisplayPoweredByUppy: true,
+      onRequestCloseModal: function onRequestCloseModal() {
+        return _this.closeModal();
+      },
+      showSelectedFiles: true,
+      showRemoveButtonAfterComplete: false,
+      browserBackButtonClose: false,
+      theme: 'light',
+      autoOpenFileEditor: false,
+      disabled: false,
+      disableLocalFiles: false
+    }; // merge default options with the ones set by user
+
+    _this.opts = _extends({}, defaultOptions, _opts);
+
+    _this.i18nInit();
+
+    _this.superFocus = createSuperFocus();
+    _this.ifFocusedOnUppyRecently = false; // Timeouts
+
+    _this.makeDashboardInsidesVisibleAnywayTimeout = null;
+    _this.removeDragOverClassTimeout = null;
+    return _this;
+  }
+
+  var _proto = Dashboard.prototype;
+
+  _proto.onMount = function onMount() {
+    // Set the text direction if the page has not defined one.
+    var element = this.el;
+    var direction = getTextDirection(element);
+
+    if (!direction) {
+      element.dir = 'ltr';
+    }
+  };
+
+  return Dashboard;
+}(Plugin), _class.VERSION = "1.21.0", _temp);
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/utils/copyToClipboard.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/utils/copyToClipboard.js ***!
+  \*******************************************************************/
+/***/ ((module) => {
+
+/**
+ * Copies text to clipboard by creating an almost invisible textarea,
+ * adding text there, then running execCommand('copy').
+ * Falls back to prompt() when the easy way fails (hello, Safari!)
+ * From http://stackoverflow.com/a/30810322
+ *
+ * @param {string} textToCopy
+ * @param {string} fallbackString
+ * @returns {Promise}
+ */
+module.exports = function copyToClipboard(textToCopy, fallbackString) {
+  fallbackString = fallbackString || 'Copy the URL below';
+  return new Promise(function (resolve) {
+    var textArea = document.createElement('textarea');
+    textArea.setAttribute('style', {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '2em',
+      height: '2em',
+      padding: 0,
+      border: 'none',
+      outline: 'none',
+      boxShadow: 'none',
+      background: 'transparent'
+    });
+    textArea.value = textToCopy;
+    document.body.appendChild(textArea);
+    textArea.select();
+
+    var magicCopyFailed = function magicCopyFailed() {
+      document.body.removeChild(textArea);
+      window.prompt(fallbackString, textToCopy);
+      resolve();
+    };
+
+    try {
+      var successful = document.execCommand('copy');
+
+      if (!successful) {
+        return magicCopyFailed('copy command unavailable');
+      }
+
+      document.body.removeChild(textArea);
+      return resolve();
+    } catch (err) {
+      document.body.removeChild(textArea);
+      return magicCopyFailed(err);
+    }
+  });
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/utils/createSuperFocus.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/utils/createSuperFocus.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var debounce = __webpack_require__(/*! lodash.debounce */ "./node_modules/lodash.debounce/index.js");
+
+var FOCUSABLE_ELEMENTS = __webpack_require__(/*! @uppy/utils/lib/FOCUSABLE_ELEMENTS */ "./node_modules/@uppy/utils/lib/FOCUSABLE_ELEMENTS.js");
+
+var getActiveOverlayEl = __webpack_require__(/*! ./getActiveOverlayEl */ "./node_modules/@uppy/dashboard/lib/utils/getActiveOverlayEl.js");
+/*
+  Focuses on some element in the currently topmost overlay.
+
+  1. If there are some [data-uppy-super-focusable] elements rendered already - focuses on the first superfocusable element, and leaves focus up to the control of a user (until currently focused element disappears from the screen [which can happen when overlay changes, or, e.g., when we click on a folder in googledrive]).
+  2. If there are no [data-uppy-super-focusable] elements yet (or ever) - focuses on the first focusable element, but switches focus if superfocusable elements appear on next render.
+*/
+
+
+module.exports = function createSuperFocus() {
+  var lastFocusWasOnSuperFocusableEl = false;
+
+  var superFocus = function superFocus(dashboardEl, activeOverlayType) {
+    var overlayEl = getActiveOverlayEl(dashboardEl, activeOverlayType);
+    var isFocusInOverlay = overlayEl.contains(document.activeElement); // If focus is already in the topmost overlay, AND on last update we focused on the superfocusable element - then leave focus up to the user.
+    // [Practical check] without this line, typing in the search input in googledrive overlay won't work.
+
+    if (isFocusInOverlay && lastFocusWasOnSuperFocusableEl) return;
+    var superFocusableEl = overlayEl.querySelector('[data-uppy-super-focusable]'); // If we are already in the topmost overlay, AND there are no super focusable elements yet, - leave focus up to the user.
+    // [Practical check] without this line, if you are in an empty folder in google drive, and something's uploading in the bg, - focus will be jumping to Done all the time.
+
+    if (isFocusInOverlay && !superFocusableEl) return;
+
+    if (superFocusableEl) {
+      superFocusableEl.focus({
+        preventScroll: true
+      });
+      lastFocusWasOnSuperFocusableEl = true;
+    } else {
+      var firstEl = overlayEl.querySelector(FOCUSABLE_ELEMENTS);
+      firstEl && firstEl.focus({
+        preventScroll: true
+      });
+      lastFocusWasOnSuperFocusableEl = false;
+    }
+  }; // ___Why do we need to debounce?
+  //    1. To deal with animations: overlay changes via animations, which results in the DOM updating AFTER plugin.update() already executed.
+  //    [Practical check] without debounce, if we open the Url overlay, and click 'Done', Dashboard won't get focused again.
+  //    [Practical check] if we delay 250ms instead of 260ms - IE11 won't get focused in same situation.
+  //    2. Performance: there can be many state update()s in a second, and this function is called every time.
+
+
+  return debounce(superFocus, 260);
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/utils/getActiveOverlayEl.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/utils/getActiveOverlayEl.js ***!
+  \**********************************************************************/
+/***/ ((module) => {
+
+/**
+ * @returns {HTMLElement} - either dashboard element, or the overlay that's most on top
+ */
+module.exports = function getActiveOverlayEl(dashboardEl, activeOverlayType) {
+  if (activeOverlayType) {
+    var overlayEl = dashboardEl.querySelector("[data-uppy-paneltype=\"" + activeOverlayType + "\"]"); // if an overlay is already mounted
+
+    if (overlayEl) return overlayEl;
+  }
+
+  return dashboardEl;
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/utils/getFileTypeIcon.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/utils/getFileTypeIcon.js ***!
+  \*******************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require.h;
+
+function iconImage() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    width: "25",
+    height: "25",
+    viewBox: "0 0 25 25"
+  }, h("g", {
+    fill: "#686DE0",
+    fillRule: "evenodd"
+  }, h("path", {
+    d: "M5 7v10h15V7H5zm0-1h15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z",
+    fillRule: "nonzero"
+  }), h("path", {
+    d: "M6.35 17.172l4.994-5.026a.5.5 0 0 1 .707 0l2.16 2.16 3.505-3.505a.5.5 0 0 1 .707 0l2.336 2.31-.707.72-1.983-1.97-3.505 3.505a.5.5 0 0 1-.707 0l-2.16-2.159-3.938 3.939-1.409.026z",
+    fillRule: "nonzero"
+  }), h("circle", {
+    cx: "7.5",
+    cy: "9.5",
+    r: "1.5"
+  })));
+}
+
+function iconAudio() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "25",
+    height: "25",
+    viewBox: "0 0 25 25"
+  }, h("path", {
+    d: "M9.5 18.64c0 1.14-1.145 2-2.5 2s-2.5-.86-2.5-2c0-1.14 1.145-2 2.5-2 .557 0 1.079.145 1.5.396V7.25a.5.5 0 0 1 .379-.485l9-2.25A.5.5 0 0 1 18.5 5v11.64c0 1.14-1.145 2-2.5 2s-2.5-.86-2.5-2c0-1.14 1.145-2 2.5-2 .557 0 1.079.145 1.5.396V8.67l-8 2v7.97zm8-11v-2l-8 2v2l8-2zM7 19.64c.855 0 1.5-.484 1.5-1s-.645-1-1.5-1-1.5.484-1.5 1 .645 1 1.5 1zm9-2c.855 0 1.5-.484 1.5-1s-.645-1-1.5-1-1.5.484-1.5 1 .645 1 1.5 1z",
+    fill: "#049BCF",
+    fillRule: "nonzero"
+  }));
+}
+
+function iconVideo() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "25",
+    height: "25",
+    viewBox: "0 0 25 25"
+  }, h("path", {
+    d: "M16 11.834l4.486-2.691A1 1 0 0 1 22 10v6a1 1 0 0 1-1.514.857L16 14.167V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2.834zM15 9H5v8h10V9zm1 4l5 3v-6l-5 3z",
+    fill: "#19AF67",
+    fillRule: "nonzero"
+  }));
+}
+
+function iconPDF() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "25",
+    height: "25",
+    viewBox: "0 0 25 25"
+  }, h("path", {
+    d: "M9.766 8.295c-.691-1.843-.539-3.401.747-3.726 1.643-.414 2.505.938 2.39 3.299-.039.79-.194 1.662-.537 3.148.324.49.66.967 1.055 1.51.17.231.382.488.629.757 1.866-.128 3.653.114 4.918.655 1.487.635 2.192 1.685 1.614 2.84-.566 1.133-1.839 1.084-3.416.249-1.141-.604-2.457-1.634-3.51-2.707a13.467 13.467 0 0 0-2.238.426c-1.392 4.051-4.534 6.453-5.707 4.572-.986-1.58 1.38-4.206 4.914-5.375.097-.322.185-.656.264-1.001.08-.353.306-1.31.407-1.737-.678-1.059-1.2-2.031-1.53-2.91zm2.098 4.87c-.033.144-.068.287-.104.427l.033-.01-.012.038a14.065 14.065 0 0 1 1.02-.197l-.032-.033.052-.004a7.902 7.902 0 0 1-.208-.271c-.197-.27-.38-.526-.555-.775l-.006.028-.002-.003c-.076.323-.148.632-.186.8zm5.77 2.978c1.143.605 1.832.632 2.054.187.26-.519-.087-1.034-1.113-1.473-.911-.39-2.175-.608-3.55-.608.845.766 1.787 1.459 2.609 1.894zM6.559 18.789c.14.223.693.16 1.425-.413.827-.648 1.61-1.747 2.208-3.206-2.563 1.064-4.102 2.867-3.633 3.62zm5.345-10.97c.088-1.793-.351-2.48-1.146-2.28-.473.119-.564 1.05-.056 2.405.213.566.52 1.188.908 1.859.18-.858.268-1.453.294-1.984z",
+    fill: "#E2514A",
+    fillRule: "nonzero"
+  }));
+}
+
+function iconArchive() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    width: "25",
+    height: "25",
+    viewBox: "0 0 25 25"
+  }, h("path", {
+    d: "M10.45 2.05h1.05a.5.5 0 0 1 .5.5v.024a.5.5 0 0 1-.5.5h-1.05a.5.5 0 0 1-.5-.5V2.55a.5.5 0 0 1 .5-.5zm2.05 1.024h1.05a.5.5 0 0 1 .5.5V3.6a.5.5 0 0 1-.5.5H12.5a.5.5 0 0 1-.5-.5v-.025a.5.5 0 0 1 .5-.5v-.001zM10.45 0h1.05a.5.5 0 0 1 .5.5v.025a.5.5 0 0 1-.5.5h-1.05a.5.5 0 0 1-.5-.5V.5a.5.5 0 0 1 .5-.5zm2.05 1.025h1.05a.5.5 0 0 1 .5.5v.024a.5.5 0 0 1-.5.5H12.5a.5.5 0 0 1-.5-.5v-.024a.5.5 0 0 1 .5-.5zm-2.05 3.074h1.05a.5.5 0 0 1 .5.5v.025a.5.5 0 0 1-.5.5h-1.05a.5.5 0 0 1-.5-.5v-.025a.5.5 0 0 1 .5-.5zm2.05 1.025h1.05a.5.5 0 0 1 .5.5v.024a.5.5 0 0 1-.5.5H12.5a.5.5 0 0 1-.5-.5v-.024a.5.5 0 0 1 .5-.5zm-2.05 1.024h1.05a.5.5 0 0 1 .5.5v.025a.5.5 0 0 1-.5.5h-1.05a.5.5 0 0 1-.5-.5v-.025a.5.5 0 0 1 .5-.5zm2.05 1.025h1.05a.5.5 0 0 1 .5.5v.025a.5.5 0 0 1-.5.5H12.5a.5.5 0 0 1-.5-.5v-.025a.5.5 0 0 1 .5-.5zm-2.05 1.025h1.05a.5.5 0 0 1 .5.5v.025a.5.5 0 0 1-.5.5h-1.05a.5.5 0 0 1-.5-.5v-.025a.5.5 0 0 1 .5-.5zm2.05 1.025h1.05a.5.5 0 0 1 .5.5v.024a.5.5 0 0 1-.5.5H12.5a.5.5 0 0 1-.5-.5v-.024a.5.5 0 0 1 .5-.5zm-1.656 3.074l-.82 5.946c.52.302 1.174.458 1.976.458.803 0 1.455-.156 1.975-.458l-.82-5.946h-2.311zm0-1.025h2.312c.512 0 .946.378 1.015.885l.82 5.946c.056.412-.142.817-.501 1.026-.686.398-1.515.597-2.49.597-.974 0-1.804-.199-2.49-.597a1.025 1.025 0 0 1-.5-1.026l.819-5.946c.07-.507.503-.885 1.015-.885zm.545 6.6a.5.5 0 0 1-.397-.561l.143-.999a.5.5 0 0 1 .495-.429h.74a.5.5 0 0 1 .495.43l.143.998a.5.5 0 0 1-.397.561c-.404.08-.819.08-1.222 0z",
+    fill: "#00C469",
+    fillRule: "nonzero"
+  }));
+}
+
+function iconFile() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "25",
+    height: "25",
+    viewBox: "0 0 25 25"
+  }, h("g", {
+    fill: "#A7AFB7",
+    fillRule: "nonzero"
+  }, h("path", {
+    d: "M5.5 22a.5.5 0 0 1-.5-.5v-18a.5.5 0 0 1 .5-.5h10.719a.5.5 0 0 1 .367.16l3.281 3.556a.5.5 0 0 1 .133.339V21.5a.5.5 0 0 1-.5.5h-14zm.5-1h13V7.25L16 4H6v17z"
+  }), h("path", {
+    d: "M15 4v3a1 1 0 0 0 1 1h3V7h-3V4h-1z"
+  })));
+}
+
+function iconText() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    className: "uppy-c-icon",
+    width: "25",
+    height: "25",
+    viewBox: "0 0 25 25"
+  }, h("path", {
+    d: "M4.5 7h13a.5.5 0 1 1 0 1h-13a.5.5 0 0 1 0-1zm0 3h15a.5.5 0 1 1 0 1h-15a.5.5 0 1 1 0-1zm0 3h15a.5.5 0 1 1 0 1h-15a.5.5 0 1 1 0-1zm0 3h10a.5.5 0 1 1 0 1h-10a.5.5 0 1 1 0-1z",
+    fill: "#5A5E69",
+    fillRule: "nonzero"
+  }));
+}
+
+module.exports = function getIconByMime(fileType) {
+  var defaultChoice = {
+    color: '#838999',
+    icon: iconFile()
+  };
+  if (!fileType) return defaultChoice;
+  var fileTypeGeneral = fileType.split('/')[0];
+  var fileTypeSpecific = fileType.split('/')[1]; // Text
+
+  if (fileTypeGeneral === 'text') {
+    return {
+      color: '#5a5e69',
+      icon: iconText()
+    };
+  } // Image
+
+
+  if (fileTypeGeneral === 'image') {
+    return {
+      color: '#686de0',
+      icon: iconImage()
+    };
+  } // Audio
+
+
+  if (fileTypeGeneral === 'audio') {
+    return {
+      color: '#068dbb',
+      icon: iconAudio()
+    };
+  } // Video
+
+
+  if (fileTypeGeneral === 'video') {
+    return {
+      color: '#19af67',
+      icon: iconVideo()
+    };
+  } // PDF
+
+
+  if (fileTypeGeneral === 'application' && fileTypeSpecific === 'pdf') {
+    return {
+      color: '#e25149',
+      icon: iconPDF()
+    };
+  } // Archive
+
+
+  var archiveTypes = ['zip', 'x-7z-compressed', 'x-rar-compressed', 'x-tar', 'x-gzip', 'x-apple-diskimage'];
+
+  if (fileTypeGeneral === 'application' && archiveTypes.indexOf(fileTypeSpecific) !== -1) {
+    return {
+      color: '#00C469',
+      icon: iconArchive()
+    };
+  }
+
+  return defaultChoice;
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/utils/ignoreEvent.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/utils/ignoreEvent.js ***!
+  \***************************************************************/
+/***/ ((module) => {
+
+// ignore drop/paste events if they are not in input or textarea —
+// otherwise when Url plugin adds drop/paste listeners to this.el,
+// draging UI elements or pasting anything into any field triggers those events —
+// Url treats them as URLs that need to be imported
+function ignoreEvent(ev) {
+  var tagName = ev.target.tagName;
+
+  if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
+    ev.stopPropagation();
+    return;
+  }
+
+  ev.preventDefault();
+  ev.stopPropagation();
+}
+
+module.exports = ignoreEvent;
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/lib/utils/trapFocus.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/lib/utils/trapFocus.js ***!
+  \*************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var toArray = __webpack_require__(/*! @uppy/utils/lib/toArray */ "./node_modules/@uppy/utils/lib/toArray.js");
+
+var getActiveOverlayEl = __webpack_require__(/*! ./getActiveOverlayEl */ "./node_modules/@uppy/dashboard/lib/utils/getActiveOverlayEl.js");
+
+var FOCUSABLE_ELEMENTS = __webpack_require__(/*! @uppy/utils/lib/FOCUSABLE_ELEMENTS */ "./node_modules/@uppy/utils/lib/FOCUSABLE_ELEMENTS.js");
+
+function focusOnFirstNode(event, nodes) {
+  var node = nodes[0];
+
+  if (node) {
+    node.focus();
+    event.preventDefault();
+  }
+}
+
+function focusOnLastNode(event, nodes) {
+  var node = nodes[nodes.length - 1];
+
+  if (node) {
+    node.focus();
+    event.preventDefault();
+  }
+} // ___Why not just use (focusedItemIndex === -1)?
+//    Firefox thinks <ul> is focusable, but we don't have <ul>s in our FOCUSABLE_ELEMENTS. Which means that if we tab into the <ul>, code will think that we are not in the active overlay, and we should focusOnFirstNode() of the currently active overlay!
+//    [Practical check] if we use (focusedItemIndex === -1), instagram provider in firefox will never get focus on its pics in the <ul>.
+
+
+function isFocusInOverlay(activeOverlayEl) {
+  return activeOverlayEl.contains(document.activeElement);
+}
+
+function trapFocus(event, activeOverlayType, dashboardEl) {
+  var activeOverlayEl = getActiveOverlayEl(dashboardEl, activeOverlayType);
+  var focusableNodes = toArray(activeOverlayEl.querySelectorAll(FOCUSABLE_ELEMENTS));
+  var focusedItemIndex = focusableNodes.indexOf(document.activeElement); // If we pressed tab, and focus is not yet within the current overlay - focus on the first element within the current overlay.
+  // This is a safety measure (for when user returns from another tab e.g.), most plugins will try to focus on some important element as it loads.
+
+  if (!isFocusInOverlay(activeOverlayEl)) {
+    focusOnFirstNode(event, focusableNodes); // If we pressed shift + tab, and we're on the first element of a modal
+  } else if (event.shiftKey && focusedItemIndex === 0) {
+    focusOnLastNode(event, focusableNodes); // If we pressed tab, and we're on the last element of the modal
+  } else if (!event.shiftKey && focusedItemIndex === focusableNodes.length - 1) {
+    focusOnFirstNode(event, focusableNodes);
+  }
+}
+
+module.exports = {
+  // Traps focus inside of the currently open overlay (e.g. Dashboard, or e.g. Instagram), never lets focus disappear from the modal.
+  forModal: function forModal(event, activeOverlayType, dashboardEl) {
+    trapFocus(event, activeOverlayType, dashboardEl);
+  },
+  // Traps focus inside of the currently open overlay, unless overlay is null - then let the user tab away.
+  forInline: function forInline(event, activeOverlayType, dashboardEl) {
+    // ___When we're in the bare 'Drop files here, paste, browse or import from' screen
+    if (activeOverlayType === null) {// Do nothing and let the browser handle it, user can tab away from Uppy to other elements on the page
+      // ___When there is some overlay with 'Done' button
+    } else {
+      // Trap the focus inside this overlay!
+      // User can close the overlay (click 'Done') if they want to travel away from Uppy.
+      trapFocus(event, activeOverlayType, dashboardEl);
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./node_modules/@uppy/drag-drop/lib/index.js":
 /*!***************************************************!*\
   !*** ./node_modules/@uppy/drag-drop/lib/index.js ***!
@@ -4374,6 +8096,102 @@ module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
 
   return DragDrop;
 }(Plugin), _class.VERSION = "1.4.31", _temp);
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/informer/lib/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/@uppy/informer/lib/index.js ***!
+  \**************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _class, _temp;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = __webpack_require__(/*! @uppy/core */ "./node_modules/@uppy/core/lib/index.js"),
+    Plugin = _require.Plugin;
+
+var _require2 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.esm.js"),
+    h = _require2.h;
+/**
+ * Informer
+ * Shows rad message bubbles
+ * used like this: `uppy.info('hello world', 'info', 5000)`
+ * or for errors: `uppy.info('Error uploading img.jpg', 'error', 5000)`
+ *
+ */
+
+
+module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
+  _inheritsLoose(Informer, _Plugin);
+
+  function Informer(uppy, opts) {
+    var _this;
+
+    _this = _Plugin.call(this, uppy, opts) || this;
+
+    _this.render = function (state) {
+      var _state$info = state.info,
+          isHidden = _state$info.isHidden,
+          message = _state$info.message,
+          details = _state$info.details;
+
+      function displayErrorAlert() {
+        var errorMessage = message + " \n\n " + details;
+        alert(errorMessage);
+      }
+
+      var handleMouseOver = function handleMouseOver() {
+        clearTimeout(_this.uppy.infoTimeoutID);
+      };
+
+      var handleMouseLeave = function handleMouseLeave() {
+        _this.uppy.infoTimeoutID = setTimeout(_this.uppy.hideInfo, 2000);
+      };
+
+      return h("div", {
+        className: "uppy uppy-Informer",
+        "aria-hidden": isHidden
+      }, h("p", {
+        role: "alert"
+      }, message, ' ', details && h("span", {
+        "aria-label": details,
+        "data-microtip-position": "top-left",
+        "data-microtip-size": "medium",
+        role: "tooltip",
+        onClick: displayErrorAlert,
+        onMouseOver: handleMouseOver,
+        onMouseLeave: handleMouseLeave
+      }, "?")));
+    };
+
+    _this.type = 'progressindicator';
+    _this.id = _this.opts.id || 'Informer';
+    _this.title = 'Informer'; // set default options
+
+    var defaultOptions = {}; // merge default options with the ones set by user
+
+    _this.opts = _extends({}, defaultOptions, opts);
+    return _this;
+  }
+
+  var _proto = Informer.prototype;
+
+  _proto.install = function install() {
+    var target = this.opts.target;
+
+    if (target) {
+      this.mount(target, this);
+    }
+  };
+
+  return Informer;
+}(Plugin), _class.VERSION = "1.6.6", _temp);
 
 /***/ }),
 
@@ -5226,6 +9044,481 @@ module.exports = function defaultStore() {
 
 /***/ }),
 
+/***/ "./node_modules/@uppy/thumbnail-generator/lib/index.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@uppy/thumbnail-generator/lib/index.js ***!
+  \*************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _class, _temp;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var _require = __webpack_require__(/*! @uppy/core */ "./node_modules/@uppy/core/lib/index.js"),
+    Plugin = _require.Plugin;
+
+var Translator = __webpack_require__(/*! @uppy/utils/lib/Translator */ "./node_modules/@uppy/utils/lib/Translator.js");
+
+var dataURItoBlob = __webpack_require__(/*! @uppy/utils/lib/dataURItoBlob */ "./node_modules/@uppy/utils/lib/dataURItoBlob.js");
+
+var isObjectURL = __webpack_require__(/*! @uppy/utils/lib/isObjectURL */ "./node_modules/@uppy/utils/lib/isObjectURL.js");
+
+var isPreviewSupported = __webpack_require__(/*! @uppy/utils/lib/isPreviewSupported */ "./node_modules/@uppy/utils/lib/isPreviewSupported.js");
+
+var MathLog2 = __webpack_require__(/*! math-log2 */ "./node_modules/math-log2/index.js"); // Polyfill for IE.
+
+
+var exifr = __webpack_require__(/*! exifr/dist/mini.legacy.umd.js */ "./node_modules/exifr/dist/mini.legacy.umd.js");
+/**
+ * The Thumbnail Generator plugin
+ */
+
+
+module.exports = (_temp = _class = /*#__PURE__*/function (_Plugin) {
+  _inheritsLoose(ThumbnailGenerator, _Plugin);
+
+  function ThumbnailGenerator(uppy, opts) {
+    var _this;
+
+    _this = _Plugin.call(this, uppy, opts) || this;
+
+    _this.onFileAdded = function (file) {
+      if (!file.preview && file.data && isPreviewSupported(file.type) && !file.isRemote) {
+        _this.addToQueue(file.id);
+      }
+    };
+
+    _this.onCancelRequest = function (file) {
+      var index = _this.queue.indexOf(file.id);
+
+      if (index !== -1) {
+        _this.queue.splice(index, 1);
+      }
+    };
+
+    _this.onFileRemoved = function (file) {
+      var index = _this.queue.indexOf(file.id);
+
+      if (index !== -1) {
+        _this.queue.splice(index, 1);
+      } // Clean up object URLs.
+
+
+      if (file.preview && isObjectURL(file.preview)) {
+        URL.revokeObjectURL(file.preview);
+      }
+    };
+
+    _this.onRestored = function () {
+      var restoredFiles = _this.uppy.getFiles().filter(function (file) {
+        return file.isRestored;
+      });
+
+      restoredFiles.forEach(function (file) {
+        // Only add blob URLs; they are likely invalid after being restored.
+        if (!file.preview || isObjectURL(file.preview)) {
+          _this.addToQueue(file.id);
+        }
+      });
+    };
+
+    _this.waitUntilAllProcessed = function (fileIDs) {
+      fileIDs.forEach(function (fileID) {
+        var file = _this.uppy.getFile(fileID);
+
+        _this.uppy.emit('preprocess-progress', file, {
+          mode: 'indeterminate',
+          message: _this.i18n('generatingThumbnails')
+        });
+      });
+
+      var emitPreprocessCompleteForAll = function emitPreprocessCompleteForAll() {
+        fileIDs.forEach(function (fileID) {
+          var file = _this.uppy.getFile(fileID);
+
+          _this.uppy.emit('preprocess-complete', file);
+        });
+      };
+
+      return new Promise(function (resolve, reject) {
+        if (_this.queueProcessing) {
+          _this.uppy.once('thumbnail:all-generated', function () {
+            emitPreprocessCompleteForAll();
+            resolve();
+          });
+        } else {
+          emitPreprocessCompleteForAll();
+          resolve();
+        }
+      });
+    };
+
+    _this.type = 'modifier';
+    _this.id = _this.opts.id || 'ThumbnailGenerator';
+    _this.title = 'Thumbnail Generator';
+    _this.queue = [];
+    _this.queueProcessing = false;
+    _this.defaultThumbnailDimension = 200;
+    _this.thumbnailType = _this.opts.thumbnailType || 'image/jpeg';
+    _this.defaultLocale = {
+      strings: {
+        generatingThumbnails: 'Generating thumbnails...'
+      }
+    };
+    var defaultOptions = {
+      thumbnailWidth: null,
+      thumbnailHeight: null,
+      waitForThumbnailsBeforeUpload: false,
+      lazy: false
+    };
+    _this.opts = _extends({}, defaultOptions, opts);
+
+    if (_this.opts.lazy && _this.opts.waitForThumbnailsBeforeUpload) {
+      throw new Error('ThumbnailGenerator: The `lazy` and `waitForThumbnailsBeforeUpload` options are mutually exclusive. Please ensure at most one of them is set to `true`.');
+    }
+
+    _this.i18nInit();
+
+    return _this;
+  }
+
+  var _proto = ThumbnailGenerator.prototype;
+
+  _proto.setOptions = function setOptions(newOpts) {
+    _Plugin.prototype.setOptions.call(this, newOpts);
+
+    this.i18nInit();
+  };
+
+  _proto.i18nInit = function i18nInit() {
+    this.translator = new Translator([this.defaultLocale, this.uppy.locale, this.opts.locale]);
+    this.i18n = this.translator.translate.bind(this.translator);
+    this.setPluginState(); // so that UI re-renders and we see the updated locale
+  }
+  /**
+   * Create a thumbnail for the given Uppy file object.
+   *
+   * @param {{data: Blob}} file
+   * @param {number} targetWidth
+   * @param {number} targetHeight
+   * @returns {Promise}
+   */
+  ;
+
+  _proto.createThumbnail = function createThumbnail(file, targetWidth, targetHeight) {
+    var _this2 = this;
+
+    // bug in the compatibility data
+    // eslint-disable-next-line compat/compat
+    var originalUrl = URL.createObjectURL(file.data);
+    var onload = new Promise(function (resolve, reject) {
+      var image = new Image();
+      image.src = originalUrl;
+      image.addEventListener('load', function () {
+        // bug in the compatibility data
+        // eslint-disable-next-line compat/compat
+        URL.revokeObjectURL(originalUrl);
+        resolve(image);
+      });
+      image.addEventListener('error', function (event) {
+        // bug in the compatibility data
+        // eslint-disable-next-line compat/compat
+        URL.revokeObjectURL(originalUrl);
+        reject(event.error || new Error('Could not create thumbnail'));
+      });
+    });
+    var orientationPromise = exifr.rotation(file.data).catch(function (_err) {
+      return 1;
+    });
+    return Promise.all([onload, orientationPromise]).then(function (_ref) {
+      var image = _ref[0],
+          orientation = _ref[1];
+
+      var dimensions = _this2.getProportionalDimensions(image, targetWidth, targetHeight, orientation.deg);
+
+      var rotatedImage = _this2.rotateImage(image, orientation);
+
+      var resizedImage = _this2.resizeImage(rotatedImage, dimensions.width, dimensions.height);
+
+      return _this2.canvasToBlob(resizedImage, _this2.thumbnailType, 80);
+    }).then(function (blob) {
+      // bug in the compatibility data
+      // eslint-disable-next-line compat/compat
+      return URL.createObjectURL(blob);
+    });
+  }
+  /**
+   * Get the new calculated dimensions for the given image and a target width
+   * or height. If both width and height are given, only width is taken into
+   * account. If neither width nor height are given, the default dimension
+   * is used.
+   */
+  ;
+
+  _proto.getProportionalDimensions = function getProportionalDimensions(img, width, height, rotation) {
+    var aspect = img.width / img.height;
+
+    if (rotation === 90 || rotation === 270) {
+      aspect = img.height / img.width;
+    }
+
+    if (width != null) {
+      return {
+        width: width,
+        height: Math.round(width / aspect)
+      };
+    }
+
+    if (height != null) {
+      return {
+        width: Math.round(height * aspect),
+        height: height
+      };
+    }
+
+    return {
+      width: this.defaultThumbnailDimension,
+      height: Math.round(this.defaultThumbnailDimension / aspect)
+    };
+  }
+  /**
+   * Make sure the image doesn’t exceed browser/device canvas limits.
+   * For ios with 256 RAM and ie
+   */
+  ;
+
+  _proto.protect = function protect(image) {
+    // https://stackoverflow.com/questions/6081483/maximum-size-of-a-canvas-element
+    var ratio = image.width / image.height;
+    var maxSquare = 5000000; // ios max canvas square
+
+    var maxSize = 4096; // ie max canvas dimensions
+
+    var maxW = Math.floor(Math.sqrt(maxSquare * ratio));
+    var maxH = Math.floor(maxSquare / Math.sqrt(maxSquare * ratio));
+
+    if (maxW > maxSize) {
+      maxW = maxSize;
+      maxH = Math.round(maxW / ratio);
+    }
+
+    if (maxH > maxSize) {
+      maxH = maxSize;
+      maxW = Math.round(ratio * maxH);
+    }
+
+    if (image.width > maxW) {
+      var canvas = document.createElement('canvas');
+      canvas.width = maxW;
+      canvas.height = maxH;
+      canvas.getContext('2d').drawImage(image, 0, 0, maxW, maxH);
+      image = canvas;
+    }
+
+    return image;
+  }
+  /**
+   * Resize an image to the target `width` and `height`.
+   *
+   * Returns a Canvas with the resized image on it.
+   */
+  ;
+
+  _proto.resizeImage = function resizeImage(image, targetWidth, targetHeight) {
+    // Resizing in steps refactored to use a solution from
+    // https://blog.uploadcare.com/image-resize-in-browsers-is-broken-e38eed08df01
+    image = this.protect(image);
+    var steps = Math.ceil(MathLog2(image.width / targetWidth));
+
+    if (steps < 1) {
+      steps = 1;
+    }
+
+    var sW = targetWidth * Math.pow(2, steps - 1);
+    var sH = targetHeight * Math.pow(2, steps - 1);
+    var x = 2;
+
+    while (steps--) {
+      var canvas = document.createElement('canvas');
+      canvas.width = sW;
+      canvas.height = sH;
+      canvas.getContext('2d').drawImage(image, 0, 0, sW, sH);
+      image = canvas;
+      sW = Math.round(sW / x);
+      sH = Math.round(sH / x);
+    }
+
+    return image;
+  };
+
+  _proto.rotateImage = function rotateImage(image, translate) {
+    var w = image.width;
+    var h = image.height;
+
+    if (translate.deg === 90 || translate.deg === 270) {
+      w = image.height;
+      h = image.width;
+    }
+
+    var canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    var context = canvas.getContext('2d');
+    context.translate(w / 2, h / 2);
+
+    if (translate.canvas) {
+      context.rotate(translate.rad);
+      context.scale(translate.scaleX, translate.scaleY);
+    }
+
+    context.drawImage(image, -image.width / 2, -image.height / 2, image.width, image.height);
+    return canvas;
+  }
+  /**
+   * Save a <canvas> element's content to a Blob object.
+   *
+   * @param {HTMLCanvasElement} canvas
+   * @returns {Promise}
+   */
+  ;
+
+  _proto.canvasToBlob = function canvasToBlob(canvas, type, quality) {
+    try {
+      canvas.getContext('2d').getImageData(0, 0, 1, 1);
+    } catch (err) {
+      if (err.code === 18) {
+        return Promise.reject(new Error('cannot read image, probably an svg with external resources'));
+      }
+    }
+
+    if (canvas.toBlob) {
+      return new Promise(function (resolve) {
+        canvas.toBlob(resolve, type, quality);
+      }).then(function (blob) {
+        if (blob === null) {
+          throw new Error('cannot read image, probably an svg with external resources');
+        }
+
+        return blob;
+      });
+    }
+
+    return Promise.resolve().then(function () {
+      return dataURItoBlob(canvas.toDataURL(type, quality), {});
+    }).then(function (blob) {
+      if (blob === null) {
+        throw new Error('could not extract blob, probably an old browser');
+      }
+
+      return blob;
+    });
+  }
+  /**
+   * Set the preview URL for a file.
+   */
+  ;
+
+  _proto.setPreviewURL = function setPreviewURL(fileID, preview) {
+    this.uppy.setFileState(fileID, {
+      preview: preview
+    });
+  };
+
+  _proto.addToQueue = function addToQueue(item) {
+    this.queue.push(item);
+
+    if (this.queueProcessing === false) {
+      this.processQueue();
+    }
+  };
+
+  _proto.processQueue = function processQueue() {
+    var _this3 = this;
+
+    this.queueProcessing = true;
+
+    if (this.queue.length > 0) {
+      var current = this.uppy.getFile(this.queue.shift());
+
+      if (!current) {
+        this.uppy.log('[ThumbnailGenerator] file was removed before a thumbnail could be generated, but not removed from the queue. This is probably a bug', 'error');
+        return;
+      }
+
+      return this.requestThumbnail(current).catch(function (err) {}) // eslint-disable-line handle-callback-err
+      .then(function () {
+        return _this3.processQueue();
+      });
+    }
+
+    this.queueProcessing = false;
+    this.uppy.log('[ThumbnailGenerator] Emptied thumbnail queue');
+    this.uppy.emit('thumbnail:all-generated');
+  };
+
+  _proto.requestThumbnail = function requestThumbnail(file) {
+    var _this4 = this;
+
+    if (isPreviewSupported(file.type) && !file.isRemote) {
+      return this.createThumbnail(file, this.opts.thumbnailWidth, this.opts.thumbnailHeight).then(function (preview) {
+        _this4.setPreviewURL(file.id, preview);
+
+        _this4.uppy.log("[ThumbnailGenerator] Generated thumbnail for " + file.id);
+
+        _this4.uppy.emit('thumbnail:generated', _this4.uppy.getFile(file.id), preview);
+      }).catch(function (err) {
+        _this4.uppy.log("[ThumbnailGenerator] Failed thumbnail for " + file.id + ":", 'warning');
+
+        _this4.uppy.log(err, 'warning');
+
+        _this4.uppy.emit('thumbnail:error', _this4.uppy.getFile(file.id), err);
+      });
+    }
+
+    return Promise.resolve();
+  };
+
+  _proto.install = function install() {
+    this.uppy.on('file-removed', this.onFileRemoved);
+
+    if (this.opts.lazy) {
+      this.uppy.on('thumbnail:request', this.onFileAdded);
+      this.uppy.on('thumbnail:cancel', this.onCancelRequest);
+    } else {
+      this.uppy.on('file-added', this.onFileAdded);
+      this.uppy.on('restored', this.onRestored);
+    }
+
+    if (this.opts.waitForThumbnailsBeforeUpload) {
+      this.uppy.addPreProcessor(this.waitUntilAllProcessed);
+    }
+  };
+
+  _proto.uninstall = function uninstall() {
+    this.uppy.off('file-removed', this.onFileRemoved);
+
+    if (this.opts.lazy) {
+      this.uppy.off('thumbnail:request', this.onFileAdded);
+      this.uppy.off('thumbnail:cancel', this.onCancelRequest);
+    } else {
+      this.uppy.off('file-added', this.onFileAdded);
+      this.uppy.off('restored', this.onRestored);
+    }
+
+    if (this.opts.waitForThumbnailsBeforeUpload) {
+      this.uppy.removePreProcessor(this.waitUntilAllProcessed);
+    }
+  };
+
+  return ThumbnailGenerator;
+}(Plugin), _class.VERSION = "1.7.11", _temp);
+
+/***/ }),
+
 /***/ "./node_modules/@uppy/utils/lib/AbortController.js":
 /*!*********************************************************!*\
   !*** ./node_modules/@uppy/utils/lib/AbortController.js ***!
@@ -5297,6 +9590,16 @@ module.exports = /*#__PURE__*/function () {
 
   return EventTracker;
 }();
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/utils/lib/FOCUSABLE_ELEMENTS.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@uppy/utils/lib/FOCUSABLE_ELEMENTS.js ***!
+  \************************************************************/
+/***/ ((module) => {
+
+module.exports = ['a[href]:not([tabindex^="-"]):not([inert]):not([aria-hidden])', 'area[href]:not([tabindex^="-"]):not([inert]):not([aria-hidden])', 'input:not([disabled]):not([inert]):not([aria-hidden])', 'select:not([disabled]):not([inert]):not([aria-hidden])', 'textarea:not([disabled]):not([inert]):not([aria-hidden])', 'button:not([disabled]):not([inert]):not([aria-hidden])', 'iframe:not([tabindex^="-"]):not([inert]):not([aria-hidden])', 'object:not([tabindex^="-"]):not([inert]):not([aria-hidden])', 'embed:not([tabindex^="-"]):not([inert]):not([aria-hidden])', '[contenteditable]:not([tabindex^="-"]):not([inert]):not([aria-hidden])', '[tabindex]:not([tabindex^="-"]):not([inert]):not([aria-hidden])'];
 
 /***/ }),
 
@@ -5707,6 +10010,51 @@ module.exports = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./node_modules/@uppy/utils/lib/dataURItoBlob.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@uppy/utils/lib/dataURItoBlob.js ***!
+  \*******************************************************/
+/***/ ((module) => {
+
+module.exports = function dataURItoBlob(dataURI, opts, toFile) {
+  // get the base64 data
+  var data = dataURI.split(',')[1]; // user may provide mime type, if not get it from data URI
+
+  var mimeType = opts.mimeType || dataURI.split(',')[0].split(':')[1].split(';')[0]; // default to plain/text if data URI has no mimeType
+
+  if (mimeType == null) {
+    mimeType = 'plain/text';
+  }
+
+  var binary = atob(data);
+  var array = [];
+
+  for (var i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+
+  var bytes;
+
+  try {
+    bytes = new Uint8Array(array); // eslint-disable-line compat/compat
+  } catch (err) {
+    return null;
+  } // Convert to a File?
+
+
+  if (toFile) {
+    return new File([bytes], opts.name || '', {
+      type: mimeType
+    });
+  }
+
+  return new Blob([bytes], {
+    type: mimeType
+  });
+};
+
+/***/ }),
+
 /***/ "./node_modules/@uppy/utils/lib/delay.js":
 /*!***********************************************!*\
   !*** ./node_modules/@uppy/utils/lib/delay.js ***!
@@ -5805,6 +10153,34 @@ module.exports = function fetchWithNetworkError() {
       throw new NetworkError(err);
     }
   });
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/utils/lib/findAllDOMElements.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@uppy/utils/lib/findAllDOMElements.js ***!
+  \************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var isDOMElement = __webpack_require__(/*! ./isDOMElement */ "./node_modules/@uppy/utils/lib/isDOMElement.js");
+/**
+ * Find one or more DOM elements.
+ *
+ * @param {string} element
+ * @returns {Array|null}
+ */
+
+
+module.exports = function findAllDOMElements(element) {
+  if (typeof element === 'string') {
+    var elements = [].slice.call(document.querySelectorAll(element));
+    return elements.length > 0 ? elements : null;
+  }
+
+  if (typeof element === 'object' && isDOMElement(element)) {
+    return [element];
+  }
 };
 
 /***/ }),
@@ -6318,6 +10694,43 @@ module.exports = function isDragDropSupported() {
 
 /***/ }),
 
+/***/ "./node_modules/@uppy/utils/lib/isObjectURL.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/@uppy/utils/lib/isObjectURL.js ***!
+  \*****************************************************/
+/***/ ((module) => {
+
+/**
+ * Check if a URL string is an object URL from `URL.createObjectURL`.
+ *
+ * @param {string} url
+ * @returns {boolean}
+ */
+module.exports = function isObjectURL(url) {
+  return url.indexOf('blob:') === 0;
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/utils/lib/isPreviewSupported.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@uppy/utils/lib/isPreviewSupported.js ***!
+  \************************************************************/
+/***/ ((module) => {
+
+module.exports = function isPreviewSupported(fileType) {
+  if (!fileType) return false;
+  var fileTypeSpecific = fileType.split('/')[1]; // list of images that browsers can preview
+
+  if (/^(jpe?g|gif|png|svg|svg\+xml|bmp|webp|avif)$/.test(fileTypeSpecific)) {
+    return true;
+  }
+
+  return false;
+};
+
+/***/ }),
+
 /***/ "./node_modules/@uppy/utils/lib/mimeTypes.js":
 /*!***************************************************!*\
   !*** ./node_modules/@uppy/utils/lib/mimeTypes.js ***!
@@ -6435,6 +10848,39 @@ module.exports = function secondsToTime(rawSeconds) {
  */
 module.exports = function toArray(list) {
   return Array.prototype.slice.call(list || [], 0);
+};
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/utils/lib/truncateString.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@uppy/utils/lib/truncateString.js ***!
+  \********************************************************/
+/***/ ((module) => {
+
+/**
+ * Truncates a string to the given number of chars (maxLength) by inserting '...' in the middle of that string.
+ * Partially taken from https://stackoverflow.com/a/5723274/3192470.
+ *
+ * @param {string} string - string to be truncated
+ * @param {number} maxLength - maximum size of the resulting string
+ * @returns {string}
+ */
+module.exports = function truncateString(string, maxLength) {
+  var separator = '...'; // Return original string if it's already shorter than maxLength
+
+  if (string.length <= maxLength) {
+    return string; // Return truncated substring without '...' if string can't be meaningfully truncated
+  }
+
+  if (maxLength <= separator.length) {
+    return string.substr(0, maxLength); // Return truncated string divided in half by '...'
+  }
+
+  var charsToShow = maxLength - separator.length;
+  var frontChars = Math.ceil(charsToShow / 2);
+  var backChars = Math.floor(charsToShow / 2);
+  return string.substr(0, frontChars) + separator + string.substr(string.length - backChars);
 };
 
 /***/ }),
@@ -10597,6 +15043,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _uppy_status_bar__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_uppy_status_bar__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _uppy_aws_s3_multipart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @uppy/aws-s3-multipart */ "./node_modules/@uppy/aws-s3-multipart/lib/index.js");
 /* harmony import */ var _uppy_aws_s3_multipart__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_uppy_aws_s3_multipart__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _uppy_dashboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @uppy/dashboard */ "./node_modules/@uppy/dashboard/lib/index.js");
+/* harmony import */ var _uppy_dashboard__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_uppy_dashboard__WEBPACK_IMPORTED_MODULE_4__);
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -10613,6 +15061,9 @@ __webpack_require__(/*! @uppy/drag-drop/dist/style.min.css */ "./node_modules/@u
 
 __webpack_require__(/*! @uppy/status-bar/dist/style.min.css */ "./node_modules/@uppy/status-bar/dist/style.min.css");
 
+__webpack_require__(/*! @uppy/dashboard/dist/style.css */ "./node_modules/@uppy/dashboard/dist/style.css");
+
+
 
 
 
@@ -10621,6 +15072,7 @@ window.Uppy = (_uppy_core__WEBPACK_IMPORTED_MODULE_0___default());
 window.DragDrop = (_uppy_drag_drop__WEBPACK_IMPORTED_MODULE_1___default());
 window.StatusBar = (_uppy_status_bar__WEBPACK_IMPORTED_MODULE_2___default());
 window.AwsS3Multipart = (_uppy_aws_s3_multipart__WEBPACK_IMPORTED_MODULE_3___default());
+window.Dashboard = (_uppy_dashboard__WEBPACK_IMPORTED_MODULE_4___default());
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -10634,6 +15086,1967 @@ window.AwsS3Multipart = (_uppy_aws_s3_multipart__WEBPACK_IMPORTED_MODULE_3___def
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./node_modules/base64-js/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/base64-js/index.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+// Support decoding URL-safe base64 strings, as Node.js does.
+// See: https://en.wikipedia.org/wiki/Base64#URL_applications
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function getLens (b64) {
+  var len = b64.length
+
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // Trim off extra bytes after placeholder bytes are found
+  // See: https://github.com/beatgammit/base64-js/issues/42
+  var validLen = b64.indexOf('=')
+  if (validLen === -1) validLen = len
+
+  var placeHoldersLen = validLen === len
+    ? 0
+    : 4 - (validLen % 4)
+
+  return [validLen, placeHoldersLen]
+}
+
+// base64 is 4/3 + up to two characters of the original data
+function byteLength (b64) {
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function _byteLength (b64, validLen, placeHoldersLen) {
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function toByteArray (b64) {
+  var tmp
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+
+  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
+
+  var curByte = 0
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  var len = placeHoldersLen > 0
+    ? validLen - 4
+    : validLen
+
+  var i
+  for (i = 0; i < len; i += 4) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 18) |
+      (revLookup[b64.charCodeAt(i + 1)] << 12) |
+      (revLookup[b64.charCodeAt(i + 2)] << 6) |
+      revLookup[b64.charCodeAt(i + 3)]
+    arr[curByte++] = (tmp >> 16) & 0xFF
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 2) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 2) |
+      (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 1) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 10) |
+      (revLookup[b64.charCodeAt(i + 1)] << 4) |
+      (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] +
+    lookup[num >> 12 & 0x3F] +
+    lookup[num >> 6 & 0x3F] +
+    lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp =
+      ((uint8[i] << 16) & 0xFF0000) +
+      ((uint8[i + 1] << 8) & 0xFF00) +
+      (uint8[i + 2] & 0xFF)
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 2] +
+      lookup[(tmp << 4) & 0x3F] +
+      '=='
+    )
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 10] +
+      lookup[(tmp >> 4) & 0x3F] +
+      lookup[(tmp << 2) & 0x3F] +
+      '='
+    )
+  }
+
+  return parts.join('')
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/buffer/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/buffer/index.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+/* eslint-disable no-proto */
+
+
+
+var base64 = __webpack_require__(/*! base64-js */ "./node_modules/base64-js/index.js")
+var ieee754 = __webpack_require__(/*! ieee754 */ "./node_modules/ieee754/index.js")
+var isArray = __webpack_require__(/*! isarray */ "./node_modules/isarray/index.js")
+
+exports.Buffer = Buffer
+exports.SlowBuffer = SlowBuffer
+exports.INSPECT_MAX_BYTES = 50
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Use Object implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * Due to various browser bugs, sometimes the Object implementation will be used even
+ * when the browser supports typed arrays.
+ *
+ * Note:
+ *
+ *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+ *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *
+ *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *
+ *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *     incorrect length in some situations.
+
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+ * get the Object implementation, which is slower but behaves correctly.
+ */
+Buffer.TYPED_ARRAY_SUPPORT = __webpack_require__.g.TYPED_ARRAY_SUPPORT !== undefined
+  ? __webpack_require__.g.TYPED_ARRAY_SUPPORT
+  : typedArraySupport()
+
+/*
+ * Export kMaxLength after typed array support is determined.
+ */
+exports.kMaxLength = kMaxLength()
+
+function typedArraySupport () {
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42 && // typed array instances can be augmented
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
+
+function createBuffer (that, length) {
+  if (kMaxLength() < length) {
+    throw new RangeError('Invalid typed array length')
+  }
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = new Uint8Array(length)
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    if (that === null) {
+      that = new Buffer(length)
+    }
+    that.length = length
+  }
+
+  return that
+}
+
+/**
+ * The Buffer constructor returns instances of `Uint8Array` that have their
+ * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+ * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+ * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+ * returns a single octet.
+ *
+ * The `Uint8Array` prototype remains unmodified.
+ */
+
+function Buffer (arg, encodingOrOffset, length) {
+  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+    return new Buffer(arg, encodingOrOffset, length)
+  }
+
+  // Common case.
+  if (typeof arg === 'number') {
+    if (typeof encodingOrOffset === 'string') {
+      throw new Error(
+        'If encoding is specified then the first argument must be a string'
+      )
+    }
+    return allocUnsafe(this, arg)
+  }
+  return from(this, arg, encodingOrOffset, length)
+}
+
+Buffer.poolSize = 8192 // not used by this implementation
+
+// TODO: Legacy, not needed anymore. Remove in next major version.
+Buffer._augment = function (arr) {
+  arr.__proto__ = Buffer.prototype
+  return arr
+}
+
+function from (that, value, encodingOrOffset, length) {
+  if (typeof value === 'number') {
+    throw new TypeError('"value" argument must not be a number')
+  }
+
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+    return fromArrayBuffer(that, value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'string') {
+    return fromString(that, value, encodingOrOffset)
+  }
+
+  return fromObject(that, value)
+}
+
+/**
+ * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+ * if value is a number.
+ * Buffer.from(str[, encoding])
+ * Buffer.from(array)
+ * Buffer.from(buffer)
+ * Buffer.from(arrayBuffer[, byteOffset[, length]])
+ **/
+Buffer.from = function (value, encodingOrOffset, length) {
+  return from(null, value, encodingOrOffset, length)
+}
+
+if (Buffer.TYPED_ARRAY_SUPPORT) {
+  Buffer.prototype.__proto__ = Uint8Array.prototype
+  Buffer.__proto__ = Uint8Array
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true
+    })
+  }
+}
+
+function assertSize (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('"size" argument must be a number')
+  } else if (size < 0) {
+    throw new RangeError('"size" argument must not be negative')
+  }
+}
+
+function alloc (that, size, fill, encoding) {
+  assertSize(size)
+  if (size <= 0) {
+    return createBuffer(that, size)
+  }
+  if (fill !== undefined) {
+    // Only pay attention to encoding if it's a string. This
+    // prevents accidentally sending in a number that would
+    // be interpretted as a start offset.
+    return typeof encoding === 'string'
+      ? createBuffer(that, size).fill(fill, encoding)
+      : createBuffer(that, size).fill(fill)
+  }
+  return createBuffer(that, size)
+}
+
+/**
+ * Creates a new filled Buffer instance.
+ * alloc(size[, fill[, encoding]])
+ **/
+Buffer.alloc = function (size, fill, encoding) {
+  return alloc(null, size, fill, encoding)
+}
+
+function allocUnsafe (that, size) {
+  assertSize(size)
+  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < size; ++i) {
+      that[i] = 0
+    }
+  }
+  return that
+}
+
+/**
+ * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+ * */
+Buffer.allocUnsafe = function (size) {
+  return allocUnsafe(null, size)
+}
+/**
+ * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+ */
+Buffer.allocUnsafeSlow = function (size) {
+  return allocUnsafe(null, size)
+}
+
+function fromString (that, string, encoding) {
+  if (typeof encoding !== 'string' || encoding === '') {
+    encoding = 'utf8'
+  }
+
+  if (!Buffer.isEncoding(encoding)) {
+    throw new TypeError('"encoding" must be a valid string encoding')
+  }
+
+  var length = byteLength(string, encoding) | 0
+  that = createBuffer(that, length)
+
+  var actual = that.write(string, encoding)
+
+  if (actual !== length) {
+    // Writing a hex string, for example, that contains invalid characters will
+    // cause everything after the first invalid character to be ignored. (e.g.
+    // 'abxxcd' will be treated as 'ab')
+    that = that.slice(0, actual)
+  }
+
+  return that
+}
+
+function fromArrayLike (that, array) {
+  var length = array.length < 0 ? 0 : checked(array.length) | 0
+  that = createBuffer(that, length)
+  for (var i = 0; i < length; i += 1) {
+    that[i] = array[i] & 255
+  }
+  return that
+}
+
+function fromArrayBuffer (that, array, byteOffset, length) {
+  array.byteLength // this throws if `array` is not a valid ArrayBuffer
+
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('\'offset\' is out of bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('\'length\' is out of bounds')
+  }
+
+  if (byteOffset === undefined && length === undefined) {
+    array = new Uint8Array(array)
+  } else if (length === undefined) {
+    array = new Uint8Array(array, byteOffset)
+  } else {
+    array = new Uint8Array(array, byteOffset, length)
+  }
+
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = array
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    that = fromArrayLike(that, array)
+  }
+  return that
+}
+
+function fromObject (that, obj) {
+  if (Buffer.isBuffer(obj)) {
+    var len = checked(obj.length) | 0
+    that = createBuffer(that, len)
+
+    if (that.length === 0) {
+      return that
+    }
+
+    obj.copy(that, 0, 0, len)
+    return that
+  }
+
+  if (obj) {
+    if ((typeof ArrayBuffer !== 'undefined' &&
+        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+        return createBuffer(that, 0)
+      }
+      return fromArrayLike(that, obj)
+    }
+
+    if (obj.type === 'Buffer' && isArray(obj.data)) {
+      return fromArrayLike(that, obj.data)
+    }
+  }
+
+  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+}
+
+function checked (length) {
+  // Note: cannot use `length < kMaxLength()` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= kMaxLength()) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
+  }
+  return length | 0
+}
+
+function SlowBuffer (length) {
+  if (+length != length) { // eslint-disable-line eqeqeq
+    length = 0
+  }
+  return Buffer.alloc(+length)
+}
+
+Buffer.isBuffer = function isBuffer (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+Buffer.compare = function compare (a, b) {
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
+    throw new TypeError('Arguments must be Buffers')
+  }
+
+  if (a === b) return 0
+
+  var x = a.length
+  var y = b.length
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i]
+      y = b[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+Buffer.isEncoding = function isEncoding (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'latin1':
+    case 'binary':
+    case 'base64':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+}
+
+Buffer.concat = function concat (list, length) {
+  if (!isArray(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return Buffer.alloc(0)
+  }
+
+  var i
+  if (length === undefined) {
+    length = 0
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length
+    }
+  }
+
+  var buffer = Buffer.allocUnsafe(length)
+  var pos = 0
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i]
+    if (!Buffer.isBuffer(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos)
+    pos += buf.length
+  }
+  return buffer
+}
+
+function byteLength (string, encoding) {
+  if (Buffer.isBuffer(string)) {
+    return string.length
+  }
+  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    string = '' + string
+  }
+
+  var len = string.length
+  if (len === 0) return 0
+
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'latin1':
+      case 'binary':
+        return len
+      case 'utf8':
+      case 'utf-8':
+      case undefined:
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+Buffer.byteLength = byteLength
+
+function slowToString (encoding, start, end) {
+  var loweredCase = false
+
+  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+  // property of a typed array.
+
+  // This behaves neither like String nor Uint8Array in that we set start/end
+  // to their upper/lower bounds if the value passed is out of range.
+  // undefined is handled specially as per ECMA-262 6th Edition,
+  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+  if (start === undefined || start < 0) {
+    start = 0
+  }
+  // Return early if start > this.length. Done here to prevent potential uint32
+  // coercion fail below.
+  if (start > this.length) {
+    return ''
+  }
+
+  if (end === undefined || end > this.length) {
+    end = this.length
+  }
+
+  if (end <= 0) {
+    return ''
+  }
+
+  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+  end >>>= 0
+  start >>>= 0
+
+  if (end <= start) {
+    return ''
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice(this, start, end)
+
+      case 'ascii':
+        return asciiSlice(this, start, end)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Slice(this, start, end)
+
+      case 'base64':
+        return base64Slice(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice(this, start, end)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+// Buffer instances.
+Buffer.prototype._isBuffer = true
+
+function swap (b, n, m) {
+  var i = b[n]
+  b[n] = b[m]
+  b[m] = i
+}
+
+Buffer.prototype.swap16 = function swap16 () {
+  var len = this.length
+  if (len % 2 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 16-bits')
+  }
+  for (var i = 0; i < len; i += 2) {
+    swap(this, i, i + 1)
+  }
+  return this
+}
+
+Buffer.prototype.swap32 = function swap32 () {
+  var len = this.length
+  if (len % 4 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 32-bits')
+  }
+  for (var i = 0; i < len; i += 4) {
+    swap(this, i, i + 3)
+    swap(this, i + 1, i + 2)
+  }
+  return this
+}
+
+Buffer.prototype.swap64 = function swap64 () {
+  var len = this.length
+  if (len % 8 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 64-bits')
+  }
+  for (var i = 0; i < len; i += 8) {
+    swap(this, i, i + 7)
+    swap(this, i + 1, i + 6)
+    swap(this, i + 2, i + 5)
+    swap(this, i + 3, i + 4)
+  }
+  return this
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
+}
+
+Buffer.prototype.equals = function equals (b) {
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  if (this === b) return true
+  return Buffer.compare(this, b) === 0
+}
+
+Buffer.prototype.inspect = function inspect () {
+  var str = ''
+  var max = exports.INSPECT_MAX_BYTES
+  if (this.length > 0) {
+    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
+    if (this.length > max) str += ' ... '
+  }
+  return '<Buffer ' + str + '>'
+}
+
+Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (!Buffer.isBuffer(target)) {
+    throw new TypeError('Argument must be a Buffer')
+  }
+
+  if (start === undefined) {
+    start = 0
+  }
+  if (end === undefined) {
+    end = target ? target.length : 0
+  }
+  if (thisStart === undefined) {
+    thisStart = 0
+  }
+  if (thisEnd === undefined) {
+    thisEnd = this.length
+  }
+
+  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+    throw new RangeError('out of range index')
+  }
+
+  if (thisStart >= thisEnd && start >= end) {
+    return 0
+  }
+  if (thisStart >= thisEnd) {
+    return -1
+  }
+  if (start >= end) {
+    return 1
+  }
+
+  start >>>= 0
+  end >>>= 0
+  thisStart >>>= 0
+  thisEnd >>>= 0
+
+  if (this === target) return 0
+
+  var x = thisEnd - thisStart
+  var y = end - start
+  var len = Math.min(x, y)
+
+  var thisCopy = this.slice(thisStart, thisEnd)
+  var targetCopy = target.slice(start, end)
+
+  for (var i = 0; i < len; ++i) {
+    if (thisCopy[i] !== targetCopy[i]) {
+      x = thisCopy[i]
+      y = targetCopy[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+//
+// Arguments:
+// - buffer - a Buffer to search
+// - val - a string, Buffer, or number
+// - byteOffset - an index into `buffer`; will be clamped to an int32
+// - encoding - an optional encoding, relevant is val is a string
+// - dir - true for indexOf, false for lastIndexOf
+function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
+  // Empty buffer means no match
+  if (buffer.length === 0) return -1
+
+  // Normalize byteOffset
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset
+    byteOffset = 0
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000
+  }
+  byteOffset = +byteOffset  // Coerce to Number.
+  if (isNaN(byteOffset)) {
+    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+    byteOffset = dir ? 0 : (buffer.length - 1)
+  }
+
+  // Normalize byteOffset: negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
+  if (byteOffset >= buffer.length) {
+    if (dir) return -1
+    else byteOffset = buffer.length - 1
+  } else if (byteOffset < 0) {
+    if (dir) byteOffset = 0
+    else return -1
+  }
+
+  // Normalize val
+  if (typeof val === 'string') {
+    val = Buffer.from(val, encoding)
+  }
+
+  // Finally, search either indexOf (if dir is true) or lastIndexOf
+  if (Buffer.isBuffer(val)) {
+    // Special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
+  } else if (typeof val === 'number') {
+    val = val & 0xFF // Search for a byte value [0-255]
+    if (Buffer.TYPED_ARRAY_SUPPORT &&
+        typeof Uint8Array.prototype.indexOf === 'function') {
+      if (dir) {
+        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
+      } else {
+        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
+      }
+    }
+    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
+function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+  var indexSize = 1
+  var arrLength = arr.length
+  var valLength = val.length
+
+  if (encoding !== undefined) {
+    encoding = String(encoding).toLowerCase()
+    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+        encoding === 'utf16le' || encoding === 'utf-16le') {
+      if (arr.length < 2 || val.length < 2) {
+        return -1
+      }
+      indexSize = 2
+      arrLength /= 2
+      valLength /= 2
+      byteOffset /= 2
+    }
+  }
+
+  function read (buf, i) {
+    if (indexSize === 1) {
+      return buf[i]
+    } else {
+      return buf.readUInt16BE(i * indexSize)
+    }
+  }
+
+  var i
+  if (dir) {
+    var foundIndex = -1
+    for (i = byteOffset; i < arrLength; i++) {
+      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+        if (foundIndex === -1) foundIndex = i
+        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+      } else {
+        if (foundIndex !== -1) i -= i - foundIndex
+        foundIndex = -1
+      }
+    }
+  } else {
+    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
+    for (i = byteOffset; i >= 0; i--) {
+      var found = true
+      for (var j = 0; j < valLength; j++) {
+        if (read(arr, i + j) !== read(val, j)) {
+          found = false
+          break
+        }
+      }
+      if (found) return i
+    }
+  }
+
+  return -1
+}
+
+Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+  return this.indexOf(val, byteOffset, encoding) !== -1
+}
+
+Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
+}
+
+Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
+}
+
+function hexWrite (buf, string, offset, length) {
+  offset = Number(offset) || 0
+  var remaining = buf.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length
+  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
+
+  if (length > strLen / 2) {
+    length = strLen / 2
+  }
+  for (var i = 0; i < length; ++i) {
+    var parsed = parseInt(string.substr(i * 2, 2), 16)
+    if (isNaN(parsed)) return i
+    buf[offset + i] = parsed
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+function asciiWrite (buf, string, offset, length) {
+  return blitBuffer(asciiToBytes(string), buf, offset, length)
+}
+
+function latin1Write (buf, string, offset, length) {
+  return asciiWrite(buf, string, offset, length)
+}
+
+function base64Write (buf, string, offset, length) {
+  return blitBuffer(base64ToBytes(string), buf, offset, length)
+}
+
+function ucs2Write (buf, string, offset, length) {
+  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+Buffer.prototype.write = function write (string, offset, length, encoding) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    encoding = 'utf8'
+    length = this.length
+    offset = 0
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    encoding = offset
+    length = this.length
+    offset = 0
+  // Buffer#write(string, offset[, length][, encoding])
+  } else if (isFinite(offset)) {
+    offset = offset | 0
+    if (isFinite(length)) {
+      length = length | 0
+      if (encoding === undefined) encoding = 'utf8'
+    } else {
+      encoding = length
+      length = undefined
+    }
+  // legacy write(string, encoding, offset, length) - remove in v0.13
+  } else {
+    throw new Error(
+      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+    )
+  }
+
+  var remaining = this.length - offset
+  if (length === undefined || length > remaining) length = remaining
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'hex':
+        return hexWrite(this, string, offset, length)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Write(this, string, offset, length)
+
+      case 'ascii':
+        return asciiWrite(this, string, offset, length)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Write(this, string, offset, length)
+
+      case 'base64':
+        // Warning: maxLength not taken into account in base64Write
+        return base64Write(this, string, offset, length)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return ucs2Write(this, string, offset, length)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+Buffer.prototype.toJSON = function toJSON () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+}
+
+function base64Slice (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return base64.fromByteArray(buf)
+  } else {
+    return base64.fromByteArray(buf.slice(start, end))
+  }
+}
+
+function utf8Slice (buf, start, end) {
+  end = Math.min(buf.length, end)
+  var res = []
+
+  var i = start
+  while (i < end) {
+    var firstByte = buf[i]
+    var codePoint = null
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+      : (firstByte > 0xBF) ? 2
+      : 1
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
+    }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
+    i += bytesPerSequence
+  }
+
+  return decodeCodePointsArray(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH = 0x1000
+
+function decodeCodePointsArray (codePoints) {
+  var len = codePoints.length
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = ''
+  var i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
+}
+
+function asciiSlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i] & 0x7F)
+  }
+  return ret
+}
+
+function latin1Slice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function hexSlice (buf, start, end) {
+  var len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  var out = ''
+  for (var i = start; i < end; ++i) {
+    out += toHex(buf[i])
+  }
+  return out
+}
+
+function utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
+  }
+  return res
+}
+
+Buffer.prototype.slice = function slice (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len
+    if (start < 0) start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0) end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start) end = start
+
+  var newBuf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    newBuf = this.subarray(start, end)
+    newBuf.__proto__ = Buffer.prototype
+  } else {
+    var sliceLen = end - start
+    newBuf = new Buffer(sliceLen, undefined)
+    for (var i = 0; i < sliceLen; ++i) {
+      newBuf[i] = this[i + start]
+    }
+  }
+
+  return newBuf
+}
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    checkOffset(offset, byteLength, this.length)
+  }
+
+  var val = this[offset + --byteLength]
+  var mul = 1
+  while (byteLength > 0 && (mul *= 0x100)) {
+    val += this[offset + --byteLength] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  return this[offset]
+}
+
+Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return this[offset] | (this[offset + 1] << 8)
+}
+
+Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return (this[offset] << 8) | this[offset + 1]
+}
+
+Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+}
+
+Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] * 0x1000000) +
+    ((this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    this[offset + 3])
+}
+
+Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var i = byteLength
+  var mul = 1
+  var val = this[offset + --i]
+  while (i > 0 && (mul *= 0x100)) {
+    val += this[offset + --i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  if (!(this[offset] & 0x80)) return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+}
+
+Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset] | (this[offset + 1] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset + 1] | (this[offset] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset]) |
+    (this[offset + 1] << 8) |
+    (this[offset + 2] << 16) |
+    (this[offset + 3] << 24)
+}
+
+Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] << 24) |
+    (this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    (this[offset + 3])
+}
+
+Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, true, 23, 4)
+}
+
+Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, false, 23, 4)
+}
+
+Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, true, 52, 8)
+}
+
+Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, false, 52, 8)
+}
+
+function checkInt (buf, value, offset, ext, max, min) {
+  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+}
+
+Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var mul = 1
+  var i = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+function objectWriteUInt16 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
+    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+      (littleEndian ? i : 1 - i) * 8
+  }
+}
+
+Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+function objectWriteUInt32 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffffffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
+    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
+  }
+}
+
+Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset + 3] = (value >>> 24)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 1] = (value >>> 8)
+    this[offset] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = 0
+  var mul = 1
+  var sub = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  var sub = 0
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  if (value < 0) value = 0xff + value + 1
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 3] = (value >>> 24)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (value < 0) value = 0xffffffff + value + 1
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+function checkIEEE754 (buf, value, offset, ext, max, min) {
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+  if (offset < 0) throw new RangeError('Index out of range')
+}
+
+function writeFloat (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+  return offset + 4
+}
+
+Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, false, noAssert)
+}
+
+function writeDouble (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+  return offset + 8
+}
+
+Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, false, noAssert)
+}
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (targetStart >= target.length) targetStart = target.length
+  if (!targetStart) targetStart = 0
+  if (end > 0 && end < start) end = start
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start
+  }
+
+  var len = end - start
+  var i
+
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; ++i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, start + len),
+      targetStart
+    )
+  }
+
+  return len
+}
+
+// Usage:
+//    buffer.fill(number[, offset[, end]])
+//    buffer.fill(buffer[, offset[, end]])
+//    buffer.fill(string[, offset[, end]][, encoding])
+Buffer.prototype.fill = function fill (val, start, end, encoding) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      encoding = start
+      start = 0
+      end = this.length
+    } else if (typeof end === 'string') {
+      encoding = end
+      end = this.length
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0)
+      if (code < 256) {
+        val = code
+      }
+    }
+    if (encoding !== undefined && typeof encoding !== 'string') {
+      throw new TypeError('encoding must be a string')
+    }
+    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+      throw new TypeError('Unknown encoding: ' + encoding)
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0
+  end = end === undefined ? this.length : end >>> 0
+
+  if (!val) val = 0
+
+  var i
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val
+    }
+  } else {
+    var bytes = Buffer.isBuffer(val)
+      ? val
+      : utf8ToBytes(new Buffer(val, encoding).toString())
+    var len = bytes.length
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+// HELPER FUNCTIONS
+// ================
+
+var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
+
+function base64clean (str) {
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+  // Node converts strings with length < 2 to ''
+  if (str.length < 2) return ''
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '='
+  }
+  return str
+}
+
+function stringtrim (str) {
+  if (str.trim) return str.trim()
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes (string, units) {
+  units = units || Infinity
+  var codePoint
+  var length = string.length
+  var leadSurrogate = null
+  var bytes = []
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i)
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str, units) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(base64clean(str))
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+function isnan (val) {
+  return val !== val // eslint-disable-line no-self-compare
+}
+
 
 /***/ }),
 
@@ -10722,6 +17135,30 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".uppy-Root{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-align:left;position:relative;color:#333}.uppy-Root[dir=rtl],[dir=rtl] .uppy-Root{text-align:right}.uppy-Root *,.uppy-Root :after,.uppy-Root :before{box-sizing:inherit}.uppy-Root [hidden]{display:none}.uppy-u-reset{-webkit-appearance:none;line-height:1;padding:0;color:inherit;-webkit-backface-visibility:visible;backface-visibility:visible;background:none;border:none;border-collapse:separate;-o-border-image:none;border-image:none;border-radius:0;border-spacing:0;box-shadow:none;clear:none;cursor:auto;display:inline;empty-cells:show;float:none;font-family:inherit;font-size:inherit;font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none;left:auto;letter-spacing:normal;list-style:none;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;opacity:1;outline:medium none invert;overflow:visible;overflow-x:visible;overflow-y:visible;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;top:auto;transform:none;transform-origin:50% 50% 0;transform-style:flat;transition:none 0s ease 0s;unicode-bidi:normal;vertical-align:baseline;visibility:visible;white-space:normal;z-index:auto}[dir=rtl] .uppy-u-reset{text-align:right}.uppy-c-textInput{border:1px solid #ddd;border-radius:4px;font-size:14px;line-height:1.5;padding:6px 8px;background-color:#fff}.uppy-size--md .uppy-c-textInput{padding:8px 10px}.uppy-c-textInput:focus{border-color:rgba(34,117,215,.6);outline:none;box-shadow:0 0 0 3px rgba(34,117,215,.15)}[data-uppy-theme=dark] .uppy-c-textInput{background-color:#333;border-color:#333;color:#eaeaea}[data-uppy-theme=dark] .uppy-c-textInput:focus{border-color:#525252;box-shadow:none}.uppy-c-icon{max-width:100%;max-height:100%;fill:currentColor;display:inline-block;overflow:hidden}.uppy-c-btn{display:inline-block;white-space:nowrap;vertical-align:middle;font-family:inherit;font-size:16px;line-height:1;font-weight:500;transition-property:background-color,color;transition-duration:.3s;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none}.uppy-c-btn,[dir=rtl] .uppy-c-btn{text-align:center}.uppy-c-btn:not(:disabled):not(.disabled){cursor:pointer}.uppy-c-btn::-moz-focus-inner{border:0}.uppy-c-btn-primary{font-size:14px;padding:10px 18px;border-radius:4px;background-color:#2275d7;color:#fff}.uppy-c-btn-primary:hover{background-color:#1b5dab}.uppy-c-btn-primary:focus{outline:none;box-shadow:0 0 0 3px rgba(34,117,215,.4)}.uppy-size--md .uppy-c-btn-primary{padding:13px 22px}[data-uppy-theme=dark] .uppy-c-btn-primary{color:#eaeaea}[data-uppy-theme=dark] .uppy-c-btn-primary:focus{outline:none}[data-uppy-theme=dark] .uppy-c-btn-primary::-moz-focus-inner{border:0}[data-uppy-theme=dark] .uppy-c-btn-primary:focus{box-shadow:0 0 0 2px rgba(170,225,255,.85)}.uppy-c-btn-link{font-size:14px;line-height:1;padding:10px 15px;border-radius:4px;background-color:transparent;color:#525252}.uppy-c-btn-link:hover{color:#333}.uppy-c-btn-link:focus{outline:none;box-shadow:0 0 0 3px rgba(34,117,215,.25)}.uppy-size--md .uppy-c-btn-link{padding:13px 18px}[data-uppy-theme=dark] .uppy-c-btn-link{color:#eaeaea}[data-uppy-theme=dark] .uppy-c-btn-link:focus{outline:none}[data-uppy-theme=dark] .uppy-c-btn-link::-moz-focus-inner{border:0}[data-uppy-theme=dark] .uppy-c-btn-link:focus{box-shadow:0 0 0 2px rgba(170,225,255,.85)}[data-uppy-theme=dark] .uppy-c-btn-link:hover{color:#939393}.uppy-c-btn--small{font-size:.9em;padding:7px 16px;border-radius:2px}.uppy-size--md .uppy-c-btn--small{padding:8px 10px;border-radius:2px}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[2]!./node_modules/@uppy/dashboard/dist/style.css":
+/*!***************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[2]!./node_modules/@uppy/dashboard/dist/style.css ***!
+  \***************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n.uppy-Informer {\n  position: absolute;\n  bottom: 60px;\n  left: 0;\n  right: 0;\n  text-align: center;\n  opacity: 1;\n  transform: none;\n  transition: all 250ms ease-in;\n  z-index: 1005;\n}\n\n.uppy-Informer[aria-hidden=true] {\n  opacity: 0;\n  transform: translateY(350%);\n  transition: all 300ms ease-in;\n  z-index: -1000;\n}\n\n.uppy-Informer p {\n  display: inline-block;\n  margin: 0;\n  padding: 0;\n  font-size: 12px;\n  line-height: 1.4;\n  font-weight: 400;\n  padding: 6px 15px;\n  background-color: #757575;\n  color: #fff;\n  border-radius: 18px;\n  max-width: 90%;\n}\n.uppy-size--md .uppy-Informer p {\n  font-size: 14px;\n  line-height: 1.3;\n  max-width: 500px;\n  padding: 10px 20px;\n}\n[data-uppy-theme=dark] .uppy-Informer p {\n  background-color: #333;\n}\n\n[dir=\"ltr\"] .uppy-Informer span{\n  left: 3px;\n}\n\n[dir=\"rtl\"] .uppy-Informer span{\n  right: 3px;\n}\n\n[dir=\"ltr\"] .uppy-Informer span{\n          margin-left: -1px;\n}\n\n[dir=\"rtl\"] .uppy-Informer span{\n          margin-right: -1px;\n}\n\n.uppy-Informer span {\n  line-height: 12px;\n  width: 13px;\n  height: 13px;\n  display: inline-block;\n  vertical-align: middle;\n  color: #525252;\n  background-color: #fff;\n  border-radius: 50%;\n  position: relative;\n  top: -1px;\n  font-size: 10px;\n  -webkit-margin-start: -1px;\n}\n\n.uppy-Informer span:hover {\n  cursor: help;\n}\n\n.uppy-Informer span:after {\n  line-height: 1.3;\n  word-wrap: break-word;\n}\n\n/* -------------------------------------------------------------------\n  Microtip\n\n  Modern, lightweight css-only tooltips\n  Just 1kb minified and gzipped\n\n  @author Ghosh\n  @package Microtip\n\n----------------------------------------------------------------------\n  1. Base Styles\n  2. Direction Modifiers\n  3. Position Modifiers\n--------------------------------------------------------------------*/\n/* ------------------------------------------------\n  [1] Base Styles\n-------------------------------------------------*/\n.uppy-Root [aria-label][role~=tooltip] {\n  /* no important */\n  position: relative;\n}\n\n.uppy-Root [aria-label][role~=tooltip]::before,\n.uppy-Root [aria-label][role~=tooltip]::after {\n  /* no important */\n  transform: translate3d(0, 0, 0);\n  -webkit-backface-visibility: hidden;\n  backface-visibility: hidden;\n  will-change: transform;\n  opacity: 0;\n  pointer-events: none;\n  transition: all var(--microtip-transition-duration, 0.18s) var(--microtip-transition-easing, ease-in-out) var(--microtip-transition-delay, 0s);\n  position: absolute;\n  box-sizing: border-box;\n  z-index: 10;\n  transform-origin: top;\n}\n\n.uppy-Root [aria-label][role~=tooltip]::before {\n  /* no important */\n  background-size: 100% auto !important;\n  content: \"\";\n}\n\n.uppy-Root [aria-label][role~=tooltip]::after {\n  /* no important */\n  background: rgba(17, 17, 17, 0.9);\n  border-radius: 4px;\n  color: #ffffff;\n  content: attr(aria-label);\n  font-size: var(--microtip-font-size, 13px);\n  font-weight: var(--microtip-font-weight, normal);\n  text-transform: var(--microtip-text-transform, none);\n  padding: 0.5em 1em;\n  white-space: nowrap;\n  box-sizing: content-box;\n}\n\n.uppy-Root [aria-label][role~=tooltip]:hover::before,\n.uppy-Root [aria-label][role~=tooltip]:hover::after,\n.uppy-Root [aria-label][role~=tooltip]:focus::before,\n.uppy-Root [aria-label][role~=tooltip]:focus::after {\n  /* no important */\n  opacity: 1;\n  pointer-events: auto;\n}\n\n/* ------------------------------------------------\n  [2] Position Modifiers\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position|=top]::before {\n  /* no important */\n  background: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%280%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat;\n  height: 6px;\n  width: 18px;\n  margin-bottom: 5px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=top]::after {\n  /* no important */\n  margin-bottom: 11px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=top]::before {\n  /* no important */\n  transform: translate3d(-50%, 0, 0);\n  bottom: 100%;\n  left: 50%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=top]:hover::before {\n  /* no important */\n  transform: translate3d(-50%, -5px, 0);\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=top]::after {\n  /* no important */\n  transform: translate3d(-50%, 0, 0);\n  bottom: 100%;\n  left: 50%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=top]:hover::after {\n  /* no important */\n  transform: translate3d(-50%, -5px, 0);\n}\n\n/* ------------------------------------------------\n  [2.1] Top Left\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position=top-left]::after {\n  /* no important */\n  transform: translate3d(calc(-100% + 16px), 0, 0);\n  bottom: 100%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=top-left]:hover::after {\n  /* no important */\n  transform: translate3d(calc(-100% + 16px), -5px, 0);\n}\n\n/* ------------------------------------------------\n  [2.2] Top Right\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position=top-right]::after {\n  /* no important */\n  transform: translate3d(calc(0% + -16px), 0, 0);\n  bottom: 100%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=top-right]:hover::after {\n  /* no important */\n  transform: translate3d(calc(0% + -16px), -5px, 0);\n}\n\n/* ------------------------------------------------\n  [2.3] Bottom\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position|=bottom]::before {\n  /* no important */\n  background: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28180%2018%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat;\n  height: 6px;\n  width: 18px;\n  margin-top: 5px;\n  margin-bottom: 0;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=bottom]::after {\n  /* no important */\n  margin-top: 11px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=bottom]::before {\n  /* no important */\n  transform: translate3d(-50%, -10px, 0);\n  bottom: auto;\n  left: 50%;\n  top: 100%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=bottom]:hover::before {\n  /* no important */\n  transform: translate3d(-50%, 0, 0);\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position|=bottom]::after {\n  /* no important */\n  transform: translate3d(-50%, -10px, 0);\n  top: 100%;\n  left: 50%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=bottom]:hover::after {\n  /* no important */\n  transform: translate3d(-50%, 0, 0);\n}\n\n/* ------------------------------------------------\n  [2.4] Bottom Left\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position=bottom-left]::after {\n  /* no important */\n  transform: translate3d(calc(-100% + 16px), -10px, 0);\n  top: 100%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=bottom-left]:hover::after {\n  /* no important */\n  transform: translate3d(calc(-100% + 16px), 0, 0);\n}\n\n/* ------------------------------------------------\n  [2.5] Bottom Right\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position=bottom-right]::after {\n  /* no important */\n  transform: translate3d(calc(0% + -16px), -10px, 0);\n  top: 100%;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=bottom-right]:hover::after {\n  /* no important */\n  transform: translate3d(calc(0% + -16px), 0, 0);\n}\n\n/* ------------------------------------------------\n  [2.6] Left\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position=left]::before,\n.uppy-Root [role~=tooltip][data-microtip-position=left]::after {\n  /* no important */\n  bottom: auto;\n  left: auto;\n  right: 100%;\n  top: 50%;\n  transform: translate3d(10px, -50%, 0);\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=left]::before {\n  /* no important */\n  background: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28-90%2018%2018%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat;\n  height: 18px;\n  width: 6px;\n  margin-right: 5px;\n  margin-bottom: 0;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=left]::after {\n  /* no important */\n  margin-right: 11px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=left]:hover::before,\n.uppy-Root [role~=tooltip][data-microtip-position=left]:hover::after {\n  /* no important */\n  transform: translate3d(0, -50%, 0);\n}\n\n/* ------------------------------------------------\n  [2.7] Right\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-position=right]::before,\n.uppy-Root [role~=tooltip][data-microtip-position=right]::after {\n  /* no important */\n  bottom: auto;\n  left: 100%;\n  top: 50%;\n  transform: translate3d(-10px, -50%, 0);\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=right]::before {\n  /* no important */\n  background: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat;\n  height: 18px;\n  width: 6px;\n  margin-bottom: 0;\n  margin-left: 5px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=right]::after {\n  /* no important */\n  margin-left: 11px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-position=right]:hover::before,\n.uppy-Root [role~=tooltip][data-microtip-position=right]:hover::after {\n  /* no important */\n  transform: translate3d(0, -50%, 0);\n}\n\n/* ------------------------------------------------\n  [3] Size\n-------------------------------------------------*/\n.uppy-Root [role~=tooltip][data-microtip-size=small]::after {\n  /* no important */\n  white-space: initial;\n  width: 80px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-size=medium]::after {\n  /* no important */\n  white-space: initial;\n  width: 150px;\n}\n\n.uppy-Root [role~=tooltip][data-microtip-size=large]::after {\n  /* no important */\n  white-space: initial;\n  width: 260px;\n}\n\n.uppy-StatusBar {\n  display: flex;\n  position: relative;\n  height: 40px;\n  line-height: 40px;\n  font-size: 12px;\n  font-weight: 400;\n  color: #fff;\n  background-color: #fff;\n  z-index: 1001;\n  transition: height 0.2s;\n}\n.uppy-size--md .uppy-StatusBar {\n  height: 46px;\n}\n[data-uppy-theme=dark] .uppy-StatusBar {\n  background-color: #1f1f1f;\n}\n\n.uppy-StatusBar:before {\n  content: \"\";\n  position: absolute;\n  left: 0;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  width: 100%;\n  height: 2px;\n  background-color: #eaeaea;\n}\n[data-uppy-theme=dark] .uppy-StatusBar:before {\n  background-color: #757575;\n}\n\n.uppy-StatusBar[aria-hidden=true] {\n  overflow-y: hidden;\n  height: 0;\n}\n\n.uppy-StatusBar.is-complete .uppy-StatusBar-progress {\n  background-color: #1bb240;\n}\n\n.uppy-StatusBar.is-error .uppy-StatusBar-progress {\n  background-color: #e32437;\n}\n\n.uppy-StatusBar.is-complete .uppy-StatusBar-statusIndicator {\n  color: #1bb240;\n}\n\n.uppy-StatusBar.is-error .uppy-StatusBar-statusIndicator {\n  color: #e32437;\n}\n\n.uppy-StatusBar:not([aria-hidden=true]).is-waiting {\n  background-color: #fff;\n  height: 65px;\n  border-top: 1px solid #eaeaea;\n}\n[data-uppy-theme=dark] .uppy-StatusBar:not([aria-hidden=true]).is-waiting {\n  background-color: #1f1f1f;\n  border-top: 1px solid #333;\n}\n\n.uppy-StatusBar-progress {\n  background-color: #2275d7;\n  height: 2px;\n  position: absolute;\n  z-index: 1001;\n  transition: background-color, width 0.3s ease-out;\n}\n.uppy-StatusBar-progress.is-indeterminate {\n  background-size: 64px 64px;\n  background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.3) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3) 75%, transparent 75%, transparent);\n  -webkit-animation: uppy-StatusBar-ProgressStripes 1s linear infinite;\n          animation: uppy-StatusBar-ProgressStripes 1s linear infinite;\n}\n\n@-webkit-keyframes uppy-StatusBar-ProgressStripes {\n  from {\n    background-position: 0 0;\n  }\n  to {\n    background-position: 64px 0;\n  }\n}\n\n@keyframes uppy-StatusBar-ProgressStripes {\n  from {\n    background-position: 0 0;\n  }\n  to {\n    background-position: 64px 0;\n  }\n}\n.uppy-StatusBar.is-preprocessing .uppy-StatusBar-progress,\n.uppy-StatusBar.is-postprocessing .uppy-StatusBar-progress {\n  background-color: #f6a623;\n}\n\n.uppy-StatusBar.is-waiting .uppy-StatusBar-progress {\n  display: none;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-content{\n          padding-left: 10px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-content{\n          padding-right: 10px;\n}\n\n.uppy-StatusBar-content {\n  display: flex;\n  align-items: center;\n  position: relative;\n  z-index: 1002;\n  -webkit-padding-start: 10px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  color: #333;\n  height: 100%;\n}\n[dir=\"ltr\"] .uppy-size--md .uppy-StatusBar-content{\n          padding-left: 15px;\n}\n[dir=\"rtl\"] .uppy-size--md .uppy-StatusBar-content{\n          padding-right: 15px;\n}\n.uppy-size--md .uppy-StatusBar-content {\n  -webkit-padding-start: 15px;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-content {\n  color: #eaeaea;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-status{\n          padding-right: 0.3em;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-status{\n          padding-left: 0.3em;\n}\n\n.uppy-StatusBar-status {\n  line-height: 1.4;\n  font-weight: normal;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  -webkit-padding-end: 0.3em;\n}\n\n.uppy-StatusBar-statusPrimary {\n  font-weight: 500;\n  line-height: 1;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-statusPrimary {\n  color: #eaeaea;\n}\n\n.uppy-StatusBar-statusSecondary {\n  margin-top: 1px;\n  font-size: 11px;\n  line-height: 1.2;\n  display: inline-block;\n  color: #757575;\n  white-space: nowrap;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-statusSecondary {\n  color: #bbb;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-statusSecondaryHint{\n          margin-right: 5px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-statusSecondaryHint{\n          margin-left: 5px;\n}\n\n.uppy-StatusBar-statusSecondaryHint {\n  display: inline-block;\n  vertical-align: middle;\n  -webkit-margin-end: 5px;\n  line-height: 1;\n}\n[dir=\"ltr\"] .uppy-size--md .uppy-StatusBar-statusSecondaryHint{\n          margin-right: 8px;\n}\n[dir=\"rtl\"] .uppy-size--md .uppy-StatusBar-statusSecondaryHint{\n          margin-left: 8px;\n}\n.uppy-size--md .uppy-StatusBar-statusSecondaryHint {\n  -webkit-margin-end: 8px;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-statusIndicator{\n          margin-right: 7px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-statusIndicator{\n          margin-left: 7px;\n}\n\n.uppy-StatusBar-statusIndicator {\n  position: relative;\n  top: 1px;\n  color: #525252;\n  -webkit-margin-end: 7px;\n}\n.uppy-StatusBar-statusIndicator svg {\n  vertical-align: text-bottom;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-actions{\n  right: 10px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-actions{\n  left: 10px;\n}\n\n.uppy-StatusBar-actions {\n  display: flex;\n  align-items: center;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  z-index: 1004;\n}\n\n.uppy-StatusBar.is-waiting .uppy-StatusBar-actions {\n  width: 100%;\n  height: 100%;\n  position: static;\n  padding: 0 15px;\n  background-color: #fafafa;\n}\n[data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actions {\n  background-color: #1f1f1f;\n}\n\n.uppy-StatusBar:not([aria-hidden=true]).is-waiting.has-ghosts {\n  height: 90px;\n  flex-direction: column;\n}\n.uppy-size--md .uppy-StatusBar:not([aria-hidden=true]).is-waiting.has-ghosts {\n  height: 65px;\n  flex-direction: row;\n}\n.uppy-StatusBar:not([aria-hidden=true]).is-waiting.has-ghosts .uppy-StatusBar-actions {\n  flex-direction: column;\n  justify-content: center;\n}\n.uppy-size--md .uppy-StatusBar:not([aria-hidden=true]).is-waiting.has-ghosts .uppy-StatusBar-actions {\n  flex-direction: row;\n  justify-content: initial;\n}\n\n.uppy-StatusBar-actionCircleBtn {\n  line-height: 1;\n  cursor: pointer;\n  margin: 3px;\n  opacity: 0.9;\n}\n.uppy-StatusBar-actionCircleBtn:focus {\n  outline: none;\n}\n.uppy-StatusBar-actionCircleBtn::-moz-focus-inner {\n  border: 0;\n}\n.uppy-StatusBar-actionCircleBtn:focus {\n  box-shadow: 0 0 0 3px rgba(34, 117, 215, 0.5);\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionCircleBtn:focus {\n  outline: none;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionCircleBtn::-moz-focus-inner {\n  border: 0;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionCircleBtn:focus {\n  box-shadow: 0 0 0 2px rgba(170, 225, 255, 0.85);\n}\n.uppy-StatusBar-actionCircleBtn:hover {\n  opacity: 1;\n}\n.uppy-StatusBar-actionCircleBtn:focus {\n  border-radius: 50%;\n}\n\n.uppy-StatusBar-actionCircleBtn svg {\n  vertical-align: bottom;\n}\n\n.uppy-StatusBar-actionBtn {\n  display: inline-block;\n  vertical-align: middle;\n  font-size: 10px;\n  line-height: inherit;\n  color: #2275d7;\n}\n.uppy-size--md .uppy-StatusBar-actionBtn {\n  font-size: 11px;\n}\n\n.uppy-StatusBar-actionBtn--disabled {\n  opacity: 0.4;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--disabled {\n  opacity: 0.7;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-actionBtn--retry{\n          margin-right: 6px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-actionBtn--retry{\n          margin-left: 6px;\n}\n\n.uppy-StatusBar-actionBtn--retry {\n  height: 16px;\n  border-radius: 8px;\n  -webkit-margin-end: 6px;\n  background-color: #ff4b23;\n  line-height: 1;\n  color: #fff;\n  padding: 1px 6px 3px 18px;\n  position: relative;\n}\n.uppy-StatusBar-actionBtn--retry:focus {\n  outline: none;\n}\n.uppy-StatusBar-actionBtn--retry::-moz-focus-inner {\n  border: 0;\n}\n.uppy-StatusBar-actionBtn--retry:focus {\n  box-shadow: 0 0 0 3px rgba(34, 117, 215, 0.5);\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--retry:focus {\n  outline: none;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--retry::-moz-focus-inner {\n  border: 0;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--retry:focus {\n  box-shadow: 0 0 0 2px rgba(170, 225, 255, 0.85);\n}\n.uppy-StatusBar-actionBtn--retry:hover {\n  background-color: #f92d00;\n}\n[dir=\"ltr\"] .uppy-StatusBar-actionBtn--retry svg{\n  left: 6px;\n}\n[dir=\"rtl\"] .uppy-StatusBar-actionBtn--retry svg{\n  right: 6px;\n}\n.uppy-StatusBar-actionBtn--retry svg {\n  position: absolute;\n  top: 3px;\n}\n\n.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload {\n  font-size: 14px;\n  width: 100%;\n  padding: 15px 10px;\n  color: #fff;\n  background-color: #1bb240;\n  line-height: 1;\n}\n.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover {\n  background-color: #189c38;\n}\n[data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload {\n  background-color: #1c8b37;\n}\n[data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover {\n  background-color: #18762f;\n}\n\n.uppy-size--md .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload {\n  padding: 13px 22px;\n  width: auto;\n}\n\n.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload.uppy-StatusBar-actionBtn--disabled:hover {\n  cursor: not-allowed;\n  background-color: #1bb240;\n}\n\n[data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload.uppy-StatusBar-actionBtn--disabled:hover {\n  background-color: #1c8b37;\n}\n\n.uppy-StatusBar:not(.is-waiting) .uppy-StatusBar-actionBtn--upload {\n  background-color: transparent;\n  color: #2275d7;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-actionBtn--uploadNewlyAdded{\n          padding-right: 3px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-actionBtn--uploadNewlyAdded{\n          padding-left: 3px;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-actionBtn--uploadNewlyAdded{\n          padding-left: 3px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-actionBtn--uploadNewlyAdded{\n          padding-right: 3px;\n}\n\n.uppy-StatusBar-actionBtn--uploadNewlyAdded {\n  -webkit-padding-end: 3px;\n  -webkit-padding-start: 3px;\n  padding-bottom: 1px;\n  border-radius: 3px;\n}\n.uppy-StatusBar-actionBtn--uploadNewlyAdded:focus {\n  outline: none;\n}\n.uppy-StatusBar-actionBtn--uploadNewlyAdded::-moz-focus-inner {\n  border: 0;\n}\n.uppy-StatusBar-actionBtn--uploadNewlyAdded:focus {\n  box-shadow: 0 0 0 3px rgba(34, 117, 215, 0.5);\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--uploadNewlyAdded:focus {\n  outline: none;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--uploadNewlyAdded::-moz-focus-inner {\n  border: 0;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--uploadNewlyAdded:focus {\n  box-shadow: 0 0 0 2px rgba(170, 225, 255, 0.85);\n}\n\n.uppy-StatusBar-actionBtn--done {\n  line-height: 1;\n  border-radius: 3px;\n  padding: 7px 8px;\n}\n.uppy-StatusBar-actionBtn--done:focus {\n  outline: none;\n}\n.uppy-StatusBar-actionBtn--done::-moz-focus-inner {\n  border: 0;\n}\n.uppy-StatusBar-actionBtn--done:hover {\n  color: #1b5dab;\n}\n.uppy-StatusBar-actionBtn--done:focus {\n  background-color: #eceef2;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--done:focus {\n  background-color: #333;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-actionBtn--done {\n  color: #02baf2;\n}\n\n.uppy-size--md .uppy-StatusBar-actionBtn--done {\n  font-size: 14px;\n}\n\n.uppy-StatusBar-serviceMsg {\n  font-size: 11px;\n  line-height: 1.1;\n  color: #000;\n  padding-left: 10px;\n}\n.uppy-size--md .uppy-StatusBar-serviceMsg {\n  font-size: 14px;\n  padding-left: 15px;\n}\n[data-uppy-theme=dark] .uppy-StatusBar-serviceMsg {\n  color: #eaeaea;\n}\n\n.uppy-StatusBar-serviceMsg-ghostsIcon {\n  opacity: 0.5;\n  vertical-align: text-bottom;\n  position: relative;\n  top: 2px;\n  left: 6px;\n  width: 10px;\n}\n.uppy-size--md .uppy-StatusBar-serviceMsg-ghostsIcon {\n  width: 15px;\n  left: 10px;\n  top: 1px;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-details{\n  left: 2px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-details{\n  right: 2px;\n}\n\n.uppy-StatusBar-details {\n  line-height: 12px;\n  width: 13px;\n  height: 13px;\n  display: inline-block;\n  vertical-align: middle;\n  color: #fff;\n  background-color: #939393;\n  border-radius: 50%;\n  position: relative;\n  top: 0;\n  font-size: 10px;\n  font-weight: 600;\n  text-align: center;\n  cursor: help;\n}\n\n.uppy-StatusBar-details:after {\n  line-height: 1.3;\n  word-wrap: break-word;\n}\n\n[dir=\"ltr\"] .uppy-StatusBar-spinner{\n          margin-right: 10px;\n}\n\n[dir=\"rtl\"] .uppy-StatusBar-spinner{\n          margin-left: 10px;\n}\n\n.uppy-StatusBar-spinner {\n  -webkit-animation-name: uppy-StatusBar-spinnerAnimation;\n          animation-name: uppy-StatusBar-spinnerAnimation;\n  -webkit-animation-duration: 1s;\n          animation-duration: 1s;\n  -webkit-animation-iteration-count: infinite;\n          animation-iteration-count: infinite;\n  -webkit-animation-timing-function: linear;\n          animation-timing-function: linear;\n  -webkit-margin-end: 10px;\n  fill: #2275d7;\n}\n\n.uppy-StatusBar.is-preprocessing .uppy-StatusBar-spinner,\n.uppy-StatusBar.is-postprocessing .uppy-StatusBar-spinner {\n  fill: #f6a623;\n}\n\n@-webkit-keyframes uppy-StatusBar-spinnerAnimation {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n\n@keyframes uppy-StatusBar-spinnerAnimation {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n.uppy-ProviderBrowser-viewType--grid ul.uppy-ProviderBrowser-list {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: space-between;\n  align-items: flex-start;\n  padding: 6px;\n}\n.uppy-ProviderBrowser-viewType--grid ul.uppy-ProviderBrowser-list::after {\n  content: \"\";\n  flex: auto;\n}\n.uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem {\n  width: 50%;\n  position: relative;\n  margin: 0;\n}\n.uppy-size--md .uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem {\n  width: 33.3333%;\n}\n.uppy-size--lg .uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem {\n  width: 25%;\n}\n.uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem::before {\n  content: \"\";\n  padding-top: 100%;\n  display: block;\n}\n.uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem--selected img, .uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem--selected svg {\n  opacity: 0.85;\n}\n.uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem--disabled {\n  opacity: 0.5;\n}\n.uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem--noPreview .uppy-ProviderBrowserItem-inner {\n  background-color: rgba(147, 147, 147, 0.2);\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem--noPreview .uppy-ProviderBrowserItem-inner {\n  background-color: rgba(234, 234, 234, 0.2);\n}\n.uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem--noPreview svg {\n  fill: rgba(0, 0, 0, 0.7);\n  width: 30%;\n  height: 30%;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-viewType--grid li.uppy-ProviderBrowserItem--noPreview svg {\n  fill: rgba(255, 255, 255, 0.8);\n}\n.uppy-ProviderBrowser-viewType--grid button.uppy-ProviderBrowserItem-inner {\n  border-radius: 4px;\n  overflow: hidden;\n  position: absolute;\n  top: 7px;\n  left: 7px;\n  right: 7px;\n  bottom: 7px;\n  text-align: center;\n  width: calc(100% - 14px);\n  height: calc(100% - 14px);\n}\n.uppy-ProviderBrowser-viewType--grid button.uppy-ProviderBrowserItem-inner:focus {\n  outline: none;\n  box-shadow: 0 0 0 3px rgba(34, 117, 215, 0.9);\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-viewType--grid button.uppy-ProviderBrowserItem-inner {\n  box-shadow: 0 0 0 3px rgba(170, 225, 255, 0.7);\n}\n.uppy-ProviderBrowser-viewType--grid button.uppy-ProviderBrowserItem-inner img {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 4px;\n}\n.uppy-ProviderBrowser-viewType--grid .uppy-ProviderBrowserItem-fakeCheckbox {\n  position: absolute;\n  top: 16px;\n  right: 16px;\n  width: 26px;\n  height: 26px;\n  background-color: #2275d7;\n  border-radius: 50%;\n  z-index: 1002;\n  opacity: 0;\n}\n[dir=\"ltr\"] .uppy-ProviderBrowser-viewType--grid .uppy-ProviderBrowserItem-fakeCheckbox:after{\n  left: 7px;\n}\n[dir=\"rtl\"] .uppy-ProviderBrowser-viewType--grid .uppy-ProviderBrowserItem-fakeCheckbox:after{\n  right: 7px;\n}\n.uppy-ProviderBrowser-viewType--grid .uppy-ProviderBrowserItem-fakeCheckbox:after {\n  width: 12px;\n  height: 7px;\n  top: 8px;\n}\n.uppy-ProviderBrowser-viewType--grid .uppy-ProviderBrowserItem-fakeCheckbox--is-checked {\n  opacity: 1;\n}\n\n.uppy-ProviderBrowser-viewType--list {\n  background-color: #fff;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-viewType--list {\n  background-color: #1f1f1f;\n}\n.uppy-ProviderBrowser-viewType--list li.uppy-ProviderBrowserItem {\n  display: flex;\n  align-items: center;\n  padding: 7px 15px;\n  margin: 0;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-viewType--list li.uppy-ProviderBrowserItem {\n  color: #eaeaea;\n}\n.uppy-ProviderBrowser-viewType--list li.uppy-ProviderBrowserItem--disabled {\n  opacity: 0.6;\n}\n[dir=\"ltr\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox{\n          margin-right: 15px;\n}\n[dir=\"rtl\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox{\n          margin-left: 15px;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox {\n  -webkit-margin-end: 15px;\n  height: 17px;\n  width: 17px;\n  border-radius: 3px;\n  background-color: #fff;\n  border: 1px solid #cfcfcf;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox:focus {\n  border: 1px solid #2275d7;\n  box-shadow: 0 0 0 3px rgba(34, 117, 215, 0.25);\n  outline: none;\n}\n[dir=\"ltr\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox::after{\n  left: 3px;\n}\n[dir=\"rtl\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox::after{\n  right: 3px;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox::after {\n  opacity: 0;\n  height: 5px;\n  width: 9px;\n  top: 4px;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox:focus {\n  border-color: rgba(2, 186, 242, 0.7);\n  box-shadow: 0 0 0 3px rgba(2, 186, 242, 0.2);\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox--is-checked {\n  background-color: #2275d7;\n  border-color: #2275d7;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox--is-checked::after {\n  opacity: 1;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n  display: flex;\n  align-items: center;\n  padding: 2px;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner:focus {\n  outline: none;\n  text-decoration: underline;\n}\n[dir=\"ltr\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner img,[dir=\"ltr\"]  .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner svg{\n          margin-right: 8px;\n}\n[dir=\"rtl\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner img,[dir=\"rtl\"]  .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner svg{\n          margin-left: 8px;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner img, .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner svg {\n  -webkit-margin-end: 8px;\n  max-width: 20px;\n  max-height: 20px;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-inner span {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n  line-height: 1.2;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem--disabled .uppy-ProviderBrowserItem-inner {\n  cursor: default;\n}\n[dir=\"ltr\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-iconWrap{\n          margin-right: 7px;\n}\n[dir=\"rtl\"] .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-iconWrap{\n          margin-left: 7px;\n}\n.uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-iconWrap {\n  width: 20px;\n  -webkit-margin-end: 7px;\n}\n\n.uppy-ProviderBrowserItem-fakeCheckbox {\n  position: relative;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.uppy-ProviderBrowserItem-fakeCheckbox:disabled {\n  cursor: default;\n}\n.uppy-ProviderBrowserItem-fakeCheckbox::after {\n  content: \"\";\n  position: absolute;\n  cursor: pointer;\n  border-left: 2px solid #eaeaea;\n  border-bottom: 2px solid #eaeaea;\n  transform: rotate(-45deg);\n}\n.uppy-ProviderBrowserItem-fakeCheckbox:disabled::after {\n  cursor: default;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowserItem-fakeCheckbox {\n  background-color: #1f1f1f;\n  border-color: #939393;\n}\n\n[data-uppy-theme=dark] .uppy-ProviderBrowserItem-fakeCheckbox--is-checked {\n  background-color: #333;\n}\n\n.uppy-SearchProvider {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  flex: 1;\n}\n[data-uppy-theme=dark] .uppy-SearchProvider {\n  background-color: #1f1f1f;\n}\n\n.uppy-SearchProvider-input {\n  width: 90%;\n  max-width: 650px;\n  margin-bottom: 15px;\n}\n.uppy-size--md .uppy-SearchProvider-input {\n  margin-bottom: 20px;\n}\n\n.uppy-SearchProvider-searchButton {\n  padding: 13px 25px;\n}\n.uppy-size--md .uppy-SearchProvider-searchButton {\n  padding: 13px 30px;\n}\n\n.uppy-DashboardContent-panelBody {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex: 1;\n}\n[data-uppy-theme=dark] .uppy-DashboardContent-panelBody {\n  background-color: #1f1f1f;\n}\n\n.uppy-Provider-auth,\n.uppy-Provider-error,\n.uppy-Provider-loading,\n.uppy-Provider-empty {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-flow: column wrap;\n  flex: 1;\n  color: #939393;\n}\n\n.uppy-Provider-empty {\n  color: #939393;\n}\n\n.uppy-Provider-authIcon svg {\n  width: 100px;\n  height: 75px;\n  margin-bottom: 15px;\n}\n\n.uppy-Provider-authTitle {\n  font-size: 17px;\n  line-height: 1.4;\n  font-weight: 400;\n  margin-bottom: 30px;\n  padding: 0 15px;\n  max-width: 500px;\n  text-align: center;\n  color: #757575;\n}\n.uppy-size--md .uppy-Provider-authTitle {\n  font-size: 20px;\n}\n[data-uppy-theme=dark] .uppy-Provider-authTitle {\n  color: #cfcfcf;\n}\n\n[dir=\"ltr\"] .uppy-Provider-breadcrumbs{\n  text-align: left;\n}\n\n[dir=\"rtl\"] .uppy-Provider-breadcrumbs{\n  text-align: right;\n}\n\n.uppy-Provider-breadcrumbs {\n  flex: 1;\n  color: #525252;\n  font-size: 12px;\n  margin-bottom: 10px;\n}\n.uppy-size--md .uppy-Provider-breadcrumbs {\n  margin-bottom: 0;\n}\n[data-uppy-theme=dark] .uppy-Provider-breadcrumbs {\n  color: #eaeaea;\n}\n\n[dir=\"ltr\"] .uppy-Provider-breadcrumbsIcon{\n          margin-right: 4px;\n}\n\n[dir=\"rtl\"] .uppy-Provider-breadcrumbsIcon{\n          margin-left: 4px;\n}\n\n.uppy-Provider-breadcrumbsIcon {\n  display: inline-block;\n  color: #525252;\n  vertical-align: middle;\n  -webkit-margin-end: 4px;\n  line-height: 1;\n}\n\n.uppy-Provider-breadcrumbsIcon svg {\n  width: 13px;\n  height: 13px;\n  fill: #525252;\n}\n\n.uppy-Provider-breadcrumbs button {\n  display: inline-block;\n  line-height: inherit;\n  padding: 4px;\n  border-radius: 3px;\n}\n.uppy-Provider-breadcrumbs button:focus {\n  outline: none;\n}\n.uppy-Provider-breadcrumbs button::-moz-focus-inner {\n  border: 0;\n}\n.uppy-Provider-breadcrumbs button:hover {\n  color: #1b5dab;\n}\n.uppy-Provider-breadcrumbs button:focus {\n  background-color: #eceef2;\n}\n[data-uppy-theme=dark] .uppy-Provider-breadcrumbs button:focus {\n  background-color: #333;\n}\n.uppy-Provider-breadcrumbs button:hover {\n  text-decoration: underline;\n  cursor: pointer;\n}\n[data-uppy-theme=dark] .uppy-Provider-breadcrumbs button {\n  color: #eaeaea;\n}\n\n.uppy-ProviderBrowser {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  font-size: 14px;\n  font-weight: 400;\n  height: 100%;\n}\n\n.uppy-ProviderBrowser-user {\n  margin: 0 8px 0 0;\n  font-weight: 500;\n  color: #333;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-user {\n  color: #eaeaea;\n}\n\n[dir=\"ltr\"] .uppy-ProviderBrowser-user:after{\n  left: 4px;\n}\n\n[dir=\"rtl\"] .uppy-ProviderBrowser-user:after{\n  right: 4px;\n}\n\n.uppy-ProviderBrowser-user:after {\n  content: \"·\";\n  position: relative;\n  color: #939393;\n  font-weight: normal;\n}\n\n.uppy-ProviderBrowser-header {\n  z-index: 1001;\n  border-bottom: 1px solid #eaeaea;\n  position: relative;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-header {\n  border-bottom: 1px solid #333;\n}\n\n.uppy-ProviderBrowser-headerBar {\n  padding: 7px 15px;\n  background-color: #fafafa;\n  z-index: 1001;\n  color: #757575;\n  line-height: 1.4;\n  font-size: 12px;\n}\n.uppy-size--md .uppy-ProviderBrowser-headerBar {\n  display: flex;\n  align-items: center;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-headerBar {\n  background-color: #1f1f1f;\n}\n\n.uppy-ProviderBrowser-headerBar--simple {\n  text-align: center;\n  display: block;\n  justify-content: center;\n}\n\n.uppy-ProviderBrowser-headerBar--simple .uppy-Provider-breadcrumbsWrap {\n  flex: none;\n  display: inline-block;\n  vertical-align: middle;\n}\n\n.uppy-ProviderBrowser-search {\n  width: 100%;\n  background-color: #fff;\n  position: relative;\n  height: 30px;\n  margin-top: 10px;\n  margin-bottom: 5px;\n  display: flex;\n  align-items: center;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-search {\n  background-color: #1f1f1f;\n}\n\n[dir=\"ltr\"] .uppy-ProviderBrowser-searchIcon{\n  left: 16px;\n}\n\n[dir=\"rtl\"] .uppy-ProviderBrowser-searchIcon{\n  right: 16px;\n}\n\n.uppy-ProviderBrowser-searchIcon {\n  position: absolute;\n  width: 12px;\n  height: 12px;\n  z-index: 1002;\n  color: #bbb;\n}\n\n[dir=\"ltr\"] .uppy-ProviderBrowser-searchInput{\n          padding-left: 27px;\n}\n\n[dir=\"rtl\"] .uppy-ProviderBrowser-searchInput{\n          padding-right: 27px;\n}\n\n.uppy-ProviderBrowser-searchInput {\n  width: 100%;\n  height: 30px;\n  background-color: transparent;\n  outline: 0;\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\";\n  font-size: 12px;\n  line-height: 1.4;\n  border: 0;\n  margin: 0 8px;\n  -webkit-padding-start: 27px;\n  z-index: 1001;\n  border-radius: 4px;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-searchInput {\n  background-color: #1f1f1f;\n  color: #eaeaea;\n}\n\n.uppy-ProviderBrowser-searchInput:focus {\n  outline: 0;\n  background-color: #f4f4f4;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-searchInput:focus {\n  background-color: #333;\n}\n\n[dir=\"ltr\"] .uppy-ProviderBrowser-searchClose{\n  right: 12px;\n}\n\n[dir=\"rtl\"] .uppy-ProviderBrowser-searchClose{\n  left: 12px;\n}\n\n.uppy-ProviderBrowser-searchClose {\n  position: absolute;\n  width: 22px;\n  height: 22px;\n  padding: 6px;\n  top: 4px;\n  z-index: 1002;\n  color: #939393;\n  cursor: pointer;\n}\n.uppy-ProviderBrowser-searchClose:hover {\n  color: #757575;\n}\n\n.uppy-ProviderBrowser-searchClose svg {\n  vertical-align: text-top;\n}\n\n.uppy-ProviderBrowser-searchInput:-ms-input-placeholder {\n  color: #939393;\n  opacity: 1;\n}\n\n.uppy-ProviderBrowser-searchInput::-moz-placeholder {\n  color: #939393;\n  opacity: 1;\n}\n\n.uppy-ProviderBrowser-searchInput::placeholder {\n  color: #939393;\n  opacity: 1;\n}\n\n.uppy-ProviderBrowser-userLogout {\n  cursor: pointer;\n  line-height: inherit;\n  color: #2275d7;\n  padding: 4px;\n  border-radius: 3px;\n}\n.uppy-ProviderBrowser-userLogout:focus {\n  outline: none;\n}\n.uppy-ProviderBrowser-userLogout::-moz-focus-inner {\n  border: 0;\n}\n.uppy-ProviderBrowser-userLogout:hover {\n  color: #1b5dab;\n}\n.uppy-ProviderBrowser-userLogout:focus {\n  background-color: #eceef2;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-userLogout:focus {\n  background-color: #333;\n}\n.uppy-ProviderBrowser-userLogout:hover {\n  text-decoration: underline;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-userLogout {\n  color: #eaeaea;\n}\n\n.uppy-ProviderBrowser-body {\n  flex: 1;\n  position: relative;\n}\n\n.uppy-ProviderBrowser-list {\n  flex: 1;\n  position: relative;\n  display: block;\n  width: 100%;\n  height: 100%;\n  background-color: #fff;\n  border-spacing: 0;\n  overflow-x: hidden;\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-list {\n  background-color: #1f1f1f;\n}\n.uppy-ProviderBrowser-list:focus {\n  outline: none;\n}\n\n.uppy-ProviderBrowserItem-inner {\n  cursor: pointer;\n  font-weight: 500;\n  font-size: 13px;\n}\n\n.uppy-ProviderBrowser-footer {\n  display: flex;\n  align-items: center;\n  background-color: #fff;\n  height: 65px;\n  border-top: 1px solid #eaeaea;\n  padding: 0 15px;\n}\n[dir=\"ltr\"] .uppy-ProviderBrowser-footer button{\n          margin-right: 8px;\n}\n[dir=\"rtl\"] .uppy-ProviderBrowser-footer button{\n          margin-left: 8px;\n}\n.uppy-ProviderBrowser-footer button {\n  -webkit-margin-end: 8px;\n}\n[data-uppy-theme=dark] .uppy-ProviderBrowser-footer {\n  background-color: #1f1f1f;\n  border-top: 1px solid #333;\n}\n\n.uppy-Dashboard-Item-previewInnerWrap {\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  position: relative;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);\n  border-radius: 3px;\n}\n.uppy-size--md .uppy-Dashboard-Item-previewInnerWrap {\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);\n}\n\n.uppy-Dashboard-Item-previewInnerWrap:after {\n  content: \"\";\n  position: absolute;\n  left: 0;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  background-color: rgba(0, 0, 0, 0.65);\n  display: none;\n  z-index: 1001;\n}\n\n.uppy-Dashboard-Item-previewLink {\n  position: absolute;\n  left: 0;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  z-index: 1002;\n}\n.uppy-Dashboard-Item-previewLink:focus {\n  box-shadow: inset 0 0 0 3px #76abe9;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-previewLink:focus {\n  box-shadow: inset 0 0 0 3px #016c8d;\n}\n\n.uppy-Dashboard-Item-preview img.uppy-Dashboard-Item-previewImg {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  transform: translateZ(0);\n  border-radius: 3px;\n}\n\n.uppy-Dashboard-Item-progress {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1002;\n  color: #fff;\n  text-align: center;\n  width: 120px;\n  transition: all 0.35 ease;\n}\n\n.uppy-Dashboard-Item-progressIndicator {\n  display: inline-block;\n  width: 38px;\n  height: 38px;\n  opacity: 0.9;\n}\n.uppy-size--md .uppy-Dashboard-Item-progressIndicator {\n  width: 55px;\n  height: 55px;\n}\n\nbutton.uppy-Dashboard-Item-progressIndicator {\n  cursor: pointer;\n}\nbutton.uppy-Dashboard-Item-progressIndicator:focus {\n  outline: none;\n}\nbutton.uppy-Dashboard-Item-progressIndicator::-moz-focus-inner {\n  border: 0;\n}\nbutton.uppy-Dashboard-Item-progressIndicator:focus .uppy-Dashboard-Item-progressIcon--bg,\nbutton.uppy-Dashboard-Item-progressIndicator:focus .uppy-Dashboard-Item-progressIcon--retry {\n  fill: #76abe9;\n}\n\n.uppy-Dashboard-Item-progressIcon--circle {\n  width: 100%;\n  height: 100%;\n}\n\n.uppy-Dashboard-Item-progressIcon--bg {\n  stroke: rgba(255, 255, 255, 0.4);\n}\n\n.uppy-Dashboard-Item-progressIcon--progress {\n  stroke: #fff;\n  transition: stroke-dashoffset 0.5s ease-out;\n}\n\n.uppy-Dashboard-Item-progressIcon--play {\n  stroke: #fff;\n  fill: #fff;\n  transition: all 0.2s;\n}\n\n.uppy-Dashboard-Item-progressIcon--cancel {\n  fill: #fff;\n  transition: all 0.2s;\n}\n\n.uppy-Dashboard-Item-progressIcon--pause {\n  stroke: #fff;\n  fill: #fff;\n  transition: all 0.2s;\n}\n\n.uppy-Dashboard-Item-progressIcon--check {\n  fill: #fff;\n  transition: all 0.2s;\n}\n\n.uppy-Dashboard-Item-progressIcon--retry {\n  fill: #fff;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-Item.is-complete .uppy-Dashboard-Item-progress{\n  right: -8px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-Item.is-complete .uppy-Dashboard-Item-progress{\n  left: -8px;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-Item.is-complete .uppy-Dashboard-Item-progress{\n  left: initial;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-Item.is-complete .uppy-Dashboard-Item-progress{\n  right: initial;\n}\n\n.uppy-Dashboard-Item.is-complete .uppy-Dashboard-Item-progress {\n  transform: initial;\n  top: -9px;\n  width: auto;\n}\n\n.uppy-Dashboard-Item.is-error .uppy-Dashboard-Item-progressIndicator {\n  width: 18px;\n  height: 18px;\n}\n.uppy-size--md .uppy-Dashboard-Item.is-error .uppy-Dashboard-Item-progressIndicator {\n  width: 28px;\n  height: 28px;\n}\n\n.uppy-Dashboard-Item.is-complete .uppy-Dashboard-Item-progressIndicator {\n  width: 18px;\n  height: 18px;\n  opacity: 1;\n}\n.uppy-size--md .uppy-Dashboard-Item.is-complete .uppy-Dashboard-Item-progressIndicator {\n  width: 22px;\n  height: 22px;\n}\n\n.uppy-Dashboard-Item.is-processing .uppy-Dashboard-Item-progress {\n  opacity: 0;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-Item-fileInfo{\n          padding-right: 5px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-Item-fileInfo{\n          padding-left: 5px;\n}\n\n.uppy-Dashboard-Item-fileInfo {\n  -webkit-padding-end: 5px;\n}\n\n.uppy-Dashboard-Item-name {\n  font-size: 12px;\n  line-height: 1.3;\n  font-weight: 500;\n  margin-bottom: 5px;\n  word-break: break-all;\n  word-wrap: anywhere;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-name {\n  color: #eaeaea;\n}\n\n.uppy-Dashboard-Item-status {\n  font-size: 11px;\n  line-height: 1;\n  font-weight: normal;\n  color: #757575;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-status {\n  color: #bbb;\n}\n\n.uppy-Dashboard-Item-statusSize {\n  display: inline-block;\n  vertical-align: bottom;\n  text-transform: uppercase;\n}\n\n.uppy-Dashboard-Item-reSelect {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: 600;\n  color: #2275d7;\n}\n\n.uppy-Dashboard-Item-action {\n  cursor: pointer;\n  color: #939393;\n}\n.uppy-Dashboard-Item-action:focus {\n  outline: none;\n}\n.uppy-Dashboard-Item-action::-moz-focus-inner {\n  border: 0;\n}\n.uppy-Dashboard-Item-action:focus {\n  box-shadow: 0 0 0 3px rgba(34, 117, 215, 0.5);\n}\n.uppy-Dashboard-Item-action:hover {\n  opacity: 1;\n  color: #1f1f1f;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-action {\n  color: #cfcfcf;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-action:focus {\n  outline: none;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-action::-moz-focus-inner {\n  border: 0;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-action:focus {\n  box-shadow: 0 0 0 2px rgba(170, 225, 255, 0.85);\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-action:hover {\n  color: #eaeaea;\n}\n\n.uppy-Dashboard-Item-action--remove {\n  color: #1f1f1f;\n  opacity: 0.95;\n}\n.uppy-Dashboard-Item-action--remove:hover {\n  opacity: 1;\n  color: #000;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-action--remove {\n  color: #525252;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item-action--remove:hover {\n  color: #333;\n}\n\n.uppy-Dashboard:not(.uppy-size--md) .uppy-Dashboard-Item-actionWrapper {\n  display: flex;\n  align-items: center;\n}\n.uppy-Dashboard:not(.uppy-size--md) .uppy-Dashboard-Item-action {\n  width: 22px;\n  height: 22px;\n  padding: 3px;\n  margin-left: 3px;\n}\n.uppy-Dashboard:not(.uppy-size--md) .uppy-Dashboard-Item-action:focus {\n  border-radius: 3px;\n}\n\n.uppy-size--md .uppy-Dashboard-Item-action--copyLink,\n.uppy-size--md .uppy-Dashboard-Item-action--edit {\n  width: 16px;\n  height: 16px;\n  padding: 0;\n}\n.uppy-size--md .uppy-Dashboard-Item-action--copyLink:focus,\n.uppy-size--md .uppy-Dashboard-Item-action--edit:focus {\n  border-radius: 3px;\n}\n[dir=\"ltr\"] .uppy-size--md .uppy-Dashboard-Item-action--remove{\n  right: -8px;\n}\n[dir=\"rtl\"] .uppy-size--md .uppy-Dashboard-Item-action--remove{\n  left: -8px;\n}\n.uppy-size--md .uppy-Dashboard-Item-action--remove {\n  z-index: 1002;\n  position: absolute;\n  top: -8px;\n  width: 18px;\n  height: 18px;\n  padding: 0;\n}\n.uppy-size--md .uppy-Dashboard-Item-action--remove:focus {\n  border-radius: 50%;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-Item{\n          padding-right: 0;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-Item{\n          padding-left: 0;\n}\n\n.uppy-Dashboard-Item {\n  display: flex;\n  align-items: center;\n  border-bottom: 1px solid #eaeaea;\n  padding: 10px;\n  -webkit-padding-end: 0;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-Item {\n  border-bottom: 1px solid #333;\n}\n[dir=\"ltr\"] .uppy-size--md .uppy-Dashboard-Item{\n  float: left;\n}\n[dir=\"rtl\"] .uppy-size--md .uppy-Dashboard-Item{\n  float: right;\n}\n.uppy-size--md .uppy-Dashboard-Item {\n  position: relative;\n  display: block;\n  margin: 5px 15px;\n  padding: 0;\n  /* When changing width: also update `itemsPerRow` values in `src/components/Dashboard.js`. */\n  width: calc(33.333% - 15px - 15px);\n  height: 215px;\n  border-bottom: 0;\n}\n.uppy-size--lg .uppy-Dashboard-Item {\n  margin: 5px 15px;\n  /* When changing width: also update `itemsPerRow` values in `src/components/Dashboard.js`. */\n  width: calc(25% - 15px - 15px);\n  height: 190px;\n}\n.uppy-size--xl .uppy-Dashboard-Item {\n  /* When changing width: also update `itemsPerRow` values in `src/components/Dashboard.js`. */\n  width: calc(20% - 15px - 15px);\n  height: 210px;\n}\n\n.uppy-Dashboard-Item.is-ghost .uppy-Dashboard-Item-previewInnerWrap {\n  opacity: 0.2;\n}\n\n.uppy-Dashboard-Item.is-ghost .uppy-Dashboard-Item-name {\n  opacity: 0.7;\n}\n\n.uppy-Dashboard-Item.is-ghost .uppy-Dashboard-Item-preview:before {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='35' height='39' viewBox='0 0 35 39'%3E%3Cpath d='M1.708 38.66c1.709 0 3.417-3.417 6.834-3.417 3.416 0 5.125 3.417 8.61 3.417 3.348 0 5.056-3.417 8.473-3.417 4.305 0 5.125 3.417 6.833 3.417.889 0 1.709-.889 1.709-1.709v-19.68C34.167-5.757 0-5.757 0 17.271v19.68c0 .82.888 1.709 1.708 1.709zm8.542-17.084a3.383 3.383 0 01-3.417-3.416 3.383 3.383 0 013.417-3.417 3.383 3.383 0 013.417 3.417 3.383 3.383 0 01-3.417 3.416zm13.667 0A3.383 3.383 0 0120.5 18.16a3.383 3.383 0 013.417-3.417 3.383 3.383 0 013.416 3.417 3.383 3.383 0 01-3.416 3.416z' fill='%2523000' fill-rule='nonzero'/%3E%3C/svg%3E\");\n  background-repeat: no-repeat;\n  background-position: 50% 10px;\n  background-size: 25px;\n  z-index: 1005;\n  opacity: 0.5;\n}\n.uppy-size--md .uppy-Dashboard-Item.is-ghost .uppy-Dashboard-Item-preview:before {\n  background-size: 40px;\n  background-position: 50% 50%;\n}\n\n.uppy-Dashboard-Item-preview {\n  position: relative;\n}\n.uppy-Dashboard:not(.uppy-size--md) .uppy-Dashboard-Item-preview {\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: 50px;\n  height: 50px;\n}\n.uppy-size--md .uppy-Dashboard-Item-preview {\n  width: 100%;\n  height: 140px;\n}\n.uppy-size--lg .uppy-Dashboard-Item-preview {\n  height: 120px;\n}\n.uppy-size--xl .uppy-Dashboard-Item-preview {\n  height: 140px;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-Item-fileInfoAndButtons{\n          padding-right: 8px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-Item-fileInfoAndButtons{\n          padding-left: 8px;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-Item-fileInfoAndButtons{\n          padding-left: 12px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-Item-fileInfoAndButtons{\n          padding-right: 12px;\n}\n\n.uppy-Dashboard-Item-fileInfoAndButtons {\n  flex-grow: 1;\n  -webkit-padding-end: 8px;\n  -webkit-padding-start: 12px;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.uppy-size--md .uppy-Dashboard-Item-fileInfoAndButtons {\n  align-items: flex-start;\n  width: 100%;\n  padding: 0;\n  padding-top: 9px;\n}\n\n.uppy-Dashboard-Item-fileInfo {\n  flex-grow: 1;\n  flex-shrink: 1;\n}\n\n.uppy-Dashboard-Item-actionWrapper {\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.uppy-Dashboard-Item.is-inprogress .uppy-Dashboard-Item-previewInnerWrap:after,\n.uppy-Dashboard-Item.is-error .uppy-Dashboard-Item-previewInnerWrap:after {\n  display: block;\n}\n\n.uppy-Dashboard-Item.is-inprogress:not(.is-resumable) .uppy-Dashboard-Item-action--remove {\n  display: none;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-Item-errorDetails{\n  left: 6px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-Item-errorDetails{\n  right: 6px;\n}\n\n.uppy-Dashboard-Item-errorDetails {\n  line-height: 12px;\n  width: 12px;\n  height: 12px;\n  display: inline-block;\n  vertical-align: middle;\n  color: #fff;\n  background-color: #939393;\n  border-radius: 50%;\n  position: relative;\n  top: -1px;\n  font-size: 8px;\n  font-weight: 600;\n  text-align: center;\n  cursor: help;\n}\n\n.uppy-Dashboard-Item-errorDetails:after {\n  line-height: 1.3;\n  word-wrap: break-word;\n}\n\n.uppy-Dashboard-FileCard {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1005;\n  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);\n  background-color: #fff;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n}\n.uppy-Dashboard-FileCard .uppy-DashboardContent-bar {\n  border-top-left-radius: 5px;\n  border-top-right-radius: 5px;\n}\n.uppy-Dashboard-FileCard .uppy-Dashboard-FileCard-actions {\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n}\n\n.uppy-Dashboard-FileCard-inner {\n  height: 100%;\n  flex-grow: 1;\n  flex-shrink: 1;\n  min-height: 0;\n  display: flex;\n  flex-direction: column;\n}\n\n.uppy-Dashboard-FileCard-preview {\n  height: 60%;\n  flex-grow: 0;\n  flex-shrink: 1;\n  min-height: 0;\n  border-bottom: 1px solid #eaeaea;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  position: relative;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-FileCard-preview {\n  background-color: #333;\n  border-bottom: 0;\n}\n\n.uppy-Dashboard-FileCard-preview img.uppy-Dashboard-Item-previewImg {\n  max-width: 90%;\n  max-height: 90%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  flex: 0 0 auto;\n  border-radius: 3px;\n  box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.15);\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-FileCard-edit{\n  right: 10px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-FileCard-edit{\n  left: 10px;\n}\n\n.uppy-Dashboard-FileCard-edit {\n  position: absolute;\n  top: 10px;\n  font-size: 13px;\n  background-color: rgba(0, 0, 0, 0.5);\n  color: #fff;\n  padding: 7px 15px;\n  border-radius: 50px;\n}\n.uppy-Dashboard-FileCard-edit:focus {\n  outline: none;\n}\n.uppy-Dashboard-FileCard-edit::-moz-focus-inner {\n  border: 0;\n}\n.uppy-Dashboard-FileCard-edit:focus {\n  box-shadow: 0 0 0 3px rgba(34, 117, 215, 0.5);\n}\n.uppy-Dashboard-FileCard-edit:hover {\n  background-color: rgba(0, 0, 0, 0.8);\n}\n\n.uppy-Dashboard-FileCard-info {\n  height: 40%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  padding: 30px 20px 20px 20px;\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-FileCard-info {\n  background-color: #1f1f1f;\n}\n\n.uppy-Dashboard-FileCard-fieldset {\n  font-size: 0;\n  border: 0;\n  padding: 0;\n  max-width: 640px;\n  margin: auto;\n  margin-bottom: 12px;\n}\n\n.uppy-Dashboard-FileCard-label {\n  display: inline-block;\n  vertical-align: middle;\n  width: 22%;\n  font-size: 12px;\n  color: #525252;\n}\n.uppy-size--md .uppy-Dashboard-FileCard-label {\n  font-size: 14px;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-FileCard-label {\n  color: #eaeaea;\n}\n\n.uppy-Dashboard-FileCard-input {\n  display: inline-block;\n  vertical-align: middle;\n  width: 78%;\n}\n\n.uppy-Dashboard-FileCard-actions {\n  height: 55px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  border-top: 1px solid #eaeaea;\n  padding: 0 15px;\n  background-color: #fafafa;\n  display: flex;\n  align-items: center;\n}\n.uppy-size--md .uppy-Dashboard-FileCard-actions {\n  height: 65px;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-FileCard-actions {\n  border-top: 1px solid #333;\n  background-color: #1f1f1f;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-FileCard-actionsBtn{\n          margin-right: 10px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-FileCard-actionsBtn{\n          margin-left: 10px;\n}\n\n.uppy-Dashboard-FileCard-actionsBtn {\n  -webkit-margin-end: 10px;\n}\n\n.uppy-transition-slideDownUp-enter {\n  opacity: 0.01;\n  transform: translate3d(0, -105%, 0);\n  transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;\n}\n\n.uppy-transition-slideDownUp-enter.uppy-transition-slideDownUp-enter-active {\n  opacity: 1;\n  transform: translate3d(0, 0, 0);\n}\n\n.uppy-transition-slideDownUp-leave {\n  opacity: 1;\n  transform: translate3d(0, 0, 0);\n  transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;\n}\n\n.uppy-transition-slideDownUp-leave.uppy-transition-slideDownUp-leave-active {\n  opacity: 0.01;\n  transform: translate3d(0, -105%, 0);\n}\n\n@-webkit-keyframes uppy-Dashboard-fadeIn {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n@keyframes uppy-Dashboard-fadeIn {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n@-webkit-keyframes uppy-Dashboard-fadeOut {\n  from {\n    opacity: 1;\n  }\n  to {\n    opacity: 0;\n  }\n}\n@keyframes uppy-Dashboard-fadeOut {\n  from {\n    opacity: 1;\n  }\n  to {\n    opacity: 0;\n  }\n}\n@-webkit-keyframes uppy-Dashboard-slideDownAndFadeIn {\n  from {\n    transform: translate3d(-50%, -70%, 0);\n    opacity: 0;\n  }\n  to {\n    transform: translate3d(-50%, -50%, 0);\n    opacity: 1;\n  }\n}\n@keyframes uppy-Dashboard-slideDownAndFadeIn {\n  from {\n    transform: translate3d(-50%, -70%, 0);\n    opacity: 0;\n  }\n  to {\n    transform: translate3d(-50%, -50%, 0);\n    opacity: 1;\n  }\n}\n@-webkit-keyframes uppy-Dashboard-slideDownAndFadeIn--small {\n  from {\n    transform: translate3d(0, -20%, 0);\n    opacity: 0;\n  }\n  to {\n    transform: translate3d(0, 0, 0);\n    opacity: 1;\n  }\n}\n@keyframes uppy-Dashboard-slideDownAndFadeIn--small {\n  from {\n    transform: translate3d(0, -20%, 0);\n    opacity: 0;\n  }\n  to {\n    transform: translate3d(0, 0, 0);\n    opacity: 1;\n  }\n}\n@-webkit-keyframes uppy-Dashboard-slideUpFadeOut {\n  from {\n    transform: translate3d(-50%, -50%, 0);\n    opacity: 1;\n  }\n  to {\n    transform: translate3d(-50%, -70%, 0);\n    opacity: 0;\n  }\n}\n@keyframes uppy-Dashboard-slideUpFadeOut {\n  from {\n    transform: translate3d(-50%, -50%, 0);\n    opacity: 1;\n  }\n  to {\n    transform: translate3d(-50%, -70%, 0);\n    opacity: 0;\n  }\n}\n@-webkit-keyframes uppy-Dashboard-slideUpFadeOut--small {\n  from {\n    transform: translate3d(0, 0, 0);\n    opacity: 1;\n  }\n  to {\n    transform: translate3d(0, -20%, 0);\n    opacity: 0;\n  }\n}\n@keyframes uppy-Dashboard-slideUpFadeOut--small {\n  from {\n    transform: translate3d(0, 0, 0);\n    opacity: 1;\n  }\n  to {\n    transform: translate3d(0, -20%, 0);\n    opacity: 0;\n  }\n}\n.uppy-Dashboard--modal {\n  z-index: 1001;\n}\n\n.uppy-Dashboard--modal[aria-hidden=true] {\n  display: none;\n}\n\n.uppy-Dashboard--modal.uppy-Dashboard--animateOpenClose > .uppy-Dashboard-inner {\n  -webkit-animation: uppy-Dashboard-slideDownAndFadeIn--small 0.3s cubic-bezier(0, 0, 0.2, 1);\n          animation: uppy-Dashboard-slideDownAndFadeIn--small 0.3s cubic-bezier(0, 0, 0.2, 1);\n}\n@media only screen and (min-width: 820px) {\n  .uppy-Dashboard--modal.uppy-Dashboard--animateOpenClose > .uppy-Dashboard-inner {\n    -webkit-animation: uppy-Dashboard-slideDownAndFadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);\n            animation: uppy-Dashboard-slideDownAndFadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);\n  }\n}\n\n.uppy-Dashboard--modal.uppy-Dashboard--animateOpenClose > .uppy-Dashboard-overlay {\n  -webkit-animation: uppy-Dashboard-fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);\n          animation: uppy-Dashboard-fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);\n}\n\n.uppy-Dashboard--modal.uppy-Dashboard--animateOpenClose.uppy-Dashboard--isClosing > .uppy-Dashboard-inner {\n  -webkit-animation: uppy-Dashboard-slideUpFadeOut--small 0.3s cubic-bezier(0, 0, 0.2, 1);\n          animation: uppy-Dashboard-slideUpFadeOut--small 0.3s cubic-bezier(0, 0, 0.2, 1);\n}\n@media only screen and (min-width: 820px) {\n  .uppy-Dashboard--modal.uppy-Dashboard--animateOpenClose.uppy-Dashboard--isClosing > .uppy-Dashboard-inner {\n    -webkit-animation: uppy-Dashboard-slideUpFadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);\n            animation: uppy-Dashboard-slideUpFadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);\n  }\n}\n\n.uppy-Dashboard--modal.uppy-Dashboard--animateOpenClose.uppy-Dashboard--isClosing > .uppy-Dashboard-overlay {\n  -webkit-animation: uppy-Dashboard-fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);\n          animation: uppy-Dashboard-fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);\n}\n\n.uppy-Dashboard-isFixed {\n  overflow: hidden;\n  height: 100vh;\n}\n\n.uppy-Dashboard--modal .uppy-Dashboard-overlay {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(0, 0, 0, 0.5);\n  z-index: 1001;\n}\n\n.uppy-Dashboard-inner {\n  position: relative;\n  background-color: #fafafa;\n  max-width: 100%;\n  max-height: 100%;\n  outline: none;\n  border: 1px solid #eaeaea;\n  border-radius: 5px;\n}\n.uppy-size--md .uppy-Dashboard-inner {\n  min-height: auto;\n}\n@media only screen and (min-width: 820px) {\n  .uppy-Dashboard-inner {\n    width: 750px;\n    height: 550px;\n  }\n}\n.uppy-Dashboard--modal .uppy-Dashboard-inner {\n  z-index: 1002;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-inner {\n  background-color: #1f1f1f;\n}\n.uppy-Dashboard--isDisabled .uppy-Dashboard-inner {\n  cursor: not-allowed;\n}\n\n.uppy-Dashboard-innerWrap {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  overflow: hidden;\n  position: relative;\n  border-radius: 5px;\n  opacity: 0;\n}\n.uppy-Dashboard--isInnerWrapVisible .uppy-Dashboard-innerWrap {\n  opacity: 1;\n}\n.uppy-Dashboard--isDisabled .uppy-Dashboard-innerWrap {\n  pointer-events: none;\n  opacity: 0.6;\n  filter: grayscale(100%);\n  -webkit-user-select: none;\n      -ms-user-select: none;\n          -moz-user-select: none;\n       user-select: none;\n}\n\n.uppy-Dashboard--isDisabled .uppy-ProviderIconBg {\n  fill: #9f9f9f;\n}\n\n.uppy-Dashboard--modal .uppy-Dashboard-inner {\n  position: fixed;\n  top: 35px;\n  left: 15px;\n  right: 15px;\n  bottom: 15px;\n  border: none;\n}\n@media only screen and (min-width: 820px) {\n  .uppy-Dashboard--modal .uppy-Dashboard-inner {\n    top: 50%;\n    left: 50%;\n    right: auto;\n    transform: translate(-50%, -50%);\n    box-shadow: 0 5px 15px 4px rgba(0, 0, 0, 0.15);\n  }\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-close{\n  right: -2px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-close{\n  left: -2px;\n}\n\n.uppy-Dashboard-close {\n  display: block;\n  position: absolute;\n  top: -33px;\n  cursor: pointer;\n  color: rgba(255, 255, 255, 0.9);\n  font-size: 27px;\n  z-index: 1005;\n}\n.uppy-Dashboard-close:focus {\n  outline: none;\n}\n.uppy-Dashboard-close::-moz-focus-inner {\n  border: 0;\n}\n.uppy-Dashboard-close:focus {\n  color: #8cb8ed;\n}\n@media only screen and (min-width: 820px) {\n  [dir=\"ltr\"] .uppy-Dashboard-close{\n    right: -35px;\n  }\n  [dir=\"rtl\"] .uppy-Dashboard-close{\n    left: -35px;\n  }\n  .uppy-Dashboard-close {\n    font-size: 35px;\n    top: -10px;\n  }\n}\n\n.uppy-Dashboard-serviceMsg {\n  background-color: #FFFBF7;\n  border-top: 1px solid #edd4b9;\n  border-bottom: 1px solid #edd4b9;\n  font-size: 12px;\n  line-height: 1.3;\n  font-weight: 500;\n  padding: 12px 0;\n  position: relative;\n  top: -1px;\n  z-index: 1004;\n}\n.uppy-size--md .uppy-Dashboard-serviceMsg {\n  font-size: 14px;\n  line-height: 1.4;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-serviceMsg {\n  background-color: #1f1f1f;\n  color: #eaeaea;\n  border-top: 1px solid #333;\n  border-bottom: 1px solid #333;\n}\n\n.uppy-Dashboard-serviceMsg-title {\n  display: block;\n  margin-bottom: 4px;\n  padding-left: 42px;\n  line-height: 1;\n}\n\n.uppy-Dashboard-serviceMsg-text {\n  padding: 0 15px;\n}\n\n.uppy-Dashboard-serviceMsg-actionBtn {\n  font-size: inherit;\n  font-weight: inherit;\n  vertical-align: initial;\n  color: #2275d7;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-serviceMsg-actionBtn {\n  color: rgba(2, 186, 242, 0.9);\n}\n\n.uppy-Dashboard-serviceMsg-icon {\n  position: absolute;\n  top: 10px;\n  left: 15px;\n}\n\n.uppy-Dashboard-AddFiles {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 100%;\n  position: relative;\n  text-align: center;\n}\n[data-uppy-drag-drop-supported=true] .uppy-Dashboard-AddFiles {\n  margin: 7px;\n  height: calc(100% - 14px);\n  border-radius: 3px;\n  border: 1px dashed #dfdfdf;\n}\n.uppy-Dashboard-AddFilesPanel .uppy-Dashboard-AddFiles {\n  border: none;\n  height: calc(100% - 14px - 40px);\n}\n.uppy-Dashboard--modal .uppy-Dashboard-AddFiles {\n  border-color: #cfcfcf;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-AddFiles {\n  border-color: #757575;\n}\n\n.uppy-Dashboard-AddFiles-info {\n  padding-top: 15px;\n  padding-bottom: 15px;\n  margin-top: auto;\n  display: none;\n}\n.uppy-size--height-md .uppy-Dashboard-AddFiles-info {\n  display: block;\n}\n.uppy-size--md .uppy-Dashboard-AddFiles-info {\n  position: absolute;\n  bottom: 25px;\n  left: 0;\n  right: 0;\n  padding-top: 30px;\n  padding-bottom: 0;\n}\n[data-uppy-num-acquirers=\"0\"] .uppy-Dashboard-AddFiles-info {\n  margin-top: 0;\n}\n\n.uppy-Dashboard-browse {\n  cursor: pointer;\n  color: rgba(34, 117, 215, 0.9);\n}\n.uppy-Dashboard-browse:focus {\n  outline: none;\n}\n.uppy-Dashboard-browse::-moz-focus-inner {\n  border: 0;\n}\n.uppy-Dashboard-browse:hover, .uppy-Dashboard-browse:focus {\n  border-bottom: 1px solid #2275d7;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-browse {\n  color: rgba(2, 186, 242, 0.9);\n}\n[data-uppy-theme=dark] .uppy-Dashboard-browse:hover, [data-uppy-theme=dark] .uppy-Dashboard-browse:focus {\n  border-bottom: 1px solid #02baf2;\n}\n\n.uppy-Dashboard-browseBtn {\n  display: block;\n  font-size: 14px;\n  font-weight: 500;\n  margin-top: 8px;\n  margin-bottom: 5px;\n  width: 100%;\n}\n.uppy-size--md .uppy-Dashboard-browseBtn {\n  font-size: 15px;\n  width: auto;\n  margin: auto;\n  margin-top: 15px;\n  margin-bottom: 15px;\n  padding: 13px 44px;\n}\n\n.uppy-Dashboard-AddFiles-list {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n  margin-top: 2px;\n  padding: 2px 0;\n  width: 100%;\n}\n.uppy-size--md .uppy-Dashboard-AddFiles-list {\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  max-width: 600px;\n  overflow-y: visible;\n  margin-top: 15px;\n  padding-top: 0;\n  flex: none;\n}\n\n.uppy-DashboardTab {\n  width: 100%;\n  text-align: center;\n  border-bottom: 1px solid #eaeaea;\n}\n[data-uppy-theme=dark] .uppy-DashboardTab {\n  border-bottom: 1px solid #333;\n}\n.uppy-size--md .uppy-DashboardTab {\n  display: inline-block;\n  width: initial;\n  margin-bottom: 10px;\n  border-bottom: none;\n}\n\n.uppy-DashboardTab-btn {\n  width: 100%;\n  height: 100%;\n  cursor: pointer;\n  background-color: transparent;\n  -webkit-appearance: none;\n  -moz-appearance: none;\n       appearance: none;\n  color: #525252;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  padding: 12px 15px;\n}\n.uppy-DashboardTab-btn:focus {\n  outline: none;\n}\n.uppy-DashboardTab-btn::-moz-focus-inner {\n  border: 0;\n}\n[dir=\"ltr\"] .uppy-size--md .uppy-DashboardTab-btn{\n          margin-right: 1px;\n}\n[dir=\"rtl\"] .uppy-size--md .uppy-DashboardTab-btn{\n          margin-left: 1px;\n}\n.uppy-size--md .uppy-DashboardTab-btn {\n  width: 86px;\n  -webkit-margin-end: 1px;\n  flex-direction: column;\n  padding: 10px 3px;\n  border-radius: 5px;\n}\n[data-uppy-theme=dark] .uppy-DashboardTab-btn {\n  color: #eaeaea;\n}\n\n.uppy-DashboardTab-btn::-moz-focus-inner {\n  border: 0;\n}\n\n.uppy-DashboardTab-btn:hover {\n  background-color: #f1f3f6;\n}\n[data-uppy-theme=dark] .uppy-DashboardTab-btn:hover {\n  background-color: #333;\n}\n\n.uppy-DashboardTab-btn:active,\n.uppy-DashboardTab-btn:focus {\n  background-color: #eceef2;\n}\n[data-uppy-theme=dark] .uppy-DashboardTab-btn:active,\n[data-uppy-theme=dark] .uppy-DashboardTab-btn:focus {\n  background-color: #525252;\n}\n\n[dir=\"ltr\"] .uppy-DashboardTab-btn svg{\n          margin-right: 10px;\n}\n\n[dir=\"rtl\"] .uppy-DashboardTab-btn svg{\n          margin-left: 10px;\n}\n\n.uppy-DashboardTab-btn svg {\n  max-width: 100%;\n  max-height: 100%;\n  display: inline-block;\n  vertical-align: text-top;\n  overflow: hidden;\n  transition: transform ease-in-out 0.15s;\n  -webkit-margin-end: 10px;\n}\n[dir=\"ltr\"] .uppy-size--md .uppy-DashboardTab-btn svg{\n          margin-right: 0;\n}\n[dir=\"rtl\"] .uppy-size--md .uppy-DashboardTab-btn svg{\n          margin-left: 0;\n}\n.uppy-size--md .uppy-DashboardTab-btn svg {\n  -webkit-margin-end: 0;\n}\n\n.uppy-DashboardTab-name {\n  font-size: 14px;\n  font-weight: 500;\n}\n.uppy-size--md .uppy-DashboardTab-name {\n  font-size: 11px;\n  line-height: 15px;\n  margin-top: 8px;\n  margin-bottom: 0;\n}\n\n.uppy-DashboardTab svg {\n  width: 23px;\n  height: 23px;\n  vertical-align: middle;\n}\n.uppy-size--md .uppy-DashboardTab svg {\n  width: 30px;\n  height: 30px;\n}\n\n.uppy-Dashboard-input {\n  width: 0.1px;\n  height: 0.1px;\n  opacity: 0;\n  overflow: hidden;\n  position: absolute;\n  z-index: -1;\n}\n\n.uppy-DashboardContent-bar {\n  flex-shrink: 0;\n  height: 40px;\n  width: 100%;\n  padding: 0 10px;\n  z-index: 1004;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  position: relative;\n  border-bottom: 1px solid #eaeaea;\n  background-color: #fafafa;\n}\n.uppy-size--md .uppy-DashboardContent-bar {\n  height: 50px;\n  padding: 0 15px;\n}\n[data-uppy-theme=dark] .uppy-DashboardContent-bar {\n  background-color: #1f1f1f;\n  border-bottom: 1px solid #333;\n}\n\n.uppy-DashboardContent-title {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  text-align: center;\n  font-size: 12px;\n  line-height: 40px;\n  font-weight: 500;\n  width: 100%;\n  max-width: 170px;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow-x: hidden;\n  margin: auto;\n}\n.uppy-size--md .uppy-DashboardContent-title {\n  font-size: 14px;\n  line-height: 50px;\n  max-width: 300px;\n}\n[data-uppy-theme=dark] .uppy-DashboardContent-title {\n  color: #eaeaea;\n}\n\n[dir=\"ltr\"] .uppy-DashboardContent-back,[dir=\"ltr\"] \n.uppy-DashboardContent-save{\n          margin-left: -6px;\n}\n\n[dir=\"rtl\"] .uppy-DashboardContent-back,[dir=\"rtl\"] \n.uppy-DashboardContent-save{\n          margin-right: -6px;\n}\n\n.uppy-DashboardContent-back,\n.uppy-DashboardContent-save {\n  background: none;\n  -webkit-appearance: none;\n  font-family: inherit;\n  font-size: inherit;\n  line-height: 1;\n  padding: 0;\n  margin: 0;\n  border: 0;\n  color: inherit;\n  border-radius: 3px;\n  font-size: 12px;\n  font-weight: 400;\n  cursor: pointer;\n  color: #2275d7;\n  padding: 7px 6px;\n  -webkit-margin-start: -6px;\n}\n.uppy-DashboardContent-back:focus,\n.uppy-DashboardContent-save:focus {\n  outline: none;\n}\n.uppy-DashboardContent-back::-moz-focus-inner,\n.uppy-DashboardContent-save::-moz-focus-inner {\n  border: 0;\n}\n.uppy-DashboardContent-back:hover,\n.uppy-DashboardContent-save:hover {\n  color: #1b5dab;\n}\n.uppy-DashboardContent-back:focus,\n.uppy-DashboardContent-save:focus {\n  background-color: #eceef2;\n}\n[data-uppy-theme=dark] .uppy-DashboardContent-back:focus,\n[data-uppy-theme=dark] .uppy-DashboardContent-save:focus {\n  background-color: #333;\n}\n.uppy-size--md .uppy-DashboardContent-back,\n.uppy-size--md .uppy-DashboardContent-save {\n  font-size: 14px;\n}\n[data-uppy-theme=dark] .uppy-DashboardContent-back,\n[data-uppy-theme=dark] .uppy-DashboardContent-save {\n  color: #02baf2;\n}\n\n[dir=\"ltr\"] .uppy-DashboardContent-addMore{\n          margin-right: -5px;\n}\n\n[dir=\"rtl\"] .uppy-DashboardContent-addMore{\n          margin-left: -5px;\n}\n\n.uppy-DashboardContent-addMore {\n  background: none;\n  -webkit-appearance: none;\n  font-family: inherit;\n  font-size: inherit;\n  line-height: 1;\n  padding: 0;\n  margin: 0;\n  border: 0;\n  color: inherit;\n  border-radius: 3px;\n  font-weight: 500;\n  cursor: pointer;\n  color: #2275d7;\n  width: 29px;\n  height: 29px;\n  padding: 7px 8px;\n  -webkit-margin-end: -5px;\n}\n.uppy-DashboardContent-addMore:focus {\n  outline: none;\n}\n.uppy-DashboardContent-addMore::-moz-focus-inner {\n  border: 0;\n}\n.uppy-DashboardContent-addMore:hover {\n  color: #1b5dab;\n}\n.uppy-DashboardContent-addMore:focus {\n  background-color: #eceef2;\n}\n[data-uppy-theme=dark] .uppy-DashboardContent-addMore:focus {\n  background-color: #333;\n}\n[dir=\"ltr\"] .uppy-size--md .uppy-DashboardContent-addMore{\n          margin-right: -8px;\n}\n[dir=\"rtl\"] .uppy-size--md .uppy-DashboardContent-addMore{\n          margin-left: -8px;\n}\n.uppy-size--md .uppy-DashboardContent-addMore {\n  font-size: 14px;\n  width: auto;\n  height: auto;\n  -webkit-margin-end: -8px;\n}\n[data-uppy-theme=dark] .uppy-DashboardContent-addMore {\n  color: #02baf2;\n}\n\n[dir=\"ltr\"] .uppy-DashboardContent-addMore svg{\n          margin-right: 4px;\n}\n\n[dir=\"rtl\"] .uppy-DashboardContent-addMore svg{\n          margin-left: 4px;\n}\n\n.uppy-DashboardContent-addMore svg {\n  vertical-align: baseline;\n  -webkit-margin-end: 4px;\n}\n.uppy-size--md .uppy-DashboardContent-addMore svg {\n  width: 11px;\n  height: 11px;\n}\n\n.uppy-DashboardContent-addMoreCaption {\n  display: none;\n}\n.uppy-size--md .uppy-DashboardContent-addMoreCaption {\n  display: inline;\n}\n\n.uppy-DashboardContent-panel {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-color: whitesmoke;\n  overflow: hidden;\n  z-index: 1005;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n\n.uppy-Dashboard-AddFilesPanel {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: #fafafa;\n  background: linear-gradient(0deg, #fafafa 35%, rgba(250, 250, 250, 0.85) 100%);\n  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.15);\n  overflow: hidden;\n  z-index: 1005;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-AddFilesPanel {\n  background-color: #333;\n  background: linear-gradient(0deg, #1f1f1f 35%, rgba(31, 31, 31, 0.85) 100%);\n}\n\n.uppy-Dashboard--isAddFilesPanelVisible .uppy-Dashboard-files {\n  filter: blur(2px);\n}\n\n.uppy-Dashboard-progress {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n  height: 12%;\n}\n\n.uppy-Dashboard-progressBarContainer.is-active {\n  z-index: 1004;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n\n.uppy-Dashboard:not(.uppy-size--md) .uppy-StatusBar-additionalInfo {\n  display: none;\n}\n\n.uppy-Dashboard-filesContainer {\n  position: relative;\n  overflow-y: hidden;\n  margin: 0;\n  flex: 1;\n}\n.uppy-Dashboard-filesContainer:after {\n  content: \"\";\n  display: table;\n  clear: both;\n}\n\n.uppy-Dashboard-files {\n  margin: 0;\n  padding: 0 0 10px 0;\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n  flex: 1;\n}\n.uppy-size--md .uppy-Dashboard-files {\n  padding-top: 10px;\n}\n\n.uppy-Dashboard-dropFilesHereHint {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  visibility: hidden;\n  position: absolute;\n  top: 7px;\n  right: 7px;\n  bottom: 7px;\n  left: 7px;\n  padding-top: 90px;\n  border: 1px dashed #2275d7;\n  border-radius: 3px;\n  z-index: 2000;\n  text-align: center;\n  background-image: url(\"data:image/svg+xml,%3Csvg width='48' height='48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 1v1C11.85 2 2 11.85 2 24s9.85 22 22 22 22-9.85 22-22S36.15 2 24 2V1zm0 0V0c13.254 0 24 10.746 24 24S37.254 48 24 48 0 37.254 0 24 10.746 0 24 0v1zm7.707 19.293a.999.999 0 1 1-1.414 1.414L25 16.414V34a1 1 0 1 1-2 0V16.414l-5.293 5.293a.999.999 0 1 1-1.414-1.414l7-7a.999.999 0 0 1 1.414 0l7 7z' fill='%232275D7' fill-rule='nonzero'/%3E%3C/svg%3E\");\n  background-position: 50% 50%;\n  background-repeat: no-repeat;\n  color: #757575;\n  font-size: 16px;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-dropFilesHereHint {\n  color: #bbb;\n  border-color: #02baf2;\n  background-image: url(\"data:image/svg+xml,%3Csvg width='48' height='48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 1v1C11.85 2 2 11.85 2 24s9.85 22 22 22 22-9.85 22-22S36.15 2 24 2V1zm0 0V0c13.254 0 24 10.746 24 24S37.254 48 24 48 0 37.254 0 24 10.746 0 24 0v1zm7.707 19.293a.999.999 0 1 1-1.414 1.414L25 16.414V34a1 1 0 1 1-2 0V16.414l-5.293 5.293a.999.999 0 1 1-1.414-1.414l7-7a.999.999 0 0 1 1.414 0l7 7z' fill='%2302BAF2' fill-rule='nonzero'/%3E%3C/svg%3E\");\n}\n\n.uppy-Dashboard.uppy-Dashboard--isDraggingOver .uppy-Dashboard-dropFilesHereHint {\n  visibility: visible;\n}\n.uppy-Dashboard.uppy-Dashboard--isDraggingOver .uppy-DashboardContent-bar,\n.uppy-Dashboard.uppy-Dashboard--isDraggingOver .uppy-Dashboard-files,\n.uppy-Dashboard.uppy-Dashboard--isDraggingOver .uppy-Dashboard-progressindicators,\n.uppy-Dashboard.uppy-Dashboard--isDraggingOver .uppy-Dashboard-serviceMsg {\n  opacity: 0.15;\n}\n.uppy-Dashboard.uppy-Dashboard--isDraggingOver .uppy-Dashboard-AddFiles {\n  opacity: 0.03;\n}\n\n.uppy-Dashboard-AddFiles-title {\n  font-size: 17px;\n  line-height: 1.35;\n  font-weight: 500;\n  color: #000;\n  margin-top: 15px;\n  margin-bottom: 5px;\n  text-align: inline-start;\n  padding: 0 15px;\n  width: 100%;\n}\n.uppy-size--md .uppy-Dashboard-AddFiles-title {\n  font-size: 25px;\n  margin-top: 5px;\n  font-weight: 400;\n  text-align: center;\n  max-width: 480px;\n}\n[data-uppy-num-acquirers=\"0\"] .uppy-Dashboard-AddFiles-title {\n  text-align: center;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-AddFiles-title {\n  color: #eaeaea;\n}\n.uppy-Dashboard-AddFiles-title button {\n  font-weight: 500;\n}\n.uppy-size--md .uppy-Dashboard-AddFiles-title button {\n  font-weight: 400;\n}\n\n.uppy-Dashboard-note {\n  font-size: 14px;\n  line-height: 1.25;\n  text-align: center;\n  color: #757575;\n  max-width: 350px;\n  margin: auto;\n  padding: 0 15px;\n}\n.uppy-size--md .uppy-Dashboard-note {\n  font-size: 15px;\n  line-height: 1.35;\n  max-width: 600px;\n}\n[data-uppy-theme=dark] .uppy-Dashboard-note {\n  color: #cfcfcf;\n}\n\na.uppy-Dashboard-poweredBy {\n  display: inline-block;\n  text-align: center;\n  font-size: 11px;\n  color: #939393;\n  text-decoration: none;\n  margin-top: 8px;\n}\n\n.uppy-Dashboard-poweredByIcon {\n  stroke: #939393;\n  fill: none;\n  margin-left: 1px;\n  margin-right: 1px;\n  position: relative;\n  top: 1px;\n  opacity: 0.9;\n  vertical-align: text-top;\n}\n\n.uppy-Dashboard-Item-previewIcon {\n  width: 25px;\n  height: 25px;\n  z-index: 100;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n.uppy-size--md .uppy-Dashboard-Item-previewIcon {\n  width: 38px;\n  height: 38px;\n}\n.uppy-Dashboard-Item-previewIcon svg {\n  width: 100%;\n  height: 100%;\n}\n\n.uppy-Dashboard-Item-previewIconWrap {\n  height: 76px;\n  max-height: 75%;\n  position: relative;\n}\n\n.uppy-Dashboard-Item-previewIconBg {\n  width: 100%;\n  height: 100%;\n  filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 1px 1px);\n}\n\n.uppy-Dashboard-upload {\n  position: relative;\n  width: 50px;\n  height: 50px;\n}\n.uppy-size--md .uppy-Dashboard-upload {\n  width: 60px;\n  height: 60px;\n}\n\n.uppy-Dashboard-upload .uppy-c-icon {\n  position: relative;\n  top: 1px;\n  width: 50%;\n}\n\n[dir=\"ltr\"] .uppy-Dashboard-uploadCount{\n  right: -12px;\n}\n\n[dir=\"rtl\"] .uppy-Dashboard-uploadCount{\n  left: -12px;\n}\n\n.uppy-Dashboard-uploadCount {\n  position: absolute;\n  top: -12px;\n  background-color: #1bb240;\n  color: #fff;\n  border-radius: 50%;\n  width: 16px;\n  height: 16px;\n  line-height: 16px;\n  font-size: 8px;\n}\n.uppy-size--md .uppy-Dashboard-uploadCount {\n  width: 18px;\n  height: 18px;\n  line-height: 18px;\n  font-size: 9px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -11006,6 +17443,532 @@ module.exports = function pad (num, size) {
   var s = '000000000' + num;
   return s.substr(s.length - size);
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/exifr/dist/mini.legacy.umd.js":
+/*!****************************************************!*\
+  !*** ./node_modules/exifr/dist/mini.legacy.umd.js ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+/* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
+/* provided dependency */ var Buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")["Buffer"];
+!function(e,t){ true?t(exports):0}(this,(function(e){"use strict";function t(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function n(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}function r(e,t,r){return t&&n(e.prototype,t),r&&n(e,r),e}function i(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function a(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}});var n=["prototype","__proto__","caller","arguments","length","name"];Object.getOwnPropertyNames(t).forEach((function(r){-1===n.indexOf(r)&&e[r]!==t[r]&&(e[r]=t[r])})),t&&u(e,t)}function s(e){return(s=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}function u(e,t){return(u=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function o(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],(function(){}))),!0}catch(e){return!1}}function f(e,t,n){return(f=o()?Reflect.construct:function(e,t,n){var r=[null];r.push.apply(r,t);var i=new(Function.bind.apply(e,r));return n&&u(i,n.prototype),i}).apply(null,arguments)}function c(e){var t="function"==typeof Map?new Map:void 0;return(c=function(e){if(null===e||(n=e,-1===Function.toString.call(n).indexOf("[native code]")))return e;var n;if("function"!=typeof e)throw new TypeError("Super expression must either be null or a function");if(void 0!==t){if(t.has(e))return t.get(e);t.set(e,r)}function r(){return f(e,arguments,s(this).constructor)}return r.prototype=Object.create(e.prototype,{constructor:{value:r,enumerable:!1,writable:!0,configurable:!0}}),u(r,e)})(e)}function h(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function l(e,t){return!t||"object"!=typeof t&&"function"!=typeof t?h(e):t}function d(e){var t=o();return function(){var n,r=s(e);if(t){var i=s(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return l(this,n)}}function v(e,t,n){return(v="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(e,t,n){var r=function(e,t){for(;!Object.prototype.hasOwnProperty.call(e,t)&&null!==(e=s(e)););return e}(e,t);if(r){var i=Object.getOwnPropertyDescriptor(r,t);return i.get?i.get.call(n):i.value}})(e,t,n||e)}var p=Object.values||function(e){var t=[];for(var n in e)t.push(e[n]);return t},y=Object.entries||function(e){var t=[];for(var n in e)t.push([n,e[n]]);return t},g=Object.assign||function(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];return n.forEach((function(t){for(var n in t)e[n]=t[n]})),e},k=Object.fromEntries||function(e){var t={};return m(e).forEach((function(e){var n=e[0],r=e[1];t[n]=r})),t},m=Array.from||function(e){if(e instanceof P){var t=[];return e.forEach((function(e,n){return t.push([n,e])})),t}return Array.prototype.slice.call(e)};function b(e){return-1!==this.indexOf(e)}Array.prototype.includes||(Array.prototype.includes=b),String.prototype.includes||(String.prototype.includes=b),String.prototype.startsWith||(String.prototype.startsWith=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0;return this.substring(t,t+e.length)===e}),String.prototype.endsWith||(String.prototype.endsWith=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.length;return this.substring(t-e.length,t)===e});var A="undefined"!=typeof self?self:__webpack_require__.g,w=A.fetch||function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};return new Promise((function(n,r){var i=new XMLHttpRequest;if(i.open("get",e,!0),i.responseType="arraybuffer",i.onerror=r,t.headers)for(var a in t.headers)i.setRequestHeader(a,t.headers[a]);i.onload=function(){n({ok:i.status>=200&&i.status<300,status:i.status,arrayBuffer:function(){return Promise.resolve(i.response)}})},i.send(null)}))},O=function(e){var t=[];if(Object.defineProperties(t,{size:{get:function(){return this.length}},has:{value:function(e){return-1!==this.indexOf(e)}},add:{value:function(e){this.has(e)||this.push(e)}},delete:{value:function(e){if(this.has(e)){var t=this.indexOf(e);this.splice(t,1)}}}}),Array.isArray(e))for(var n=0;n<e.length;n++)t.add(e[n]);return t},S=function(e){return new P(e)},P=void 0!==A.Map&&void 0!==A.Map.prototype.keys?A.Map:function(){function e(n){if(t(this,e),this.clear(),n)for(var r=0;r<n.length;r++)this.set(n[r][0],n[r][1])}return r(e,[{key:"clear",value:function(){this._map={},this._keys=[]}},{key:"size",get:function(){return this._keys.length}},{key:"get",value:function(e){return this._map["map_"+e]}},{key:"set",value:function(e,t){return this._map["map_"+e]=t,this._keys.indexOf(e)<0&&this._keys.push(e),this}},{key:"has",value:function(e){return this._keys.indexOf(e)>=0}},{key:"delete",value:function(e){var t=this._keys.indexOf(e);return!(t<0)&&(delete this._map["map_"+e],this._keys.splice(t,1),!0)}},{key:"keys",value:function(){return this._keys.slice(0)}},{key:"values",value:function(){var e=this;return this._keys.map((function(t){return e.get(t)}))}},{key:"entries",value:function(){var e=this;return this._keys.map((function(t){return[t,e.get(t)]}))}},{key:"forEach",value:function(e,t){for(var n=0;n<this._keys.length;n++)e.call(t,this._map["map_"+this._keys[n]],this._keys[n],this)}}]),e}(),U="undefined"!=typeof self?self:__webpack_require__.g,x="undefined"!=typeof navigator,C=x&&"undefined"==typeof HTMLImageElement,B=!("undefined"==typeof __webpack_require__.g||"undefined"==typeof process||!process.versions||!process.versions.node),j=U.Buffer,_=!!j;var V=function(e){return void 0!==e};function I(e){return void 0===e||(e instanceof P?0===e.size:0===p(e).filter(V).length)}function L(e){var t=new Error(e);throw delete t.stack,t}function T(e){var t=function(e){var t=0;return e.ifd0.enabled&&(t+=1024),e.exif.enabled&&(t+=2048),e.makerNote&&(t+=2048),e.userComment&&(t+=1024),e.gps.enabled&&(t+=512),e.interop.enabled&&(t+=100),e.ifd1.enabled&&(t+=1024),t+2048}(e);return e.jfif.enabled&&(t+=50),e.xmp.enabled&&(t+=2e4),e.iptc.enabled&&(t+=14e3),e.icc.enabled&&(t+=6e3),t}var z=function(e){return String.fromCharCode.apply(null,e)},F="undefined"!=typeof TextDecoder?new TextDecoder("utf-8"):void 0;function E(e){return F?F.decode(e):_?Buffer.from(e).toString("utf8"):decodeURIComponent(escape(z(e)))}var D=function(){function e(n){var r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0,i=arguments.length>2?arguments[2]:void 0,a=arguments.length>3?arguments[3]:void 0;if(t(this,e),"boolean"==typeof a&&(this.le=a),Array.isArray(n)&&(n=new Uint8Array(n)),0===n)this.byteOffset=0,this.byteLength=0;else if(n instanceof ArrayBuffer){void 0===i&&(i=n.byteLength-r);var s=new DataView(n,r,i);this._swapDataView(s)}else if(n instanceof Uint8Array||n instanceof DataView||n instanceof e){void 0===i&&(i=n.byteLength-r),(r+=n.byteOffset)+i>n.byteOffset+n.byteLength&&L("Creating view outside of available memory in ArrayBuffer");var u=new DataView(n.buffer,r,i);this._swapDataView(u)}else if("number"==typeof n){var o=new DataView(new ArrayBuffer(n));this._swapDataView(o)}else L("Invalid input argument for BufferView: "+n)}return r(e,[{key:"_swapArrayBuffer",value:function(e){this._swapDataView(new DataView(e))}},{key:"_swapBuffer",value:function(e){this._swapDataView(new DataView(e.buffer,e.byteOffset,e.byteLength))}},{key:"_swapDataView",value:function(e){this.dataView=e,this.buffer=e.buffer,this.byteOffset=e.byteOffset,this.byteLength=e.byteLength}},{key:"_lengthToEnd",value:function(e){return this.byteLength-e}},{key:"set",value:function(t,n){var r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:e;t instanceof DataView||t instanceof e?t=new Uint8Array(t.buffer,t.byteOffset,t.byteLength):t instanceof ArrayBuffer&&(t=new Uint8Array(t)),t instanceof Uint8Array||L("BufferView.set(): Invalid data argument.");var i=this.toUint8();return i.set(t,n),new r(this,n,t.byteLength)}},{key:"subarray",value:function(t,n){return new e(this,t,n=n||this._lengthToEnd(t))}},{key:"toUint8",value:function(){return new Uint8Array(this.buffer,this.byteOffset,this.byteLength)}},{key:"getUint8Array",value:function(e,t){return new Uint8Array(this.buffer,this.byteOffset+e,t)}},{key:"getString",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0,t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.byteLength,n=this.getUint8Array(e,t);return E(n)}},{key:"getLatin1String",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0,t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.byteLength,n=this.getUint8Array(e,t);return z(n)}},{key:"getUnicodeString",value:function(){for(var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0,t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.byteLength,n=[],r=0;r<t&&e+r<this.byteLength;r+=2)n.push(this.getUint16(e+r));return z(n)}},{key:"getInt8",value:function(e){return this.dataView.getInt8(e)}},{key:"getUint8",value:function(e){return this.dataView.getUint8(e)}},{key:"getInt16",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getInt16(e,t)}},{key:"getInt32",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getInt32(e,t)}},{key:"getUint16",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getUint16(e,t)}},{key:"getUint32",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getUint32(e,t)}},{key:"getFloat32",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getFloat32(e,t)}},{key:"getFloat64",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getFloat64(e,t)}},{key:"getFloat",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getFloat32(e,t)}},{key:"getDouble",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:this.le;return this.dataView.getFloat64(e,t)}},{key:"getUintBytes",value:function(e,t,n){switch(t){case 1:return this.getUint8(e,n);case 2:return this.getUint16(e,n);case 4:return this.getUint32(e,n);case 8:return this.getUint64&&this.getUint64(e,n)}}},{key:"getUint",value:function(e,t,n){switch(t){case 8:return this.getUint8(e,n);case 16:return this.getUint16(e,n);case 32:return this.getUint32(e,n);case 64:return this.getUint64&&this.getUint64(e,n)}}},{key:"toString",value:function(e){return this.dataView.toString(e,this.constructor.name)}},{key:"ensureChunk",value:function(){}}],[{key:"from",value:function(t,n){return t instanceof this&&t.le===n?t:new e(t,void 0,void 0,n)}}]),e}();function R(e,t){L("".concat(e," '").concat(t,"' was not loaded, try using full build of exifr."))}var N=function(e){a(i,e);var n=d(i);function i(e){var r;return t(this,i),(r=n.call(this)).kind=e,r}return r(i,[{key:"get",value:function(e,t){return this.has(e)||R(this.kind,e),t&&(e in t||function(e,t){L("Unknown ".concat(e," '").concat(t,"'."))}(this.kind,e),t[e].enabled||R(this.kind,e)),v(s(i.prototype),"get",this).call(this,e)}},{key:"keyList",value:function(){return m(this.keys())}}]),i}(c(P)),M=new N("file parser"),W=new N("segment parser"),K=new N("file reader");function H(e){return function(){for(var t=[],n=0;n<arguments.length;n++)t[n]=arguments[n];try{return Promise.resolve(e.apply(this,t))}catch(e){return Promise.reject(e)}}}function X(e,t,n){return n?t?t(e):e:(e&&e.then||(e=Promise.resolve(e)),t?e.then(t):e)}var Y=H((function(e){return new Promise((function(t,n){var r=new FileReader;r.onloadend=function(){return t(r.result||new ArrayBuffer)},r.onerror=n,r.readAsArrayBuffer(e)}))})),G=H((function(e){return w(e).then((function(e){return e.arrayBuffer()}))})),J=H((function(e,t){return X(t(e),(function(e){return new D(e)}))})),q=H((function(e,t,n){var r=new(K.get(n))(e,t);return X(r.read(),(function(){return r}))})),Q=H((function(e,t,n,r){return K.has(n)?q(e,t,n):r?J(e,r):(L("Parser ".concat(n," is not loaded")),X())})),Z="Invalid input argument";function $(e,t){return(n=e).startsWith("data:")||n.length>1e4?q(e,t,"base64"):x?Q(e,t,"url",G):B?q(e,t,"fs"):void L(Z);var n}var ee=function(e){a(i,e);var n=d(i);function i(){return t(this,i),n.apply(this,arguments)}return r(i,[{key:"tagKeys",get:function(){return this.allKeys||(this.allKeys=m(this.keys())),this.allKeys}},{key:"tagValues",get:function(){return this.allValues||(this.allValues=m(this.values())),this.allValues}}]),i}(c(P));function te(e,t,n){var r=new ee,i=n;Array.isArray(i)||("function"==typeof i.entries&&(i=i.entries()),i=m(i));for(var a=0;a<i.length;a++){var s=i[a],u=s[0],o=s[1];r.set(u,o)}if(Array.isArray(t)){var f=t;Array.isArray(f)||("function"==typeof f.entries&&(f=f.entries()),f=m(f));for(var c=0;c<f.length;c++){var h=f[c];e.set(h,r)}}else e.set(t,r);return r}function ne(e,t,n){var r,i=e.get(t),a=n;Array.isArray(a)||("function"==typeof a.entries&&(a=a.entries()),a=m(a));for(var s=0;s<a.length;s++)r=a[s],i.set(r[0],r[1])}var re=S(),ie=S(),ae=S(),se=37500,ue=37510,oe=33723,fe=34675,ce=34665,he=34853,le=40965,de=["chunked","firstChunkSize","firstChunkSizeNode","firstChunkSizeBrowser","chunkSize","chunkLimit"],ve=["jfif","xmp","icc","iptc","ihdr"],pe=["tiff"].concat(ve),ye=["ifd0","ifd1","exif","gps","interop"],ge=[].concat(pe,ye),ke=["makerNote","userComment"],me=["translateKeys","translateValues","reviveValues","multiSegment"],be=[].concat(me,["sanitize","mergeOutput","silentErrors"]),Ae=function(){function e(){t(this,e)}return r(e,[{key:"translate",get:function(){return this.translateKeys||this.translateValues||this.reviveValues}}]),e}(),we=function(e){a(s,e);var n=d(s);function s(e,r,a,u){var o;if(t(this,s),i(h(o=n.call(this)),"enabled",!1),i(h(o),"skip",O()),i(h(o),"pick",O()),i(h(o),"deps",O()),i(h(o),"translateKeys",!1),i(h(o),"translateValues",!1),i(h(o),"reviveValues",!1),o.key=e,o.enabled=r,o.parse=o.enabled,o.applyInheritables(u),o.canBeFiltered=ye.includes(e),o.canBeFiltered&&(o.dict=re.get(e)),void 0!==a)if(Array.isArray(a))o.parse=o.enabled=!0,o.canBeFiltered&&a.length>0&&o.translateTagSet(a,o.pick);else if("object"==typeof a){if(o.enabled=!0,o.parse=!1!==a.parse,o.canBeFiltered){var f=a.pick,c=a.skip;f&&f.length>0&&o.translateTagSet(f,o.pick),c&&c.length>0&&o.translateTagSet(c,o.skip)}o.applyInheritables(a)}else!0===a||!1===a?o.parse=o.enabled=a:L("Invalid options argument: ".concat(a));return o}return r(s,[{key:"needed",get:function(){return this.enabled||this.deps.size>0}},{key:"applyInheritables",value:function(e){var t,n,r=me;Array.isArray(r)||("function"==typeof r.entries&&(r=r.entries()),r=m(r));for(var i=0;i<r.length;i++)void 0!==(n=e[t=r[i]])&&(this[t]=n)}},{key:"translateTagSet",value:function(e,t){if(this.dict){var n,r,i=this.dict,a=i.tagKeys,s=i.tagValues,u=e;Array.isArray(u)||("function"==typeof u.entries&&(u=u.entries()),u=m(u));for(var o=0;o<u.length;o++)"string"==typeof(n=u[o])?(-1===(r=s.indexOf(n))&&(r=a.indexOf(Number(n))),-1!==r&&t.add(Number(a[r]))):t.add(n)}else{var f=e;Array.isArray(f)||("function"==typeof f.entries&&(f=f.entries()),f=m(f));for(var c=0;c<f.length;c++){var h=f[c];t.add(h)}}}},{key:"finalizeFilters",value:function(){!this.enabled&&this.deps.size>0?(this.enabled=!0,Ce(this.pick,this.deps)):this.enabled&&this.pick.size>0&&Ce(this.pick,this.deps)}}]),s}(Ae),Oe={jfif:!1,tiff:!0,xmp:!1,icc:!1,iptc:!1,ifd0:!0,ifd1:!1,exif:!0,gps:!0,interop:!1,ihdr:void 0,makerNote:!1,userComment:!1,multiSegment:!1,skip:[],pick:[],translateKeys:!0,translateValues:!0,reviveValues:!0,sanitize:!0,mergeOutput:!0,silentErrors:!0,chunked:!0,firstChunkSize:void 0,firstChunkSizeNode:512,firstChunkSizeBrowser:65536,chunkSize:65536,chunkLimit:5},Se=S(),Pe=function(e){a(i,e);var n=d(i);function i(e){var r;return t(this,i),r=n.call(this),!0===e?r.setupFromTrue():void 0===e?r.setupFromUndefined():Array.isArray(e)?r.setupFromArray(e):"object"==typeof e?r.setupFromObject(e):L("Invalid options argument ".concat(e)),void 0===r.firstChunkSize&&(r.firstChunkSize=x?r.firstChunkSizeBrowser:r.firstChunkSizeNode),r.mergeOutput&&(r.ifd1.enabled=!1),r.filterNestedSegmentTags(),r.traverseTiffDependencyTree(),r.checkLoadedPlugins(),r}return r(i,[{key:"setupFromUndefined",value:function(){var e,t=de;Array.isArray(t)||("function"==typeof t.entries&&(t=t.entries()),t=m(t));for(var n=0;n<t.length;n++)this[e=t[n]]=Oe[e];var r=be;Array.isArray(r)||("function"==typeof r.entries&&(r=r.entries()),r=m(r));for(var i=0;i<r.length;i++)this[e=r[i]]=Oe[e];var a=ke;Array.isArray(a)||("function"==typeof a.entries&&(a=a.entries()),a=m(a));for(var s=0;s<a.length;s++)this[e=a[s]]=Oe[e];var u=ge;Array.isArray(u)||("function"==typeof u.entries&&(u=u.entries()),u=m(u));for(var o=0;o<u.length;o++)this[e=u[o]]=new we(e,Oe[e],void 0,this)}},{key:"setupFromTrue",value:function(){var e,t=de;Array.isArray(t)||("function"==typeof t.entries&&(t=t.entries()),t=m(t));for(var n=0;n<t.length;n++)this[e=t[n]]=Oe[e];var r=be;Array.isArray(r)||("function"==typeof r.entries&&(r=r.entries()),r=m(r));for(var i=0;i<r.length;i++)this[e=r[i]]=Oe[e];var a=ke;Array.isArray(a)||("function"==typeof a.entries&&(a=a.entries()),a=m(a));for(var s=0;s<a.length;s++)this[e=a[s]]=!0;var u=ge;Array.isArray(u)||("function"==typeof u.entries&&(u=u.entries()),u=m(u));for(var o=0;o<u.length;o++)this[e=u[o]]=new we(e,!0,void 0,this)}},{key:"setupFromArray",value:function(e){var t,n=de;Array.isArray(n)||("function"==typeof n.entries&&(n=n.entries()),n=m(n));for(var r=0;r<n.length;r++)this[t=n[r]]=Oe[t];var i=be;Array.isArray(i)||("function"==typeof i.entries&&(i=i.entries()),i=m(i));for(var a=0;a<i.length;a++)this[t=i[a]]=Oe[t];var s=ke;Array.isArray(s)||("function"==typeof s.entries&&(s=s.entries()),s=m(s));for(var u=0;u<s.length;u++)this[t=s[u]]=Oe[t];var o=ge;Array.isArray(o)||("function"==typeof o.entries&&(o=o.entries()),o=m(o));for(var f=0;f<o.length;f++)this[t=o[f]]=new we(t,!1,void 0,this);this.setupGlobalFilters(e,void 0,ye)}},{key:"setupFromObject",value:function(e){var t;ye.ifd0=ye.ifd0||ye.image,ye.ifd1=ye.ifd1||ye.thumbnail,g(this,e);var n=de;Array.isArray(n)||("function"==typeof n.entries&&(n=n.entries()),n=m(n));for(var r=0;r<n.length;r++)this[t=n[r]]=xe(e[t],Oe[t]);var i=be;Array.isArray(i)||("function"==typeof i.entries&&(i=i.entries()),i=m(i));for(var a=0;a<i.length;a++)this[t=i[a]]=xe(e[t],Oe[t]);var s=ke;Array.isArray(s)||("function"==typeof s.entries&&(s=s.entries()),s=m(s));for(var u=0;u<s.length;u++)this[t=s[u]]=xe(e[t],Oe[t]);var o=pe;Array.isArray(o)||("function"==typeof o.entries&&(o=o.entries()),o=m(o));for(var f=0;f<o.length;f++)this[t=o[f]]=new we(t,Oe[t],e[t],this);var c=ye;Array.isArray(c)||("function"==typeof c.entries&&(c=c.entries()),c=m(c));for(var h=0;h<c.length;h++)this[t=c[h]]=new we(t,Oe[t],e[t],this.tiff);this.setupGlobalFilters(e.pick,e.skip,ye,ge),!0===e.tiff?this.batchEnableWithBool(ye,!0):!1===e.tiff?this.batchEnableWithUserValue(ye,e):Array.isArray(e.tiff)?this.setupGlobalFilters(e.tiff,void 0,ye):"object"==typeof e.tiff&&this.setupGlobalFilters(e.tiff.pick,e.tiff.skip,ye)}},{key:"batchEnableWithBool",value:function(e,t){var n=e;Array.isArray(n)||("function"==typeof n.entries&&(n=n.entries()),n=m(n));for(var r=0;r<n.length;r++){this[n[r]].enabled=t}}},{key:"batchEnableWithUserValue",value:function(e,t){var n=e;Array.isArray(n)||("function"==typeof n.entries&&(n=n.entries()),n=m(n));for(var r=0;r<n.length;r++){var i=n[r],a=t[i];this[i].enabled=!1!==a&&void 0!==a}}},{key:"setupGlobalFilters",value:function(e,t,n){var r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:n;if(e&&e.length){var i=r;Array.isArray(i)||("function"==typeof i.entries&&(i=i.entries()),i=m(i));for(var a=0;a<i.length;a++){var s=i[a];this[s].enabled=!1}var u=Ue(e,n),o=u;Array.isArray(o)||("function"==typeof o.entries&&(o=o.entries()),o=m(o));for(var f=0;f<o.length;f++){var c=o[f],h=c[0],l=c[1];Ce(this[h].pick,l),this[h].enabled=!0}}else if(t&&t.length){var d=Ue(t,n),v=d;Array.isArray(v)||("function"==typeof v.entries&&(v=v.entries()),v=m(v));for(var p=0;p<v.length;p++){var y=v[p],g=y[0],k=y[1];Ce(this[g].skip,k)}}}},{key:"filterNestedSegmentTags",value:function(){var e=this.ifd0,t=this.exif,n=this.xmp,r=this.iptc,i=this.icc;this.makerNote?t.deps.add(se):t.skip.add(se),this.userComment?t.deps.add(ue):t.skip.add(ue),n.enabled||e.skip.add(700),r.enabled||e.skip.add(oe),i.enabled||e.skip.add(fe)}},{key:"traverseTiffDependencyTree",value:function(){var e=this,t=this.ifd0,n=this.exif,r=this.gps;this.interop.needed&&(n.deps.add(le),t.deps.add(le)),n.needed&&t.deps.add(ce),r.needed&&t.deps.add(he),this.tiff.enabled=ye.some((function(t){return!0===e[t].enabled}))||this.makerNote||this.userComment;var i=ye;Array.isArray(i)||("function"==typeof i.entries&&(i=i.entries()),i=m(i));for(var a=0;a<i.length;a++){this[i[a]].finalizeFilters()}}},{key:"onlyTiff",get:function(){var e=this;return!ve.map((function(t){return e[t].enabled})).some((function(e){return!0===e}))&&this.tiff.enabled}},{key:"checkLoadedPlugins",value:function(){var e=pe;Array.isArray(e)||("function"==typeof e.entries&&(e=e.entries()),e=m(e));for(var t=0;t<e.length;t++){var n=e[t];this[n].enabled&&!W.has(n)&&R("segment parser",n)}}}],[{key:"useCached",value:function(e){var t=Se.get(e);return void 0!==t||(t=new this(e),Se.set(e,t)),t}}]),i}(Ae);function Ue(e,t){var n,r,i,a=[],s=t;Array.isArray(s)||("function"==typeof s.entries&&(s=s.entries()),s=m(s));for(var u=0;u<s.length;u++){r=s[u],n=[];var o=re.get(r);Array.isArray(o)||("function"==typeof o.entries&&(o=o.entries()),o=m(o));for(var f=0;f<o.length;f++)i=o[f],(e.includes(i[0])||e.includes(i[1]))&&n.push(i[0]);n.length&&a.push([r,n])}return a}function xe(e,t){return void 0!==e?e:void 0!==t?t:void 0}function Ce(e,t){var n=t;Array.isArray(n)||("function"==typeof n.entries&&(n=n.entries()),n=m(n));for(var r=0;r<n.length;r++){var i=n[r];e.add(i)}}function Be(e,t,n){return n?t?t(e):e:(e&&e.then||(e=Promise.resolve(e)),t?e.then(t):e)}function je(){}function _e(e,t){if(!t)return e&&e.then?e.then(je):Promise.resolve()}function Ve(e,t){var n=e();return n&&n.then?n.then(t):t(n)}i(Pe,"default",Oe);var Ie=function(){function e(n){t(this,e),i(this,"parsers",{}),this.options=Pe.useCached(n)}return r(e,[{key:"setup",value:function(){if(!this.fileParser){var e=this.file,t=e.getUint16(0),n=M;Array.isArray(n)||("function"==typeof n.entries&&(n=n.entries()),n=m(n));for(var r=0;r<n.length;r++){var i=n[r],a=i[0],s=i[1];if(s.canHandle(e,t))return this.fileParser=new s(this.options,this.file,this.parsers),e[a]=!0}L("Unknown file format")}}},{key:"read",value:function(e){try{var t=this;return Be(function(e,t){return"string"==typeof e?$(e,t):x&&!C&&e instanceof HTMLImageElement?$(e.src,t):e instanceof Uint8Array||e instanceof ArrayBuffer||e instanceof DataView?new D(e):x&&e instanceof Blob?Q(e,t,"blob",Y):void L(Z)}(e,t.options),(function(e){t.file=e}))}catch(e){return Promise.reject(e)}}},{key:"parse",value:function(){try{var e=this;e.setup();var t={},n=[];return Ve((function(){return e.options.silentErrors?Be(e.doParse(t,n).catch((function(e){return n.push(e)})),(function(){n.push.apply(n,e.fileParser.errors)})):_e(e.doParse(t,n))}),(function(){return e.file.close&&e.file.close(),e.options.silentErrors&&n.length>0&&(t.errors=n),I(r=t)?void 0:r;var r}))}catch(e){return Promise.reject(e)}}},{key:"doParse",value:function(e,t){try{var n=this;return Be(n.fileParser.parse(),(function(){var r,i=p(n.parsers).map((r=function(t){return Be(t.parse(),(function(n){t.assignToOutput(e,n)}))},function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];try{return Promise.resolve(r.apply(this,e))}catch(e){return Promise.reject(e)}}));if(n.options.silentErrors){var a=function(e){return t.push(e)};i=i.map((function(e){return e.catch(a)}))}return _e(Promise.all(i))}))}catch(e){return Promise.reject(e)}}},{key:"extractThumbnail",value:function(){try{var e=this;e.setup();var t,n=e.options,r=e.file,i=W.get("tiff",n);return Ve((function(){if(!r.tiff)return function(e){var t=e();if(t&&t.then)return t.then(je)}((function(){if(r.jpeg)return Be(e.fileParser.getOrFindSegment("tiff"),(function(e){t=e}))}));t={start:0,type:"tiff"}}),(function(){if(void 0!==t)return Be(e.fileParser.ensureSegmentChunk(t),(function(t){return Be((e.parsers.tiff=new i(t,n,r)).extractThumbnail(),(function(e){return r.close&&r.close(),e}))}))}))}catch(e){return Promise.reject(e)}}}]),e}();var Le,Te=(Le=function(e,t){var n,r,i,a=new Ie(t);return n=a.read(e),r=function(){return a.parse()},i?r?r(n):n:(n&&n.then||(n=Promise.resolve(n)),r?n.then(r):n)},function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];try{return Promise.resolve(Le.apply(this,e))}catch(e){return Promise.reject(e)}}),ze=Object.freeze({__proto__:null,parse:Te,Exifr:Ie,fileParsers:M,segmentParsers:W,fileReaders:K,tagKeys:re,tagValues:ie,tagRevivers:ae,createDictionary:te,extendDictionary:ne,fetchUrlAsArrayBuffer:G,readBlobAsArrayBuffer:Y,chunkedProps:de,otherSegments:ve,segments:pe,tiffBlocks:ye,segmentsAndBlocks:ge,tiffExtractables:ke,inheritables:me,allFormatters:be,Options:Pe});function Fe(){}var Ee=function(){function e(n,r,a){var s=this;t(this,e),i(this,"errors",[]),i(this,"ensureSegmentChunk",function(e){return function(){for(var t=[],n=0;n<arguments.length;n++)t[n]=arguments[n];try{return Promise.resolve(e.apply(this,t))}catch(e){return Promise.reject(e)}}}((function(e){var t,n,r,i=e.start,a=e.size||65536;return t=function(){if(s.file.chunked)return function(e){var t=e();if(t&&t.then)return t.then(Fe)}((function(){if(!s.file.available(i,a))return function(e){if(e&&e.then)return e.then(Fe)}(function(e,t){try{var n=e()}catch(e){return t(e)}return n&&n.then?n.then(void 0,t):n}((function(){return t=s.file.readChunk(i,a),n=function(t){e.chunk=t},r?n?n(t):t:(t&&t.then||(t=Promise.resolve(t)),n?t.then(n):t);var t,n,r}),(function(t){L("Couldn't read segment: ".concat(JSON.stringify(e),". ").concat(t.message))})));e.chunk=s.file.subarray(i,a)}));s.file.byteLength>i+a?e.chunk=s.file.subarray(i,a):void 0===e.size?e.chunk=s.file.subarray(i):L("Segment unreachable: "+JSON.stringify(e))},n=function(){return e.chunk},(r=t())&&r.then?r.then(n):n(r)}))),this.extendOptions&&this.extendOptions(n),this.options=n,this.file=r,this.parsers=a}return r(e,[{key:"injectSegment",value:function(e,t){this.options[e].enabled&&this.createParser(e,t)}},{key:"createParser",value:function(e,t){var n=new(W.get(e))(t,this.options,this.file);return this.parsers[e]=n}},{key:"createParsers",value:function(e){var t=e;Array.isArray(t)||("function"==typeof t.entries&&(t=t.entries()),t=m(t));for(var n=0;n<t.length;n++){var r=t[n],i=r.type,a=r.chunk,s=this.options[i];if(s&&s.enabled){var u=this.parsers[i];u&&u.append||u||this.createParser(i,a)}}}},{key:"readSegments",value:function(e){try{var t=e.map(this.ensureSegmentChunk);return function(e,t){if(!t)return e&&e.then?e.then(Fe):Promise.resolve()}(Promise.all(t))}catch(e){return Promise.reject(e)}}}]),e}(),De=function(){function e(n){var r=this,a=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},s=arguments.length>2?arguments[2]:void 0;t(this,e),i(this,"errors",[]),i(this,"raw",S()),i(this,"handleError",(function(e){if(!r.options.silentErrors)throw e;r.errors.push(e.message)})),this.chunk=this.normalizeInput(n),this.file=s,this.type=this.constructor.type,this.globalOptions=this.options=a,this.localOptions=a[this.type],this.canTranslate=this.localOptions&&this.localOptions.translate}return r(e,[{key:"normalizeInput",value:function(e){return e instanceof D?e:new D(e)}},{key:"translate",value:function(){this.canTranslate&&(this.translated=this.translateBlock(this.raw,this.type))}},{key:"output",get:function(){return this.translated?this.translated:this.raw?k(this.raw):void 0}},{key:"translateBlock",value:function(e,t){var n=ae.get(t),r=ie.get(t),i=re.get(t),a=this.options[t],s=a.reviveValues&&!!n,u=a.translateValues&&!!r,o=a.translateKeys&&!!i,f={},c=e;Array.isArray(c)||("function"==typeof c.entries&&(c=c.entries()),c=m(c));for(var h=0;h<c.length;h++){var l=c[h],d=l[0],v=l[1];s&&n.has(d)?v=n.get(d)(v):u&&r.has(d)&&(v=this.translateValue(v,r.get(d))),o&&i.has(d)&&(d=i.get(d)||d),f[d]=v}return f}},{key:"translateValue",value:function(e,t){return t[e]||t.DEFAULT||e}},{key:"assignToOutput",value:function(e,t){this.assignObjectToOutput(e,this.constructor.type,t)}},{key:"assignObjectToOutput",value:function(e,t,n){if(this.globalOptions.mergeOutput)return g(e,n);e[t]?g(e[t],n):e[t]=n}}],[{key:"findPosition",value:function(e,t){var n=e.getUint16(t+2)+2,r="function"==typeof this.headerLength?this.headerLength(e,t,n):this.headerLength,i=t+r,a=n-r;return{offset:t,length:n,headerLength:r,start:i,size:a,end:i+a}}},{key:"parse",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=new Pe(i({},this.type,t)),r=new this(e,n);return r.parse()}}]),e}();function Re(e,t,n){return n?t?t(e):e:(e&&e.then||(e=Promise.resolve(e)),t?e.then(t):e)}i(De,"headerLength",4),i(De,"type",void 0),i(De,"multiSegment",!1),i(De,"canHandle",(function(){return!1}));function Ne(){}function Me(e,t){if(!t)return e&&e.then?e.then(Ne):Promise.resolve()}function We(e){var t=e();if(t&&t.then)return t.then(Ne)}function Ke(e,t){var n=e();return n&&n.then?n.then(t):t(n)}function He(e,t,n){if(!e.s){if(n instanceof Xe){if(!n.s)return void(n.o=He.bind(null,e,t));1&t&&(t=n.s),n=n.v}if(n&&n.then)return void n.then(He.bind(null,e,t),He.bind(null,e,2));e.s=t,e.v=n;var r=e.o;r&&r(e)}}var Xe=function(){function e(){}return e.prototype.then=function(t,n){var r=new e,i=this.s;if(i){var a=1&i?t:n;if(a){try{He(r,1,a(this.v))}catch(e){He(r,2,e)}return r}return this}return this.o=function(e){try{var i=e.v;1&e.s?He(r,1,t?t(i):i):n?He(r,1,n(i)):He(r,2,i)}catch(e){He(r,2,e)}},r},e}();function Ye(e){return e instanceof Xe&&1&e.s}function Ge(e,t,n){for(var r;;){var i=e();if(Ye(i)&&(i=i.v),!i)return a;if(i.then){r=0;break}var a=n();if(a&&a.then){if(!Ye(a)){r=1;break}a=a.s}if(t){var s=t();if(s&&s.then&&!Ye(s)){r=2;break}}}var u=new Xe,o=He.bind(null,u,2);return(0===r?i.then(c):1===r?a.then(f):s.then(h)).then(void 0,o),u;function f(r){a=r;do{if(t&&(s=t())&&s.then&&!Ye(s))return void s.then(h).then(void 0,o);if(!(i=e())||Ye(i)&&!i.v)return void He(u,1,a);if(i.then)return void i.then(c).then(void 0,o);Ye(a=n())&&(a=a.v)}while(!a||!a.then);a.then(f).then(void 0,o)}function c(e){e?(a=n())&&a.then?a.then(f).then(void 0,o):f(a):He(u,1,a)}function h(){(i=e())?i.then?i.then(c).then(void 0,o):c(i):He(u,1,a)}}function Je(e){return 192===e||194===e||196===e||219===e||221===e||218===e||254===e}function qe(e){return e>=224&&e<=239}function Qe(e,t,n){var r=W;Array.isArray(r)||("function"==typeof r.entries&&(r=r.entries()),r=m(r));for(var i=0;i<r.length;i++){var a=r[i],s=a[0];if(a[1].canHandle(e,t,n))return s}}var Ze=function(e){a(s,e);var n=d(s);function s(){var e;t(this,s);for(var r=arguments.length,a=new Array(r),u=0;u<r;u++)a[u]=arguments[u];return i(h(e=n.call.apply(n,[this].concat(a))),"appSegments",[]),i(h(e),"jpegSegments",[]),i(h(e),"unknownSegments",[]),e}return r(s,[{key:"parse",value:function(){try{var e=this;return Re(e.findAppSegments(),(function(){return Re(e.readSegments(e.appSegments),(function(){e.mergeMultiSegments(),e.createParsers(e.mergedAppSegments||e.appSegments)}))}))}catch(e){return Promise.reject(e)}}},{key:"setupSegmentFinderArgs",value:function(e){var t=this;!0===e?(this.findAll=!0,this.wanted=O(W.keyList())):(e=void 0===e?W.keyList().filter((function(e){return t.options[e].enabled})):e.filter((function(e){return t.options[e].enabled&&W.has(e)})),this.findAll=!1,this.remaining=O(e),this.wanted=O(e)),this.unfinishedMultiSegment=!1}},{key:"findAppSegments",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0,t=arguments.length>1?arguments[1]:void 0;try{var n=this;n.setupSegmentFinderArgs(t);var r=n.file,i=n.findAll,a=n.wanted,s=n.remaining;return Ke((function(){if(!i&&n.file.chunked)return i=m(a).some((function(e){var t=W.get(e),r=n.options[e];return t.multiSegment&&r.multiSegment})),We((function(){if(i)return Me(n.file.readWhole())}))}),(function(){var t=!1;if(e=n.findAppSegmentsInRange(e,r.byteLength),!n.options.onlyTiff)return function(){if(r.chunked){var i=!1;return Ge((function(){return!t&&s.size>0&&!i&&(!!r.canReadNextChunk||!!n.unfinishedMultiSegment)}),void 0,(function(){var a=r.nextChunkOffset,s=n.appSegments.some((function(e){return!n.file.available(e.offset||e.start,e.length||e.size)}));return Ke((function(){return e>a&&!s?Re(r.readNextChunk(e),(function(e){i=!e})):Re(r.readNextChunk(a),(function(e){i=!e}))}),(function(){void 0===(e=n.findAppSegmentsInRange(e,r.byteLength))&&(t=!0)}))}))}}()}))}catch(e){return Promise.reject(e)}}},{key:"findAppSegmentsInRange",value:function(e,t){t-=2;for(var n,r,i,a,s,u,o=this.file,f=this.findAll,c=this.wanted,h=this.remaining,l=this.options;e<t;e++)if(255===o.getUint8(e))if(qe(n=o.getUint8(e+1))){if(r=o.getUint16(e+2),(i=Qe(o,e,r))&&c.has(i)&&(s=(a=W.get(i)).findPosition(o,e),u=l[i],s.type=i,this.appSegments.push(s),!f&&(a.multiSegment&&u.multiSegment?(this.unfinishedMultiSegment=s.chunkNumber<s.chunkCount,this.unfinishedMultiSegment||h.delete(i)):h.delete(i),0===h.size)))break;l.recordUnknownSegments&&((s=De.findPosition(o,e)).marker=n,this.unknownSegments.push(s)),e+=r+1}else if(Je(n)){if(r=o.getUint16(e+2),218===n&&!1!==l.stopAfterSos)return;l.recordJpegSegments&&this.jpegSegments.push({offset:e,length:r,marker:n}),e+=r+1}return e}},{key:"mergeMultiSegments",value:function(){var e=this;if(this.appSegments.some((function(e){return e.multiSegment}))){var t=function(e,t){for(var n,r,i,a=S(),s=0;s<e.length;s++)r=(n=e[s])[t],a.has(r)?i=a.get(r):a.set(r,i=[]),i.push(n);return m(a)}(this.appSegments,"type");this.mergedAppSegments=t.map((function(t){var n=t[0],r=t[1],i=W.get(n,e.options);return i.handleMultiSegments?{type:n,chunk:i.handleMultiSegments(r)}:r[0]}))}}},{key:"getSegment",value:function(e){return this.appSegments.find((function(t){return t.type===e}))}},{key:"getOrFindSegment",value:function(e){try{var t=this,n=t.getSegment(e);return Ke((function(){if(void 0===n)return Re(t.findAppSegments(0,[e]),(function(){n=t.getSegment(e)}))}),(function(){return n}))}catch(e){return Promise.reject(e)}}}],[{key:"canHandle",value:function(e,t){return 65496===t}}]),s}(Ee);function $e(){}i(Ze,"type","jpeg"),M.set("jpeg",Ze);function et(e,t){if(!t)return e&&e.then?e.then($e):Promise.resolve()}function tt(e,t){var n=e();return n&&n.then?n.then(t):t(n)}var nt=[void 0,1,1,2,4,8,1,1,2,4,8,4,8,4];var rt=function(e){a(i,e);var n=d(i);function i(){return t(this,i),n.apply(this,arguments)}return r(i,[{key:"parse",value:function(){try{var e=this;e.parseHeader();var t=e.options;return tt((function(){if(t.ifd0.enabled)return et(e.parseIfd0Block())}),(function(){return tt((function(){if(t.exif.enabled)return et(e.safeParse("parseExifBlock"))}),(function(){return tt((function(){if(t.gps.enabled)return et(e.safeParse("parseGpsBlock"))}),(function(){return tt((function(){if(t.interop.enabled)return et(e.safeParse("parseInteropBlock"))}),(function(){return tt((function(){if(t.ifd1.enabled)return et(e.safeParse("parseThumbnailBlock"))}),(function(){return e.createOutput()}))}))}))}))}))}catch(e){return Promise.reject(e)}}},{key:"safeParse",value:function(e){var t=this[e]();return void 0!==t.catch&&(t=t.catch(this.handleError)),t}},{key:"findIfd0Offset",value:function(){void 0===this.ifd0Offset&&(this.ifd0Offset=this.chunk.getUint32(4))}},{key:"findIfd1Offset",value:function(){if(void 0===this.ifd1Offset){this.findIfd0Offset();var e=this.chunk.getUint16(this.ifd0Offset),t=this.ifd0Offset+2+12*e;this.ifd1Offset=this.chunk.getUint32(t)}}},{key:"parseBlock",value:function(e,t){var n=S();return this[t]=n,this.parseTags(e,t,n),n}},{key:"parseIfd0Block",value:function(){try{var e=this;if(e.ifd0)return;var t=e.file;return e.findIfd0Offset(),e.ifd0Offset<8&&L("Malformed EXIF data"),!t.chunked&&e.ifd0Offset>t.byteLength&&L("IFD0 offset points to outside of file.\nthis.ifd0Offset: ".concat(e.ifd0Offset,", file.byteLength: ").concat(t.byteLength)),tt((function(){if(t.tiff)return et(t.ensureChunk(e.ifd0Offset,T(e.options)))}),(function(){var t=e.parseBlock(e.ifd0Offset,"ifd0");if(0!==t.size)return e.exifOffset=t.get(ce),e.interopOffset=t.get(le),e.gpsOffset=t.get(he),e.xmp=t.get(700),e.iptc=t.get(oe),e.icc=t.get(fe),e.options.sanitize&&(t.delete(ce),t.delete(le),t.delete(he),t.delete(700),t.delete(oe),t.delete(fe)),t}))}catch(e){return Promise.reject(e)}}},{key:"parseExifBlock",value:function(){try{var e=this;if(e.exif)return;return tt((function(){if(!e.ifd0)return et(e.parseIfd0Block())}),(function(){if(void 0!==e.exifOffset)return tt((function(){if(e.file.tiff)return et(e.file.ensureChunk(e.exifOffset,T(e.options)))}),(function(){var t=e.parseBlock(e.exifOffset,"exif");return e.interopOffset||(e.interopOffset=t.get(le)),e.makerNote=t.get(se),e.userComment=t.get(ue),e.options.sanitize&&(t.delete(le),t.delete(se),t.delete(ue)),e.unpack(t,41728),e.unpack(t,41729),t}))}))}catch(e){return Promise.reject(e)}}},{key:"unpack",value:function(e,t){var n=e.get(t);n&&1===n.length&&e.set(t,n[0])}},{key:"parseGpsBlock",value:function(){try{var e=this;if(e.gps)return;return tt((function(){if(!e.ifd0)return et(e.parseIfd0Block())}),(function(){if(void 0!==e.gpsOffset){var t=e.parseBlock(e.gpsOffset,"gps");return t&&t.has(2)&&t.has(4)&&(t.set("latitude",it.apply(void 0,t.get(2).concat([t.get(1)]))),t.set("longitude",it.apply(void 0,t.get(4).concat([t.get(3)])))),t}}))}catch(e){return Promise.reject(e)}}},{key:"parseInteropBlock",value:function(){try{var e=this;if(e.interop)return;return tt((function(){if(!e.ifd0)return et(e.parseIfd0Block())}),(function(){return tt((function(){if(void 0===e.interopOffset&&!e.exif)return et(e.parseExifBlock())}),(function(){if(void 0!==e.interopOffset)return e.parseBlock(e.interopOffset,"interop")}))}))}catch(e){return Promise.reject(e)}}},{key:"parseThumbnailBlock",value:function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];try{var t=this;if(t.ifd1||t.ifd1Parsed)return;if(t.options.mergeOutput&&!e)return;return t.findIfd1Offset(),t.ifd1Offset>0&&(t.parseBlock(t.ifd1Offset,"ifd1"),t.ifd1Parsed=!0),t.ifd1}catch(e){return Promise.reject(e)}}},{key:"extractThumbnail",value:function(){try{var e=this;return e.headerParsed||e.parseHeader(),tt((function(){if(!e.ifd1Parsed)return et(e.parseThumbnailBlock(!0))}),(function(){if(void 0!==e.ifd1){var t=e.ifd1.get(513),n=e.ifd1.get(514);return e.chunk.getUint8Array(t,n)}}))}catch(e){return Promise.reject(e)}}},{key:"image",get:function(){return this.ifd0}},{key:"thumbnail",get:function(){return this.ifd1}},{key:"createOutput",value:function(){var e,t,n,r={},i=ye;Array.isArray(i)||("function"==typeof i.entries&&(i=i.entries()),i=m(i));for(var a=0;a<i.length;a++)if(!I(e=this[t=i[a]]))if(n=this.canTranslate?this.translateBlock(e,t):k(e),this.options.mergeOutput){if("ifd1"===t)continue;g(r,n)}else r[t]=n;return this.makerNote&&(r.makerNote=this.makerNote),this.userComment&&(r.userComment=this.userComment),r}},{key:"assignToOutput",value:function(e,t){if(this.globalOptions.mergeOutput)g(e,t);else{var n=y(t);Array.isArray(n)||("function"==typeof n.entries&&(n=n.entries()),n=m(n));for(var r=0;r<n.length;r++){var i=n[r],a=i[0],s=i[1];this.assignObjectToOutput(e,a,s)}}}}],[{key:"canHandle",value:function(e,t){return 225===e.getUint8(t+1)&&1165519206===e.getUint32(t+4)&&0===e.getUint16(t+8)}}]),i}(function(e){a(i,e);var n=d(i);function i(){return t(this,i),n.apply(this,arguments)}return r(i,[{key:"parseHeader",value:function(){var e=this.chunk.getUint16();18761===e?this.le=!0:19789===e&&(this.le=!1),this.chunk.le=this.le,this.headerParsed=!0}},{key:"parseTags",value:function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:S(),r=this.options[t],i=r.pick,a=r.skip,s=(i=O(i)).size>0,u=0===a.size,o=this.chunk.getUint16(e);e+=2;for(var f=0;f<o;f++){var c=this.chunk.getUint16(e);if(s){if(i.has(c)&&(n.set(c,this.parseTag(e,c,t)),i.delete(c),0===i.size))break}else!u&&a.has(c)||n.set(c,this.parseTag(e,c,t));e+=12}return n}},{key:"parseTag",value:function(e,t,n){var r,i=this.chunk,a=i.getUint16(e+2),s=i.getUint32(e+4),u=nt[a];if(u*s<=4?e+=8:e=i.getUint32(e+8),(a<1||a>13)&&L("Invalid TIFF value type. block: ".concat(n.toUpperCase(),", tag: ").concat(t.toString(16),", type: ").concat(a,", offset ").concat(e)),e>i.byteLength&&L("Invalid TIFF value offset. block: ".concat(n.toUpperCase(),", tag: ").concat(t.toString(16),", type: ").concat(a,", offset ").concat(e," is outside of chunk size ").concat(i.byteLength)),1===a)return i.getUint8Array(e,s);if(2===a)return""===(r=function(e){for(;e.endsWith("\0");)e=e.slice(0,-1);return e}(r=i.getString(e,s)).trim())?void 0:r;if(7===a)return i.getUint8Array(e,s);if(1===s)return this.parseTagValue(a,e);for(var o=new(function(e){switch(e){case 1:return Uint8Array;case 3:return Uint16Array;case 4:return Uint32Array;case 5:return Array;case 6:return Int8Array;case 8:return Int16Array;case 9:return Int32Array;case 10:return Array;case 11:return Float32Array;case 12:return Float64Array;default:return Array}}(a))(s),f=u,c=0;c<s;c++)o[c]=this.parseTagValue(a,e),e+=f;return o}},{key:"parseTagValue",value:function(e,t){var n=this.chunk;switch(e){case 1:return n.getUint8(t);case 3:return n.getUint16(t);case 4:return n.getUint32(t);case 5:return n.getUint32(t)/n.getUint32(t+4);case 6:return n.getInt8(t);case 8:return n.getInt16(t);case 9:return n.getInt32(t);case 10:return n.getInt32(t)/n.getInt32(t+4);case 11:return n.getFloat(t);case 12:return n.getDouble(t);case 13:return n.getUint32(t);default:L("Invalid tiff type ".concat(e))}}}]),i}(De));function it(e,t,n,r){var i=e+t/60+n/3600;return"S"!==r&&"W"!==r||(i*=-1),i}i(rt,"type","tiff"),i(rt,"headerLength",10),W.set("tiff",rt);var at=Object.freeze({__proto__:null,default:ze,Exifr:Ie,fileParsers:M,segmentParsers:W,fileReaders:K,tagKeys:re,tagValues:ie,tagRevivers:ae,createDictionary:te,extendDictionary:ne,fetchUrlAsArrayBuffer:G,readBlobAsArrayBuffer:Y,chunkedProps:de,otherSegments:ve,segments:pe,tiffBlocks:ye,segmentsAndBlocks:ge,tiffExtractables:ke,inheritables:me,allFormatters:be,Options:Pe,parse:Te});function st(e,t,n){return n?t?t(e):e:(e&&e.then||(e=Promise.resolve(e)),t?e.then(t):e)}function ut(e){return function(){for(var t=[],n=0;n<arguments.length;n++)t[n]=arguments[n];try{return Promise.resolve(e.apply(this,t))}catch(e){return Promise.reject(e)}}}var ot=ut((function(e){var t=new Ie(vt);return st(t.read(e),(function(){return st(t.parse(),(function(e){if(e&&e.ifd0)return e.ifd0[274]}))}))})),ft=ut((function(e){var t=new Ie(dt);return st(t.read(e),(function(){return st(t.parse(),(function(e){if(e&&e.gps){var t=e.gps;return{latitude:t.latitude,longitude:t.longitude}}}))}))})),ct=ut((function(e){return st(this.thumbnail(e),(function(e){if(void 0!==e){var t=new Blob([e]);return URL.createObjectURL(t)}}))})),ht=ut((function(e){var t=new Ie(pt);return st(t.read(e),(function(){return st(t.extractThumbnail(),(function(e){return e&&_?j.from(e):e}))}))})),lt={ifd0:!1,ifd1:!1,exif:!1,gps:!1,interop:!1,sanitize:!1,reviveValues:!0,translateKeys:!1,translateValues:!1,mergeOutput:!1},dt=g({},lt,{firstChunkSize:4e4,gps:[1,2,3,4]}),vt=g({},lt,{firstChunkSize:4e4,ifd0:[274]}),pt=g({},lt,{tiff:!1,ifd1:!0,mergeOutput:!1}),yt=Object.freeze({1:{dimensionSwapped:!1,scaleX:1,scaleY:1,deg:0,rad:0},2:{dimensionSwapped:!1,scaleX:-1,scaleY:1,deg:0,rad:0},3:{dimensionSwapped:!1,scaleX:1,scaleY:1,deg:180,rad:180*Math.PI/180},4:{dimensionSwapped:!1,scaleX:-1,scaleY:1,deg:180,rad:180*Math.PI/180},5:{dimensionSwapped:!0,scaleX:1,scaleY:-1,deg:90,rad:90*Math.PI/180},6:{dimensionSwapped:!0,scaleX:1,scaleY:1,deg:90,rad:90*Math.PI/180},7:{dimensionSwapped:!0,scaleX:1,scaleY:-1,deg:270,rad:270*Math.PI/180},8:{dimensionSwapped:!0,scaleX:1,scaleY:1,deg:270,rad:270*Math.PI/180}});if(e.rotateCanvas=!0,e.rotateCss=!0,"object"==typeof navigator){var gt=navigator.userAgent;if(gt.includes("iPad")||gt.includes("iPhone")){var kt=gt.match(/OS (\d+)_(\d+)/);if(kt){var mt=kt[1],bt=kt[2],At=Number(mt)+.1*Number(bt);e.rotateCanvas=At<13.4,e.rotateCss=!1}}else if(gt.includes("OS X 10")){var wt=gt.match(/OS X 10[_.](\d+)/)[1];e.rotateCanvas=e.rotateCss=Number(wt)<15}if(gt.includes("Chrome/")){var Ot=gt.match(/Chrome\/(\d+)/)[1];e.rotateCanvas=e.rotateCss=Number(Ot)<81}else if(gt.includes("Firefox/")){var St=gt.match(/Firefox\/(\d+)/)[1];e.rotateCanvas=e.rotateCss=Number(St)<77}}function Pt(){}var Ut=function(e){a(u,e);var n=d(u);function u(){var e;t(this,u);for(var r=arguments.length,a=new Array(r),s=0;s<r;s++)a[s]=arguments[s];return i(h(e=n.call.apply(n,[this].concat(a))),"ranges",new xt),0!==e.byteLength&&e.ranges.add(0,e.byteLength),e}return r(u,[{key:"_tryExtend",value:function(e,t,n){if(0===e&&0===this.byteLength&&n){var r=new DataView(n.buffer||n,n.byteOffset,n.byteLength);this._swapDataView(r)}else{var i=e+t;if(i>this.byteLength){var a=this._extend(i).dataView;this._swapDataView(a)}}}},{key:"_extend",value:function(e){var t;t=_?j.allocUnsafe(e):new Uint8Array(e);var n=new DataView(t.buffer,t.byteOffset,t.byteLength);return t.set(new Uint8Array(this.buffer,this.byteOffset,this.byteLength),0),{uintView:t,dataView:n}}},{key:"subarray",value:function(e,t){var n=arguments.length>2&&void 0!==arguments[2]&&arguments[2];return t=t||this._lengthToEnd(e),n&&this._tryExtend(e,t),this.ranges.add(e,t),v(s(u.prototype),"subarray",this).call(this,e,t)}},{key:"set",value:function(e,t){var n=arguments.length>2&&void 0!==arguments[2]&&arguments[2];n&&this._tryExtend(t,e.byteLength,e);var r=v(s(u.prototype),"set",this).call(this,e,t);return this.ranges.add(t,r.byteLength),r}},{key:"ensureChunk",value:function(e,t){try{var n=this;if(!n.chunked)return;if(n.ranges.available(e,t))return;return function(e,t){if(!t)return e&&e.then?e.then(Pt):Promise.resolve()}(n.readChunk(e,t))}catch(e){return Promise.reject(e)}}},{key:"available",value:function(e,t){return this.ranges.available(e,t)}}]),u}(D),xt=function(){function e(){t(this,e),i(this,"list",[])}return r(e,[{key:"length",get:function(){return this.list.length}},{key:"add",value:function(e,t){var n=e+t,r=this.list.filter((function(t){return Ct(e,t.offset,n)||Ct(e,t.end,n)}));if(r.length>0){e=Math.min.apply(Math,[e].concat(r.map((function(e){return e.offset})))),t=(n=Math.max.apply(Math,[n].concat(r.map((function(e){return e.end})))))-e;var i=r.shift();i.offset=e,i.length=t,i.end=n,this.list=this.list.filter((function(e){return!r.includes(e)}))}else this.list.push({offset:e,length:t,end:n})}},{key:"available",value:function(e,t){var n=e+t;return this.list.some((function(t){return t.offset<=e&&n<=t.end}))}}]),e}();function Ct(e,t,n){return e<=t&&t<=n}function Bt(){}function jt(e,t){if(!t)return e&&e.then?e.then(Bt):Promise.resolve()}function _t(e,t,n){return n?t?t(e):e:(e&&e.then||(e=Promise.resolve(e)),t?e.then(t):e)}var Vt=function(e){a(i,e);var n=d(i);function i(){return t(this,i),n.apply(this,arguments)}return r(i,[{key:"readWhole",value:function(){try{var e=this;return e.chunked=!1,_t(Y(e.input),(function(t){e._swapArrayBuffer(t)}))}catch(e){return Promise.reject(e)}}},{key:"readChunked",value:function(){return this.chunked=!0,this.size=this.input.size,v(s(i.prototype),"readChunked",this).call(this)}},{key:"_readChunk",value:function(e,t){try{var n=this,r=t?e+t:void 0,i=n.input.slice(e,r);return _t(Y(i),(function(t){return n.set(t,e,!0)}))}catch(e){return Promise.reject(e)}}}]),i}(function(e){a(s,e);var n=d(s);function s(e,r){var a;return t(this,s),i(h(a=n.call(this,0)),"chunksRead",0),a.input=e,a.options=r,a}return r(s,[{key:"readWhole",value:function(){try{var e=this;return e.chunked=!1,jt(e.readChunk(e.nextChunkOffset))}catch(e){return Promise.reject(e)}}},{key:"readChunked",value:function(){try{var e=this;return e.chunked=!0,jt(e.readChunk(0,e.options.firstChunkSize))}catch(e){return Promise.reject(e)}}},{key:"readNextChunk",value:function(e){try{var t=this;if(void 0===e&&(e=t.nextChunkOffset),t.fullyRead)return t.chunksRead++,!1;var n=t.options.chunkSize;return r=t.readChunk(e,n),i=function(e){return!!e&&e.byteLength===n},a?i?i(r):r:(r&&r.then||(r=Promise.resolve(r)),i?r.then(i):r)}catch(e){return Promise.reject(e)}var r,i,a}},{key:"readChunk",value:function(e,t){try{var n=this;if(n.chunksRead++,0===(t=n.safeWrapAddress(e,t)))return;return n._readChunk(e,t)}catch(e){return Promise.reject(e)}}},{key:"safeWrapAddress",value:function(e,t){return void 0!==this.size&&e+t>this.size?Math.max(0,this.size-e):t}},{key:"nextChunkOffset",get:function(){if(0!==this.ranges.list.length)return this.ranges.list[0].length}},{key:"canReadNextChunk",get:function(){return this.chunksRead<this.options.chunkLimit}},{key:"fullyRead",get:function(){return void 0!==this.size&&this.nextChunkOffset===this.size}},{key:"read",value:function(){return this.options.chunked?this.readChunked():this.readWhole()}},{key:"close",value:function(){}}]),s}(Ut));K.set("blob",Vt),e.Exifr=Ie,e.Options=Pe,e.allFormatters=be,e.chunkedProps=de,e.createDictionary=te,e.default=at,e.disableAllOptions=lt,e.extendDictionary=ne,e.fetchUrlAsArrayBuffer=G,e.fileParsers=M,e.fileReaders=K,e.gps=ft,e.gpsOnlyOptions=dt,e.inheritables=me,e.orientation=ot,e.orientationOnlyOptions=vt,e.otherSegments=ve,e.parse=Te,e.readBlobAsArrayBuffer=Y,e.rotation=function(t){return st(ot(t),(function(t){return g({canvas:e.rotateCanvas,css:e.rotateCss},yt[t])}))},e.rotations=yt,e.segmentParsers=W,e.segments=pe,e.segmentsAndBlocks=ge,e.tagKeys=re,e.tagRevivers=ae,e.tagValues=ie,e.thumbnail=ht,e.thumbnailOnlyOptions=pt,e.thumbnailUrl=ct,e.tiffBlocks=ye,e.tiffExtractables=ke,Object.defineProperty(e,"__esModule",{value:!0})}));
+
+
+/***/ }),
+
+/***/ "./node_modules/ieee754/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/ieee754/index.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = ((value * c) - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/is-shallow-equal/index.js":
+/*!************************************************!*\
+  !*** ./node_modules/is-shallow-equal/index.js ***!
+  \************************************************/
+/***/ ((module) => {
+
+module.exports = function isShallowEqual (a, b) {
+  if (a === b) return true
+  for (var i in a) if (!(i in b)) return false
+  for (var i in b) if (a[i] !== b[i]) return false
+  return true
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/isarray/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/isarray/index.js ***!
+  \***************************************/
+/***/ ((module) => {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash.debounce/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash.debounce/index.js ***!
+  \***********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/** Used as references for various `Number` constants. */
+var NAN = 0 / 0;
+
+/** `Object#toString` result references. */
+var symbolTag = '[object Symbol]';
+
+/** Used to match leading and trailing whitespace. */
+var reTrim = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof __webpack_require__.g == 'object' && __webpack_require__.g && __webpack_require__.g.Object === Object && __webpack_require__.g;
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max,
+    nativeMin = Math.min;
+
+/**
+ * Gets the timestamp of the number of milliseconds that have elapsed since
+ * the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Date
+ * @returns {number} Returns the timestamp.
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => Logs the number of milliseconds it took for the deferred invocation.
+ */
+var now = function() {
+  return root.Date.now();
+};
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed `func` invocations and a `flush` method to immediately invoke them.
+ * Provide `options` to indicate whether `func` should be invoked on the
+ * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+ * with the last arguments provided to the debounced function. Subsequent
+ * calls to the debounced function return the result of the last `func`
+ * invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the debounced function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.debounce` and `_.throttle`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to debounce.
+ * @param {number} [wait=0] The number of milliseconds to delay.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=false]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {number} [options.maxWait]
+ *  The maximum time `func` is allowed to be delayed before it's invoked.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new debounced function.
+ * @example
+ *
+ * // Avoid costly calculations while the window size is in flux.
+ * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+ *
+ * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+ * jQuery(element).on('click', _.debounce(sendMail, 300, {
+ *   'leading': true,
+ *   'trailing': false
+ * }));
+ *
+ * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+ * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+ * var source = new EventSource('/stream');
+ * jQuery(source).on('message', debounced);
+ *
+ * // Cancel the trailing debounced invocation.
+ * jQuery(window).on('popstate', debounced.cancel);
+ */
+function debounce(func, wait, options) {
+  var lastArgs,
+      lastThis,
+      maxWait,
+      result,
+      timerId,
+      lastCallTime,
+      lastInvokeTime = 0,
+      leading = false,
+      maxing = false,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  wait = toNumber(wait) || 0;
+  if (isObject(options)) {
+    leading = !!options.leading;
+    maxing = 'maxWait' in options;
+    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+
+  function invokeFunc(time) {
+    var args = lastArgs,
+        thisArg = lastThis;
+
+    lastArgs = lastThis = undefined;
+    lastInvokeTime = time;
+    result = func.apply(thisArg, args);
+    return result;
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time;
+    // Start the timer for the trailing edge.
+    timerId = setTimeout(timerExpired, wait);
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result;
+  }
+
+  function remainingWait(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime,
+        result = wait - timeSinceLastCall;
+
+    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
+  }
+
+  function shouldInvoke(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime;
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+  }
+
+  function timerExpired() {
+    var time = now();
+    if (shouldInvoke(time)) {
+      return trailingEdge(time);
+    }
+    // Restart the timer.
+    timerId = setTimeout(timerExpired, remainingWait(time));
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined;
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time);
+    }
+    lastArgs = lastThis = undefined;
+    return result;
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+    lastInvokeTime = 0;
+    lastArgs = lastCallTime = lastThis = timerId = undefined;
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(now());
+  }
+
+  function debounced() {
+    var time = now(),
+        isInvoking = shouldInvoke(time);
+
+    lastArgs = arguments;
+    lastThis = this;
+    lastCallTime = time;
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime);
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        timerId = setTimeout(timerExpired, wait);
+        return invokeFunc(lastCallTime);
+      }
+    }
+    if (timerId === undefined) {
+      timerId = setTimeout(timerExpired, wait);
+    }
+    return result;
+  }
+  debounced.cancel = cancel;
+  debounced.flush = flush;
+  return debounced;
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim, '');
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+module.exports = debounce;
 
 
 /***/ }),
@@ -28671,6 +35634,85 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
+/***/ "./node_modules/math-log2/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/math-log2/index.js ***!
+  \*****************************************/
+/***/ ((module) => {
+
+"use strict";
+
+module.exports = Math.log2 || function (x) {
+	return Math.log(x) * Math.LOG2E;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/memoize-one/dist/memoize-one.esm.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/memoize-one/dist/memoize-one.esm.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var safeIsNaN = Number.isNaN ||
+    function ponyfill(value) {
+        return typeof value === 'number' && value !== value;
+    };
+function isEqual(first, second) {
+    if (first === second) {
+        return true;
+    }
+    if (safeIsNaN(first) && safeIsNaN(second)) {
+        return true;
+    }
+    return false;
+}
+function areInputsEqual(newInputs, lastInputs) {
+    if (newInputs.length !== lastInputs.length) {
+        return false;
+    }
+    for (var i = 0; i < newInputs.length; i++) {
+        if (!isEqual(newInputs[i], lastInputs[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function memoizeOne(resultFn, isEqual) {
+    if (isEqual === void 0) { isEqual = areInputsEqual; }
+    var lastThis;
+    var lastArgs = [];
+    var lastResult;
+    var calledOnce = false;
+    function memoized() {
+        var newArgs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            newArgs[_i] = arguments[_i];
+        }
+        if (calledOnce && lastThis === this && isEqual(newArgs, lastArgs)) {
+            return lastResult;
+        }
+        lastResult = resultFn.apply(this, newArgs);
+        calledOnce = true;
+        lastThis = this;
+        lastArgs = newArgs;
+        return lastResult;
+    }
+    return memoized;
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (memoizeOne);
+
+
+/***/ }),
+
 /***/ "./node_modules/mime-match/index.js":
 /*!******************************************!*\
   !*** ./node_modules/mime-match/index.js ***!
@@ -30304,6 +37346,949 @@ module.exports = function required(port, protocol) {
 
 /***/ }),
 
+/***/ "./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/**
+ * A collection of shims that provide minimal functionality of the ES6 collections.
+ *
+ * These implementations are not meant to be used outside of the ResizeObserver
+ * modules as they cover only a limited range of use cases.
+ */
+/* eslint-disable require-jsdoc, valid-jsdoc */
+var MapShim = (function () {
+    if (typeof Map !== 'undefined') {
+        return Map;
+    }
+    /**
+     * Returns index in provided array that matches the specified key.
+     *
+     * @param {Array<Array>} arr
+     * @param {*} key
+     * @returns {number}
+     */
+    function getIndex(arr, key) {
+        var result = -1;
+        arr.some(function (entry, index) {
+            if (entry[0] === key) {
+                result = index;
+                return true;
+            }
+            return false;
+        });
+        return result;
+    }
+    return /** @class */ (function () {
+        function class_1() {
+            this.__entries__ = [];
+        }
+        Object.defineProperty(class_1.prototype, "size", {
+            /**
+             * @returns {boolean}
+             */
+            get: function () {
+                return this.__entries__.length;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @param {*} key
+         * @returns {*}
+         */
+        class_1.prototype.get = function (key) {
+            var index = getIndex(this.__entries__, key);
+            var entry = this.__entries__[index];
+            return entry && entry[1];
+        };
+        /**
+         * @param {*} key
+         * @param {*} value
+         * @returns {void}
+         */
+        class_1.prototype.set = function (key, value) {
+            var index = getIndex(this.__entries__, key);
+            if (~index) {
+                this.__entries__[index][1] = value;
+            }
+            else {
+                this.__entries__.push([key, value]);
+            }
+        };
+        /**
+         * @param {*} key
+         * @returns {void}
+         */
+        class_1.prototype.delete = function (key) {
+            var entries = this.__entries__;
+            var index = getIndex(entries, key);
+            if (~index) {
+                entries.splice(index, 1);
+            }
+        };
+        /**
+         * @param {*} key
+         * @returns {void}
+         */
+        class_1.prototype.has = function (key) {
+            return !!~getIndex(this.__entries__, key);
+        };
+        /**
+         * @returns {void}
+         */
+        class_1.prototype.clear = function () {
+            this.__entries__.splice(0);
+        };
+        /**
+         * @param {Function} callback
+         * @param {*} [ctx=null]
+         * @returns {void}
+         */
+        class_1.prototype.forEach = function (callback, ctx) {
+            if (ctx === void 0) { ctx = null; }
+            for (var _i = 0, _a = this.__entries__; _i < _a.length; _i++) {
+                var entry = _a[_i];
+                callback.call(ctx, entry[1], entry[0]);
+            }
+        };
+        return class_1;
+    }());
+})();
+
+/**
+ * Detects whether window and document objects are available in current environment.
+ */
+var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && window.document === document;
+
+// Returns global object of a current environment.
+var global$1 = (function () {
+    if (typeof __webpack_require__.g !== 'undefined' && __webpack_require__.g.Math === Math) {
+        return __webpack_require__.g;
+    }
+    if (typeof self !== 'undefined' && self.Math === Math) {
+        return self;
+    }
+    if (typeof window !== 'undefined' && window.Math === Math) {
+        return window;
+    }
+    // eslint-disable-next-line no-new-func
+    return Function('return this')();
+})();
+
+/**
+ * A shim for the requestAnimationFrame which falls back to the setTimeout if
+ * first one is not supported.
+ *
+ * @returns {number} Requests' identifier.
+ */
+var requestAnimationFrame$1 = (function () {
+    if (typeof requestAnimationFrame === 'function') {
+        // It's required to use a bounded function because IE sometimes throws
+        // an "Invalid calling object" error if rAF is invoked without the global
+        // object on the left hand side.
+        return requestAnimationFrame.bind(global$1);
+    }
+    return function (callback) { return setTimeout(function () { return callback(Date.now()); }, 1000 / 60); };
+})();
+
+// Defines minimum timeout before adding a trailing call.
+var trailingTimeout = 2;
+/**
+ * Creates a wrapper function which ensures that provided callback will be
+ * invoked only once during the specified delay period.
+ *
+ * @param {Function} callback - Function to be invoked after the delay period.
+ * @param {number} delay - Delay after which to invoke callback.
+ * @returns {Function}
+ */
+function throttle (callback, delay) {
+    var leadingCall = false, trailingCall = false, lastCallTime = 0;
+    /**
+     * Invokes the original callback function and schedules new invocation if
+     * the "proxy" was called during current request.
+     *
+     * @returns {void}
+     */
+    function resolvePending() {
+        if (leadingCall) {
+            leadingCall = false;
+            callback();
+        }
+        if (trailingCall) {
+            proxy();
+        }
+    }
+    /**
+     * Callback invoked after the specified delay. It will further postpone
+     * invocation of the original function delegating it to the
+     * requestAnimationFrame.
+     *
+     * @returns {void}
+     */
+    function timeoutCallback() {
+        requestAnimationFrame$1(resolvePending);
+    }
+    /**
+     * Schedules invocation of the original function.
+     *
+     * @returns {void}
+     */
+    function proxy() {
+        var timeStamp = Date.now();
+        if (leadingCall) {
+            // Reject immediately following calls.
+            if (timeStamp - lastCallTime < trailingTimeout) {
+                return;
+            }
+            // Schedule new call to be in invoked when the pending one is resolved.
+            // This is important for "transitions" which never actually start
+            // immediately so there is a chance that we might miss one if change
+            // happens amids the pending invocation.
+            trailingCall = true;
+        }
+        else {
+            leadingCall = true;
+            trailingCall = false;
+            setTimeout(timeoutCallback, delay);
+        }
+        lastCallTime = timeStamp;
+    }
+    return proxy;
+}
+
+// Minimum delay before invoking the update of observers.
+var REFRESH_DELAY = 20;
+// A list of substrings of CSS properties used to find transition events that
+// might affect dimensions of observed elements.
+var transitionKeys = ['top', 'right', 'bottom', 'left', 'width', 'height', 'size', 'weight'];
+// Check if MutationObserver is available.
+var mutationObserverSupported = typeof MutationObserver !== 'undefined';
+/**
+ * Singleton controller class which handles updates of ResizeObserver instances.
+ */
+var ResizeObserverController = /** @class */ (function () {
+    /**
+     * Creates a new instance of ResizeObserverController.
+     *
+     * @private
+     */
+    function ResizeObserverController() {
+        /**
+         * Indicates whether DOM listeners have been added.
+         *
+         * @private {boolean}
+         */
+        this.connected_ = false;
+        /**
+         * Tells that controller has subscribed for Mutation Events.
+         *
+         * @private {boolean}
+         */
+        this.mutationEventsAdded_ = false;
+        /**
+         * Keeps reference to the instance of MutationObserver.
+         *
+         * @private {MutationObserver}
+         */
+        this.mutationsObserver_ = null;
+        /**
+         * A list of connected observers.
+         *
+         * @private {Array<ResizeObserverSPI>}
+         */
+        this.observers_ = [];
+        this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
+        this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
+    }
+    /**
+     * Adds observer to observers list.
+     *
+     * @param {ResizeObserverSPI} observer - Observer to be added.
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.addObserver = function (observer) {
+        if (!~this.observers_.indexOf(observer)) {
+            this.observers_.push(observer);
+        }
+        // Add listeners if they haven't been added yet.
+        if (!this.connected_) {
+            this.connect_();
+        }
+    };
+    /**
+     * Removes observer from observers list.
+     *
+     * @param {ResizeObserverSPI} observer - Observer to be removed.
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.removeObserver = function (observer) {
+        var observers = this.observers_;
+        var index = observers.indexOf(observer);
+        // Remove observer if it's present in registry.
+        if (~index) {
+            observers.splice(index, 1);
+        }
+        // Remove listeners if controller has no connected observers.
+        if (!observers.length && this.connected_) {
+            this.disconnect_();
+        }
+    };
+    /**
+     * Invokes the update of observers. It will continue running updates insofar
+     * it detects changes.
+     *
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.refresh = function () {
+        var changesDetected = this.updateObservers_();
+        // Continue running updates if changes have been detected as there might
+        // be future ones caused by CSS transitions.
+        if (changesDetected) {
+            this.refresh();
+        }
+    };
+    /**
+     * Updates every observer from observers list and notifies them of queued
+     * entries.
+     *
+     * @private
+     * @returns {boolean} Returns "true" if any observer has detected changes in
+     *      dimensions of it's elements.
+     */
+    ResizeObserverController.prototype.updateObservers_ = function () {
+        // Collect observers that have active observations.
+        var activeObservers = this.observers_.filter(function (observer) {
+            return observer.gatherActive(), observer.hasActive();
+        });
+        // Deliver notifications in a separate cycle in order to avoid any
+        // collisions between observers, e.g. when multiple instances of
+        // ResizeObserver are tracking the same element and the callback of one
+        // of them changes content dimensions of the observed target. Sometimes
+        // this may result in notifications being blocked for the rest of observers.
+        activeObservers.forEach(function (observer) { return observer.broadcastActive(); });
+        return activeObservers.length > 0;
+    };
+    /**
+     * Initializes DOM listeners.
+     *
+     * @private
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.connect_ = function () {
+        // Do nothing if running in a non-browser environment or if listeners
+        // have been already added.
+        if (!isBrowser || this.connected_) {
+            return;
+        }
+        // Subscription to the "Transitionend" event is used as a workaround for
+        // delayed transitions. This way it's possible to capture at least the
+        // final state of an element.
+        document.addEventListener('transitionend', this.onTransitionEnd_);
+        window.addEventListener('resize', this.refresh);
+        if (mutationObserverSupported) {
+            this.mutationsObserver_ = new MutationObserver(this.refresh);
+            this.mutationsObserver_.observe(document, {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true
+            });
+        }
+        else {
+            document.addEventListener('DOMSubtreeModified', this.refresh);
+            this.mutationEventsAdded_ = true;
+        }
+        this.connected_ = true;
+    };
+    /**
+     * Removes DOM listeners.
+     *
+     * @private
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.disconnect_ = function () {
+        // Do nothing if running in a non-browser environment or if listeners
+        // have been already removed.
+        if (!isBrowser || !this.connected_) {
+            return;
+        }
+        document.removeEventListener('transitionend', this.onTransitionEnd_);
+        window.removeEventListener('resize', this.refresh);
+        if (this.mutationsObserver_) {
+            this.mutationsObserver_.disconnect();
+        }
+        if (this.mutationEventsAdded_) {
+            document.removeEventListener('DOMSubtreeModified', this.refresh);
+        }
+        this.mutationsObserver_ = null;
+        this.mutationEventsAdded_ = false;
+        this.connected_ = false;
+    };
+    /**
+     * "Transitionend" event handler.
+     *
+     * @private
+     * @param {TransitionEvent} event
+     * @returns {void}
+     */
+    ResizeObserverController.prototype.onTransitionEnd_ = function (_a) {
+        var _b = _a.propertyName, propertyName = _b === void 0 ? '' : _b;
+        // Detect whether transition may affect dimensions of an element.
+        var isReflowProperty = transitionKeys.some(function (key) {
+            return !!~propertyName.indexOf(key);
+        });
+        if (isReflowProperty) {
+            this.refresh();
+        }
+    };
+    /**
+     * Returns instance of the ResizeObserverController.
+     *
+     * @returns {ResizeObserverController}
+     */
+    ResizeObserverController.getInstance = function () {
+        if (!this.instance_) {
+            this.instance_ = new ResizeObserverController();
+        }
+        return this.instance_;
+    };
+    /**
+     * Holds reference to the controller's instance.
+     *
+     * @private {ResizeObserverController}
+     */
+    ResizeObserverController.instance_ = null;
+    return ResizeObserverController;
+}());
+
+/**
+ * Defines non-writable/enumerable properties of the provided target object.
+ *
+ * @param {Object} target - Object for which to define properties.
+ * @param {Object} props - Properties to be defined.
+ * @returns {Object} Target object.
+ */
+var defineConfigurable = (function (target, props) {
+    for (var _i = 0, _a = Object.keys(props); _i < _a.length; _i++) {
+        var key = _a[_i];
+        Object.defineProperty(target, key, {
+            value: props[key],
+            enumerable: false,
+            writable: false,
+            configurable: true
+        });
+    }
+    return target;
+});
+
+/**
+ * Returns the global object associated with provided element.
+ *
+ * @param {Object} target
+ * @returns {Object}
+ */
+var getWindowOf = (function (target) {
+    // Assume that the element is an instance of Node, which means that it
+    // has the "ownerDocument" property from which we can retrieve a
+    // corresponding global object.
+    var ownerGlobal = target && target.ownerDocument && target.ownerDocument.defaultView;
+    // Return the local global object if it's not possible extract one from
+    // provided element.
+    return ownerGlobal || global$1;
+});
+
+// Placeholder of an empty content rectangle.
+var emptyRect = createRectInit(0, 0, 0, 0);
+/**
+ * Converts provided string to a number.
+ *
+ * @param {number|string} value
+ * @returns {number}
+ */
+function toFloat(value) {
+    return parseFloat(value) || 0;
+}
+/**
+ * Extracts borders size from provided styles.
+ *
+ * @param {CSSStyleDeclaration} styles
+ * @param {...string} positions - Borders positions (top, right, ...)
+ * @returns {number}
+ */
+function getBordersSize(styles) {
+    var positions = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        positions[_i - 1] = arguments[_i];
+    }
+    return positions.reduce(function (size, position) {
+        var value = styles['border-' + position + '-width'];
+        return size + toFloat(value);
+    }, 0);
+}
+/**
+ * Extracts paddings sizes from provided styles.
+ *
+ * @param {CSSStyleDeclaration} styles
+ * @returns {Object} Paddings box.
+ */
+function getPaddings(styles) {
+    var positions = ['top', 'right', 'bottom', 'left'];
+    var paddings = {};
+    for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
+        var position = positions_1[_i];
+        var value = styles['padding-' + position];
+        paddings[position] = toFloat(value);
+    }
+    return paddings;
+}
+/**
+ * Calculates content rectangle of provided SVG element.
+ *
+ * @param {SVGGraphicsElement} target - Element content rectangle of which needs
+ *      to be calculated.
+ * @returns {DOMRectInit}
+ */
+function getSVGContentRect(target) {
+    var bbox = target.getBBox();
+    return createRectInit(0, 0, bbox.width, bbox.height);
+}
+/**
+ * Calculates content rectangle of provided HTMLElement.
+ *
+ * @param {HTMLElement} target - Element for which to calculate the content rectangle.
+ * @returns {DOMRectInit}
+ */
+function getHTMLElementContentRect(target) {
+    // Client width & height properties can't be
+    // used exclusively as they provide rounded values.
+    var clientWidth = target.clientWidth, clientHeight = target.clientHeight;
+    // By this condition we can catch all non-replaced inline, hidden and
+    // detached elements. Though elements with width & height properties less
+    // than 0.5 will be discarded as well.
+    //
+    // Without it we would need to implement separate methods for each of
+    // those cases and it's not possible to perform a precise and performance
+    // effective test for hidden elements. E.g. even jQuery's ':visible' filter
+    // gives wrong results for elements with width & height less than 0.5.
+    if (!clientWidth && !clientHeight) {
+        return emptyRect;
+    }
+    var styles = getWindowOf(target).getComputedStyle(target);
+    var paddings = getPaddings(styles);
+    var horizPad = paddings.left + paddings.right;
+    var vertPad = paddings.top + paddings.bottom;
+    // Computed styles of width & height are being used because they are the
+    // only dimensions available to JS that contain non-rounded values. It could
+    // be possible to utilize the getBoundingClientRect if only it's data wasn't
+    // affected by CSS transformations let alone paddings, borders and scroll bars.
+    var width = toFloat(styles.width), height = toFloat(styles.height);
+    // Width & height include paddings and borders when the 'border-box' box
+    // model is applied (except for IE).
+    if (styles.boxSizing === 'border-box') {
+        // Following conditions are required to handle Internet Explorer which
+        // doesn't include paddings and borders to computed CSS dimensions.
+        //
+        // We can say that if CSS dimensions + paddings are equal to the "client"
+        // properties then it's either IE, and thus we don't need to subtract
+        // anything, or an element merely doesn't have paddings/borders styles.
+        if (Math.round(width + horizPad) !== clientWidth) {
+            width -= getBordersSize(styles, 'left', 'right') + horizPad;
+        }
+        if (Math.round(height + vertPad) !== clientHeight) {
+            height -= getBordersSize(styles, 'top', 'bottom') + vertPad;
+        }
+    }
+    // Following steps can't be applied to the document's root element as its
+    // client[Width/Height] properties represent viewport area of the window.
+    // Besides, it's as well not necessary as the <html> itself neither has
+    // rendered scroll bars nor it can be clipped.
+    if (!isDocumentElement(target)) {
+        // In some browsers (only in Firefox, actually) CSS width & height
+        // include scroll bars size which can be removed at this step as scroll
+        // bars are the only difference between rounded dimensions + paddings
+        // and "client" properties, though that is not always true in Chrome.
+        var vertScrollbar = Math.round(width + horizPad) - clientWidth;
+        var horizScrollbar = Math.round(height + vertPad) - clientHeight;
+        // Chrome has a rather weird rounding of "client" properties.
+        // E.g. for an element with content width of 314.2px it sometimes gives
+        // the client width of 315px and for the width of 314.7px it may give
+        // 314px. And it doesn't happen all the time. So just ignore this delta
+        // as a non-relevant.
+        if (Math.abs(vertScrollbar) !== 1) {
+            width -= vertScrollbar;
+        }
+        if (Math.abs(horizScrollbar) !== 1) {
+            height -= horizScrollbar;
+        }
+    }
+    return createRectInit(paddings.left, paddings.top, width, height);
+}
+/**
+ * Checks whether provided element is an instance of the SVGGraphicsElement.
+ *
+ * @param {Element} target - Element to be checked.
+ * @returns {boolean}
+ */
+var isSVGGraphicsElement = (function () {
+    // Some browsers, namely IE and Edge, don't have the SVGGraphicsElement
+    // interface.
+    if (typeof SVGGraphicsElement !== 'undefined') {
+        return function (target) { return target instanceof getWindowOf(target).SVGGraphicsElement; };
+    }
+    // If it's so, then check that element is at least an instance of the
+    // SVGElement and that it has the "getBBox" method.
+    // eslint-disable-next-line no-extra-parens
+    return function (target) { return (target instanceof getWindowOf(target).SVGElement &&
+        typeof target.getBBox === 'function'); };
+})();
+/**
+ * Checks whether provided element is a document element (<html>).
+ *
+ * @param {Element} target - Element to be checked.
+ * @returns {boolean}
+ */
+function isDocumentElement(target) {
+    return target === getWindowOf(target).document.documentElement;
+}
+/**
+ * Calculates an appropriate content rectangle for provided html or svg element.
+ *
+ * @param {Element} target - Element content rectangle of which needs to be calculated.
+ * @returns {DOMRectInit}
+ */
+function getContentRect(target) {
+    if (!isBrowser) {
+        return emptyRect;
+    }
+    if (isSVGGraphicsElement(target)) {
+        return getSVGContentRect(target);
+    }
+    return getHTMLElementContentRect(target);
+}
+/**
+ * Creates rectangle with an interface of the DOMRectReadOnly.
+ * Spec: https://drafts.fxtf.org/geometry/#domrectreadonly
+ *
+ * @param {DOMRectInit} rectInit - Object with rectangle's x/y coordinates and dimensions.
+ * @returns {DOMRectReadOnly}
+ */
+function createReadOnlyRect(_a) {
+    var x = _a.x, y = _a.y, width = _a.width, height = _a.height;
+    // If DOMRectReadOnly is available use it as a prototype for the rectangle.
+    var Constr = typeof DOMRectReadOnly !== 'undefined' ? DOMRectReadOnly : Object;
+    var rect = Object.create(Constr.prototype);
+    // Rectangle's properties are not writable and non-enumerable.
+    defineConfigurable(rect, {
+        x: x, y: y, width: width, height: height,
+        top: y,
+        right: x + width,
+        bottom: height + y,
+        left: x
+    });
+    return rect;
+}
+/**
+ * Creates DOMRectInit object based on the provided dimensions and the x/y coordinates.
+ * Spec: https://drafts.fxtf.org/geometry/#dictdef-domrectinit
+ *
+ * @param {number} x - X coordinate.
+ * @param {number} y - Y coordinate.
+ * @param {number} width - Rectangle's width.
+ * @param {number} height - Rectangle's height.
+ * @returns {DOMRectInit}
+ */
+function createRectInit(x, y, width, height) {
+    return { x: x, y: y, width: width, height: height };
+}
+
+/**
+ * Class that is responsible for computations of the content rectangle of
+ * provided DOM element and for keeping track of it's changes.
+ */
+var ResizeObservation = /** @class */ (function () {
+    /**
+     * Creates an instance of ResizeObservation.
+     *
+     * @param {Element} target - Element to be observed.
+     */
+    function ResizeObservation(target) {
+        /**
+         * Broadcasted width of content rectangle.
+         *
+         * @type {number}
+         */
+        this.broadcastWidth = 0;
+        /**
+         * Broadcasted height of content rectangle.
+         *
+         * @type {number}
+         */
+        this.broadcastHeight = 0;
+        /**
+         * Reference to the last observed content rectangle.
+         *
+         * @private {DOMRectInit}
+         */
+        this.contentRect_ = createRectInit(0, 0, 0, 0);
+        this.target = target;
+    }
+    /**
+     * Updates content rectangle and tells whether it's width or height properties
+     * have changed since the last broadcast.
+     *
+     * @returns {boolean}
+     */
+    ResizeObservation.prototype.isActive = function () {
+        var rect = getContentRect(this.target);
+        this.contentRect_ = rect;
+        return (rect.width !== this.broadcastWidth ||
+            rect.height !== this.broadcastHeight);
+    };
+    /**
+     * Updates 'broadcastWidth' and 'broadcastHeight' properties with a data
+     * from the corresponding properties of the last observed content rectangle.
+     *
+     * @returns {DOMRectInit} Last observed content rectangle.
+     */
+    ResizeObservation.prototype.broadcastRect = function () {
+        var rect = this.contentRect_;
+        this.broadcastWidth = rect.width;
+        this.broadcastHeight = rect.height;
+        return rect;
+    };
+    return ResizeObservation;
+}());
+
+var ResizeObserverEntry = /** @class */ (function () {
+    /**
+     * Creates an instance of ResizeObserverEntry.
+     *
+     * @param {Element} target - Element that is being observed.
+     * @param {DOMRectInit} rectInit - Data of the element's content rectangle.
+     */
+    function ResizeObserverEntry(target, rectInit) {
+        var contentRect = createReadOnlyRect(rectInit);
+        // According to the specification following properties are not writable
+        // and are also not enumerable in the native implementation.
+        //
+        // Property accessors are not being used as they'd require to define a
+        // private WeakMap storage which may cause memory leaks in browsers that
+        // don't support this type of collections.
+        defineConfigurable(this, { target: target, contentRect: contentRect });
+    }
+    return ResizeObserverEntry;
+}());
+
+var ResizeObserverSPI = /** @class */ (function () {
+    /**
+     * Creates a new instance of ResizeObserver.
+     *
+     * @param {ResizeObserverCallback} callback - Callback function that is invoked
+     *      when one of the observed elements changes it's content dimensions.
+     * @param {ResizeObserverController} controller - Controller instance which
+     *      is responsible for the updates of observer.
+     * @param {ResizeObserver} callbackCtx - Reference to the public
+     *      ResizeObserver instance which will be passed to callback function.
+     */
+    function ResizeObserverSPI(callback, controller, callbackCtx) {
+        /**
+         * Collection of resize observations that have detected changes in dimensions
+         * of elements.
+         *
+         * @private {Array<ResizeObservation>}
+         */
+        this.activeObservations_ = [];
+        /**
+         * Registry of the ResizeObservation instances.
+         *
+         * @private {Map<Element, ResizeObservation>}
+         */
+        this.observations_ = new MapShim();
+        if (typeof callback !== 'function') {
+            throw new TypeError('The callback provided as parameter 1 is not a function.');
+        }
+        this.callback_ = callback;
+        this.controller_ = controller;
+        this.callbackCtx_ = callbackCtx;
+    }
+    /**
+     * Starts observing provided element.
+     *
+     * @param {Element} target - Element to be observed.
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.observe = function (target) {
+        if (!arguments.length) {
+            throw new TypeError('1 argument required, but only 0 present.');
+        }
+        // Do nothing if current environment doesn't have the Element interface.
+        if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+            return;
+        }
+        if (!(target instanceof getWindowOf(target).Element)) {
+            throw new TypeError('parameter 1 is not of type "Element".');
+        }
+        var observations = this.observations_;
+        // Do nothing if element is already being observed.
+        if (observations.has(target)) {
+            return;
+        }
+        observations.set(target, new ResizeObservation(target));
+        this.controller_.addObserver(this);
+        // Force the update of observations.
+        this.controller_.refresh();
+    };
+    /**
+     * Stops observing provided element.
+     *
+     * @param {Element} target - Element to stop observing.
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.unobserve = function (target) {
+        if (!arguments.length) {
+            throw new TypeError('1 argument required, but only 0 present.');
+        }
+        // Do nothing if current environment doesn't have the Element interface.
+        if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+            return;
+        }
+        if (!(target instanceof getWindowOf(target).Element)) {
+            throw new TypeError('parameter 1 is not of type "Element".');
+        }
+        var observations = this.observations_;
+        // Do nothing if element is not being observed.
+        if (!observations.has(target)) {
+            return;
+        }
+        observations.delete(target);
+        if (!observations.size) {
+            this.controller_.removeObserver(this);
+        }
+    };
+    /**
+     * Stops observing all elements.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.disconnect = function () {
+        this.clearActive();
+        this.observations_.clear();
+        this.controller_.removeObserver(this);
+    };
+    /**
+     * Collects observation instances the associated element of which has changed
+     * it's content rectangle.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.gatherActive = function () {
+        var _this = this;
+        this.clearActive();
+        this.observations_.forEach(function (observation) {
+            if (observation.isActive()) {
+                _this.activeObservations_.push(observation);
+            }
+        });
+    };
+    /**
+     * Invokes initial callback function with a list of ResizeObserverEntry
+     * instances collected from active resize observations.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.broadcastActive = function () {
+        // Do nothing if observer doesn't have active observations.
+        if (!this.hasActive()) {
+            return;
+        }
+        var ctx = this.callbackCtx_;
+        // Create ResizeObserverEntry instance for every active observation.
+        var entries = this.activeObservations_.map(function (observation) {
+            return new ResizeObserverEntry(observation.target, observation.broadcastRect());
+        });
+        this.callback_.call(ctx, entries, ctx);
+        this.clearActive();
+    };
+    /**
+     * Clears the collection of active observations.
+     *
+     * @returns {void}
+     */
+    ResizeObserverSPI.prototype.clearActive = function () {
+        this.activeObservations_.splice(0);
+    };
+    /**
+     * Tells whether observer has active observations.
+     *
+     * @returns {boolean}
+     */
+    ResizeObserverSPI.prototype.hasActive = function () {
+        return this.activeObservations_.length > 0;
+    };
+    return ResizeObserverSPI;
+}());
+
+// Registry of internal observers. If WeakMap is not available use current shim
+// for the Map collection as it has all required methods and because WeakMap
+// can't be fully polyfilled anyway.
+var observers = typeof WeakMap !== 'undefined' ? new WeakMap() : new MapShim();
+/**
+ * ResizeObserver API. Encapsulates the ResizeObserver SPI implementation
+ * exposing only those methods and properties that are defined in the spec.
+ */
+var ResizeObserver = /** @class */ (function () {
+    /**
+     * Creates a new instance of ResizeObserver.
+     *
+     * @param {ResizeObserverCallback} callback - Callback that is invoked when
+     *      dimensions of the observed elements change.
+     */
+    function ResizeObserver(callback) {
+        if (!(this instanceof ResizeObserver)) {
+            throw new TypeError('Cannot call a class as a function.');
+        }
+        if (!arguments.length) {
+            throw new TypeError('1 argument required, but only 0 present.');
+        }
+        var controller = ResizeObserverController.getInstance();
+        var observer = new ResizeObserverSPI(callback, controller, this);
+        observers.set(this, observer);
+    }
+    return ResizeObserver;
+}());
+// Expose public methods of ResizeObserver.
+[
+    'observe',
+    'unobserve',
+    'disconnect'
+].forEach(function (method) {
+    ResizeObserver.prototype[method] = function () {
+        var _a;
+        return (_a = observers.get(this))[method].apply(_a, arguments);
+    };
+});
+
+var index = (function () {
+    // Export existing implementation if available.
+    if (typeof global$1.ResizeObserver !== 'undefined') {
+        return global$1.ResizeObserver;
+    }
+    return ResizeObserver;
+})();
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (index);
+
+
+/***/ }),
+
 /***/ "./node_modules/@uppy/core/dist/style.min.css":
 /*!****************************************************!*\
   !*** ./node_modules/@uppy/core/dist/style.min.css ***!
@@ -30331,6 +38316,36 @@ var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMP
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_css_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_1_postcss_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_2_style_min_css__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/@uppy/dashboard/dist/style.css":
+/*!*****************************************************!*\
+  !*** ./node_modules/@uppy/dashboard/dist/style.css ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _css_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_1_postcss_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_2_style_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../css-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[1]!../../../postcss-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[2]!./style.css */ "./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[6].oneOf[1].use[2]!./node_modules/@uppy/dashboard/dist/style.css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_1_postcss_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_2_style_css__WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_css_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_1_postcss_loader_dist_cjs_js_ruleSet_1_rules_6_oneOf_1_use_2_style_css__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
 
 /***/ }),
 

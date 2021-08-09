@@ -13,16 +13,19 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 require('@uppy/core/dist/style.min.css')
 require('@uppy/drag-drop/dist/style.min.css')
 require('@uppy/status-bar/dist/style.min.css')
+require('@uppy/dashboard/dist/style.css')
 
 import Uppy from '@uppy/core'
 import DragDrop from '@uppy/drag-drop'
 import StatusBar from '@uppy/status-bar'
 import AwsS3Multipart from '@uppy/aws-s3-multipart'
+import Dashboard from '@uppy/dashboard'
 
 window.Uppy = Uppy
 window.DragDrop = DragDrop
 window.StatusBar = StatusBar
 window.AwsS3Multipart = AwsS3Multipart
+window.Dashboard = Dashboard
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
